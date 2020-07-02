@@ -12,7 +12,7 @@ This library is a wrapper for Apple's AVAudio Sampler Instrument AudioUnit.
 >*Note:* This library is MIT licensed (permissive).
 > Please share and share a like.
 */
-library community.appleavaudiosampler.paulmcclernan
+library community.appleavaumusicinstrument.paulmcclernan
 
 use com.livecode.engine
 use com.livecode.foreign
