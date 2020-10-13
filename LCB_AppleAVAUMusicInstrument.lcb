@@ -1,4 +1,4 @@
-/**
+ /**
 This library contains bindings for Apple's AVAudio Sampler Instrument AudioUnit, useful for creating musical audio output using Sounds (aif, wav, mp3) or Soundbank files (SF2, DLS, and some EXS format).
 
 OS:
@@ -23,12 +23,13 @@ use com.livecode.byte
 use com.livecode.date
 use com.livecode.binary
 use com.livecode.bitwise
+use com.livecode.math
 use com.livecode.string
 
 metadata version is "0.6"
 metadata author is "Paul McClernan"
 metadata title is "LCB AppleAVAUMusicInstrument library"
-metadata svgicon is "M66.43,52.07c-0.71,0.32-1.48,0.56-2.31,0.78c-2.35,0.65-5.44,0.04-5.44,0.04l-8.52,9.56c0,0,11.03,11.58,13.36,13.92 s4.02,6.19,4.02,6.19l8.77-19.76C76.31,62.8,67.18,58.92,66.43,52.07z M56.35,86.86c-2.83-2.4-16.4-15.09-16.4-15.09L21.22,90.12c0,0,3.25,1.93,5.41,1.86c5.6-0.17,10.48-3.77,15.46-3.77 c4.58,0,8.99,3.52,15.56,3.77c1.55,0.06,2.88-0.35,4.41-1.24c0.7-0.41,2.02-1.54,2.02-1.54S59.18,89.26,56.35,86.86z M52.45,18.42c5.85-5.85,5.42-15.63,5.42-15.63s-8.65,0.97-13.34,6.82c-5.22,6.51-5.07,13.39-4.94,14.51 C44.49,24.13,48.71,22.16,52.45,18.42z M18.38,48.03c-3.59,0.27-3.23,4.28-3.21,4.45l0.03,0.32l-0.23,0.23l-5.54,5.89l-5.85-5.95l8.91,24.95l18.58-18.16l-8.8-9.83 C22.28,49.93,19.79,47.92,18.38,48.03z M9.98,39.65c0,0,1.4-2.6,5.19-5.27c2.15-1.51,4.69-2.88,7.45-3.52c1.75-0.41,3.72-0.62,5.86-0.62 c3.63,0,9.12,1.35,9.12,1.35l-10.85,4.24c-1.77,0.8-2.58,2.62-2.85,3.38l14.4,13.75c3.71-3.62,6.78-6.15,9.99-9.57 c-0.51-4.23,0.89-8.11,3.22-10.81c4.73-5.48,13.47-2.78,13.47-2.78l-3.55,3.05c0,0-4.13,3.16-3.01,6.79 c0.27,0.87,0.84,2.34,2.44,3.17c0.93,0.48,4.09,0.37,5.6-0.95C68.48,40.1,70.45,38,70.45,38s0.88-1.54,1.8-2.43 c1.11-1.08,3.56-2.91,3.56-2.91s-4.82-5.38-8.14-6.83c-2.91-1.27-6.15-1.89-9.71-1.91c-7.4-0.03-12.83,4.65-16.7,4.35 c-3.19-0.25-9.47-4.38-14.6-4.35c-7.22,0.05-13.04,2.44-17.47,7.33C5.44,35.37,4,45.11,4,45.11l1.89-1.93c0,0,2.98-0.11,3.34-0.41 c1.48-1.24,1.31-2.33,1.31-2.33L9.98,39.65z M18.15,46.11c1.68-0.19,4.88,2.09,4.88,2.09l9.22,10.03l4.11-3.86L21.75,39.42l0.13-0.52c0.03-0.14,0.88-3.49,3.9-4.84 l5.18-2.02c-1.95-0.07-5.6-0.11-7.97,0.42c-3.26,0.74-8.73,4.32-10.78,7.04c0.06,0.17,0.09,0.34,0.1,0.53 c0.08,1.49-1.41,3.45-2.02,3.98c-0.73,0.63-2.55,1.03-3.63,1.21l-3.94,3.94l6.59,6.6l3.85-3.86c-0.04-1.6,0.45-3.4,1.78-4.57 C15.67,46.71,16.48,46.3,18.15,46.11z M70.95,39.93c-0.62,0.44-4.18,6.07-9.58,4.98c-2.9-0.58-4.65-3.5-4.92-5.3c-0.6-4.07,1.8-6.16,3.56-7.69 c0.59-0.52,1.6-1.31,1.6-1.31s-6.16-0.73-9.16,3.5c-3.98,5.61-1.98,9.83-1.98,9.83S13.22,80.66,12.03,81.82 c-0.09,0.56-0.5,3.71,0.93,5.31c1.56,1.74,3.06,2.79,5.34,2.24c1.3-0.32,39.44-38.44,39.44-38.44s3.65,0.56,5.67,0.07 C68.3,49.8,70.71,46.32,70.95,39.93z M65.52,84.81c-0.14,0.85-0.52,1.48-1.2,1.99c-0.5,0.41-1.12,0.62-1.88,0.62c-2.8,0-6.23-3.51-6.24-3.52L41.82,70.25 l6.44-6.55c0,0,13.44,13.7,14.11,14.36C63.03,78.73,65.79,83.22,65.52,84.81z"
+metadata svgicon is "M66.43,52.07c-0.71,0.32-1.48,0.56-2.31,0.78c-2.35,0.65-5.44,0.04-5.44,0.04l-8.52,9.56c0,0,11.03,11.58,13.36,13.92 s4.02,6.19,4.02,6.19l8.77-19.76C76.31,62.8,67.18,58.92,66.43,52.07z M56.35,86.86c-2.83-2.4-16.4-15.09-16.4-15.09L21.22,90.12c0,0,3.25,1.93,5.41,1.86c5.6-0.17,10.48-3.77,15.46-3.77 c4.58,0,8.99,3.52,15.56,3.77c1.55,0.06,2.88-0.35,4.41-1.24c0.7-0.41,2.02-1.54,2.02-1.54S59.18,89.26,56.35,86.86z M52.45,18.42c5.85-5.85,5.42-15.63,5.42-15.63s-8.65,0.97-13.34,6.82c-5.22,6.51-5.07,13.39-4.94,14.51 C44.49,24.13,48.71,22.16,52.45,18.42z M18.38,48.03c-3.59,0.27-3.23,4.28-3.21,4.45l0.03,0.32l-0.23,0.23l-5.54,5.89l-5.85-5.95l8.91,24.95l18.58-18.16l-8.8-9.83 C22.28,49.93,19.79,47.92,18.38,48.03z M9.98,39.65c0,0,1.4-2.6,5.19-5.27c2.15-1.51,4.69-2.88,7.45-3.52c1.75-0.41,3.72-0.62,5.86-0.62 c3.63,0,9.12,1.35,9.12,1.35l-10.85,4.24c-1.77,0.8-2.58,2.62-2.85,3.38l14.4,13.75c3.71-3.62,6.78-6.15,9.99-9.57 c-0.51-4.23,0.89-8.11,3.22-10.81c4.73-5.48,13.47-2.78,13.47-2.78l-3.55,3.05c0,0-4.13,3.16-3.0AVAudioUnitMIDIInstrumentInitWithDescr1,6.79 c0.27,0.87,0.84,2.34,2.44,3.17c0.93,0.48,4.09,0.37,5.6-0.95C68.48,40.1,70.45,38,70.45,38s0.88-1.54,1.8-2.43 c1.11-1.08,3.56-2.91,3.56-2.91s-4.82-5.38-8.14-6.83c-2.91-1.27-6.15-1.89-9.71-1.91c-7.4-0.03-12.83,4.65-16.7,4.35 c-3.19-0.25-9.47-4.38-14.6-4.35c-7.22,0.05-13.04,2.44-17.47,7.33C5.44,35.37,4,45.11,4,45.11l1.89-1.93c0,0,2.98-0.11,3.34-0.41 c1.48-1.24,1.31-2.33,1.31-2.33L9.98,39.65z M18.15,46.11c1.68-0.19,4.88,2.09,4.88,2.09l9.22,10.03l4.11-3.86L21.75,39.42l0.13-0.52c0.03-0.14,0.88-3.49,3.9-4.84 l5.18-2.02c-1.95-0.07-5.6-0.11-7.97,0.42c-3.26,0.74-8.73,4.32-10.78,7.04c0.06,0.17,0.09,0.34,0.1,0.53 c0.08,1.49-1.41,3.45-2.02,3.98c-0.73,0.63-2.55,1.03-3.63,1.21l-3.94,3.94l6.59,6.6l3.85-3.86c-0.04-1.6,0.45-3.4,1.78-4.57 C15.67,46.71,16.48,46.3,18.15,46.11z M70.95,39.93c-0.62,0.44-4.18,6.07-9.58,4.98c-2.9-0.58-4.65-3.5-4.92-5.3c-0.6-4.07,1.8-6.16,3.56-7.69 c0.59-0.52,1.6-1.31,1.6-1.31s-6.16-0.73-9.16,3.5c-3.98,5.61-1.98,9.83-1.98,9.83S13.22,80.66,12.03,81.82 c-0.09,0.56-0.5,3.71,0.93,5.31c1.56,1.74,3.06,2.79,5.34,2.24c1.3-0.32,39.44-38.44,39.44-38.44s3.65,0.56,5.67,0.07 C68.3,49.8,70.71,46.32,70.95,39.93z M65.52,84.81c-0.14,0.85-0.52,1.48-1.2,1.99c-0.5,0.41-1.12,0.62-1.88,0.62c-2.8,0-6.23-3.51-6.24-3.52L41.82,70.25 l6.44-6.55c0,0,13.44,13.7,14.11,14.36C63.03,78.73,65.79,83.22,65.52,84.81z"
 ---------------------------------------------------------------------------------------------------------------------------
 public foreign type AudioComponentDescription binds to "MCAggregateTypeInfo:jjjjj" -- 5x OSType/UInt32s
 constant kAudioUnitType_MusicDevice is 1635085685 -- 'umua' reversed for Intel, PowerPC would be 1970107745 -- "aumu"
@@ -38,6 +39,7 @@ constant kAudioUnitSubType_MIDISynth is 1836284270 -- 'nysm' reversed for Intel,
 constant kAudioUnitManufacturer_Apple is 1634758764 -- 'lppa' reversed for Intel, PowerPC would be 1819308129 -- "appl"
 constant kAudioUnitType_Output is 1635086197 -- "uoua" reversed for Intel, PowerPC would be 1970238817 -- "auou"
 constant kAudioUnitSubType_RemoteIO is 1919512419 -- "coir" reversed for Intel, PowerPC would be 1668245874 -- "rioc"
+constant kAUMIDISynthProperty_EnablePreload is 4119
 
 public handler getIntegerFromFourCharCodeLittleEndian(in pStr as String) returns optional Uint32
    variable tUint32 as Uint32
@@ -64,23 +66,31 @@ public handler getFourCharCodeFromUint32( in pNum as optional any) returns optio
    variable tTempStr as String
    variable tNum as Number
    variable tBinsStr as String
-   put ( pNum converted from base 10 to base 16 ) into tBinsStr
-   if (the number of chars in tBinsStr) < 8 then
-      put 8 - (the number of chars in tBinsStr) into tNum
-      repeat tNum times
-         put "0" before tBinsStr
-      end repeat
-      -- log tBinsStr
+   log pNum
+   if pNum is not nothing then
+      if pNum is a number then
+         put pNum formatted as string into pNum
+      end if
+      put pNum converted from base 10 to base 16 into tBinsStr
+      if (the number of chars in tBinsStr) < 8 then
+         put 8 - (the number of chars in tBinsStr) into tNum
+         repeat tNum times
+            put "0" before tBinsStr
+         end repeat
+         -- log tBinsStr
+      end if
+       put ( (char 1 to 2 of tBinsStr) converted from base 16 to base 10 ) into tTempStr
+       put the char with code (tTempStr parsed as number) into tStr
+       put ( (char 3 to 4 of tBinsStr) converted from base 16 to base 10 ) into tTempStr
+       put the char with code (tTempStr parsed as number) after tStr
+       put ( (char 5 to 6 of tBinsStr) converted from base 16 to base 10 ) into tTempStr
+       put the char with code (tTempStr parsed as number) after tStr
+       put ( (char 7 to 8 of tBinsStr) converted from base 16 to base 10 ) into tTempStr
+       put the char with code (tTempStr parsed as number) after tStr
+      return tStr
+   else
+      return the empty string
    end if
-    put ( (char 1 to 2 of tBinsStr) converted from base 16 to base 10 ) into tTempStr
-    put the char with code (tTempStr parsed as number) into tStr
-    put ( (char 3 to 4 of tBinsStr) converted from base 16 to base 10 ) into tTempStr
-    put the char with code (tTempStr parsed as number) after tStr
-    put ( (char 5 to 6 of tBinsStr) converted from base 16 to base 10 ) into tTempStr
-    put the char with code (tTempStr parsed as number) after tStr
-    put ( (char 7 to 8 of tBinsStr) converted from base 16 to base 10 ) into tTempStr
-    put the char with code (tTempStr parsed as number) after tStr
-   return tStr
 end handler
 
 private handler getAudioComponentDescriptionCharCode(in pConstant as Number) returns String
@@ -136,16 +146,15 @@ private foreign handler objC_AVAudioUnitMIDIInstrumentChannelPressure(in pAVAUMI
 private foreign handler objC_AVAudioUnitMIDIInstrumentEvent(in pAVAUMIDIInstrInstr as ObjcId, in pStatusByte as UInt8, in pDataOne as UInt8,in pDataTwo as UInt8 ) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-sendMIDIEvent:data1:"
 private foreign handler objC_AVAudioUnitMIDIInstrumentEventTwoBytes(in pAVAUMIDIInstrInstr as ObjcId, in pStatusByte as UInt8, in pDataOne as UInt8,in pDataTwo as UInt8 ) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-sendMIDIEvent:data1:data2:"
 private foreign handler objC_AVAudioUnitMIDIInstrumentController(in pAVAUMIDIInstrInstr as ObjcId, in pController as UInt8, in pValue as UInt8, in pChanl as UInt8 ) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-sendController:withValue:onChannel:"
-private foreign handler objC_AVAudioUnitMIDIInstrumentPitchbend(in pAVAUMIDIInstrInstr as ObjcId, in pPitchbend as CUint, in pChanl as UInt8 ) returns nothing binds to "objc:AVAudioUnitSampler.-sendPitchBend:onChannel:"
+private foreign handler objC_AVAudioUnitMIDIInstrumentPitchbend(in pAVAUMIDIInstrInstr as ObjcId, in pPitchbend as CUint, in pChanl as UInt8 ) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-sendPitchBend:onChannel:"
 private foreign handler objC_AVAudioUnitMIDIInstrumentProgramChange(in pAVAUMIDIInstrInstr as ObjcId, in pProgram as UInt8, in pChanl as UInt8 ) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-sendProgramChange:onChannel:"
 private foreign handler objC_AVAudioUnitMIDIInstrumentBankAndProgramChange(in pAVAUMIDIInstrInstr as ObjcId, in pProgram as UInt8, in pBankMSB as UInt8, in pBankLSB as UInt8, in pChanl as UInt8 ) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-sendProgramChange:bankMSB:bankLSB:onChannel:"
 -- - (void)sendMIDISysExEvent:(NSData *)midiData;
-
 private foreign handler objC_AVAudioUnitMIDIInstrumentLoadSoundBankInstrURL(in pAVAUSampler as ObjcId, in pSoundFontNSURL as ObjcId, \
       in pPrgChng as UInt8, in pBankChngMSB as UInt8, in pBankChngLSB as UInt8, out pNSError as optional ObjcId) returns CBool binds to "objc:AVAudioUnitSampler.-loadSoundBankInstrumentAtURL:program:bankMSB:bankLSB:error:"
 private foreign handler objC_AVAudioUnitMIDIInstrumentLoadEXSPresetOrSoundURL(in pAVAUSampler as ObjcId, in pFileURL as ObjcId, out pNSError as optional ObjcId) returns CBool binds to "objc:AVAudioUnitSampler.-loadInstrumentAtURL:error:"
 -- (BOOL)loadAudioFilesAtURLs:(NSArray<NSURL *> *)audioFiles error:(NSError * _Nullable *)outError;
-private foreign handler objC_AVAudioUnitSamplerLoadSoundFilesURLs(in pAVAUSampler as ObjcId, in pNSArrayOfNSURLs as ObjcId, out pNSError as optional ObjcId) returns CBool binds to "objc:AVAudioUnitSampler.-loadAudioFilesAtURLs:error:"
+private foreign handler objC_AVAudioUnitSamplerLoadSoundFilesURLs(in pAVAUSampler as ObjcId, in pNSArrayOfNSURLs as ObjcId, out pNSError as optional ObjcId) returns CBool binds to "objc:AVAudioUnitMIDIInstrument.-loadAudioFilesAtURLs:error:"
 -- loadAudioFilesAtURLs:error: rteturns Boolean
 private foreign handler objC_AVAudioUnitMIDIInstrumentSetValForKey(in pAVAUSampler as ObjcId, in pValue as ObjcId, in pSelector as ObjcId) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-setValue:forKey:"
 private foreign handler objC_AVAudioUnitMIDIInstrumentGetValForKey(in pAVAUSampler as ObjcId, in pSelector as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.-valueForKey:"
@@ -163,13 +172,24 @@ private foreign handler objC_AVAudioUnitGetACDescription(in pAVAUSampler as Objc
 private foreign handler objC_AVAudioUnitGetName(in pAVAUSampler as ObjcId) returns ObjcId binds to "objc:AVAudioUnit.name"
 private foreign handler objC_AVAudioUnitGetManufacturer(in pAVAUSampler as ObjcId) returns ObjcId binds to "objc:AVAudioUnit.manufacturerName"
 private foreign handler objC_AVAudioUnitGetVersion(in pAVAUSampler as ObjcId) returns UInt64 binds to "objc:AVAudioUnit.version"
-private foreign handler objC_AVAudioUnitGetAudioUnit(in pAVAUSampler as ObjcId) returns ObjcId binds to "objc:AVAudioUnit.audioUnit"
+private foreign handler objC_AVAudioUnitGetAudioUnit(in pAVAUSampler as ObjcId) returns optional ObjcId binds to "objc:AVAudioUnit.audioUnit"
 -- private foreign handler objC_AVAudioUnitGetAUAudioUnit(in pAVAUSampler as ObjcId) returns ObjcId binds to "objc:AVAudioUnit.AUAudioUnit" -- macOS 10.11+ only
 
 private foreign handler c_AudioUnitUninitialize(in pAVAUSampler as ObjcId) returns CSInt binds to "c:AudioUnit.framework>AudioUnitUninitialize"
 private foreign handler c_AudioUnitInitialize(in pAVAUSampler as ObjcId) returns CSInt binds to "c:AudioUnit.framework>AudioUnitInitialize"
-private foreign handler c_AudioUnitGetProperty(in pAudioUnit as ObjcId,in pPropertyID as UInt32,in pScope as UInt32, in pElement as UInt32, \
-                                       out rData as Data, out rDataSize as UInt32) returns CSInt binds to "c:AudioUnit.framework>AudioUnitGetProperty"
+private foreign handler c_AudioUnitGetProperty(in pAudioUnit as ObjcId, in pPropertyID as UInt32, in pScope as UInt32, in pElement as UInt32, \
+                                       out rData as optional ObjcId, out rDataSize as optional ObjcId) returns CSInt binds to "c:AudioUnit.framework>AudioUnitGetProperty"
+
+private foreign handler c_AudioUnitSetProperty(in pAudioUnit as ObjcId,in pPropertyID as UInt32,in pScope as UInt32, in pElement as UInt32, \
+                                       in rData as optional ObjcId, in rTimeStamp as optional UInt32) returns CSInt binds to "c:AudioUnit.framework>AudioUnitSetProperty"
+
+                                       -- put c_AudioUnitSetProperty(tAVAudioUnit,NumberToNSNumber(1100),NumberToNSNumber(0),NumberToNSNumber(0),tSoundFontNSURL,NumberToNSNumber(0)) into tOSStatus ---  UInt32(sizeof(bankURL.dynamicType) ) into tOSStatus --
+                                       -- 1100 = kMusicDeviceProperty_SoundBankURL
+                                       -- 0 is kAudioUnitScope_Global
+                                       -- OSStatus AudioUnitSetParameter(AudioUnit inUnit, AudioUnitParameterID inID, AudioUnitScope inScope, AudioUnitElement inElement, AudioUnitParameterValue inValue, UInt32 inBufferOffsetInFrames);
+                                       -- Parameters: inUnit The audio unit that you want to set a parameter value for. inID The audio unit parameter identifier. inScope The audio unit scope for the parameter. inElement The audio unit element for the parameter.
+                                       --                    inValue The value that you want to apply to the parameter. inBufferOffsetInFrames Set this to 0. To schedule the setting of a parameter value, use the AudioUnitScheduleParameters function.
+
 
 private foreign handler objC_AVAudioUnitComponentGetComponent(in pAVAUSampler as ObjcId) returns any binds to "objc:AVAudioUnitComponent.audioComponent"
 private foreign handler objC_AVAudioUnitComponentHasCustomView(in pAVAUSampler as ObjcId) returns CBool binds to "objc:AVAudioUnitComponent.hasCustomView"
@@ -177,6 +197,11 @@ private foreign handler objC_AVAudioUnitComponentHasCustomView(in pAVAUSampler a
 private foreign handler objC_AVAudioNodeGetNumberOfInputs(in pAVAUSampler as ObjcId) returns NaturalUInt binds to "objc:AVAudioNode.numberOfInputs"
 private foreign handler objC_AVAudioNodeGetNumberOfOutputs(in pAVAUSampler as ObjcId) returns NaturalUInt binds to "objc:AVAudioNode.numberOfOutputs"
 private foreign handler objC_AVAudioNodeGetEngine(in pAVAUSampler as ObjcId) returns ObjcId binds to "objc:AVAudioNode.engine"
+
+
+-- foreign handler cSizeOf(in pPointer as Pointer) returns UIntSize binds to "c:sizeof"
+foreign handler cSizeOf(in pPointer as Pointer) returns UIntSize binds to "<builtin>"
+
 
 private variable sAVAudioEngine as optional ObjcObject
 private variable sAVAudioUnitMIDIInstrument as optional ObjcObject
@@ -209,33 +234,24 @@ public handler AVAudioUnitMIDIInstrumentInitWithDescr(in pAUType as optional Str
    variable tComponentManufacturer as UInt32
    variable tComponentFlags as UInt32
    variable tComponentFlagsMask as UInt32
-
+   variable tAVAudioUnit as optional ObjcObject
    if sAVAudioEngine is nothing then
       unsafe
         -- put [0,0,0,0,0] into tAudioComponentDescription
         ------------------- Get Shared AUComponentManager -------------------------
          -- put objC_AVAudioUnitAUComponentManager() into tAVAudioUnitsManagerInstance
          ----------------------------- ComponentType ------------------------------
-         if pAUType is not "" then
-           if pAUType is "Music Devices" then
-              put 1635085685 into tComponentType
-           else if pAUType is "Audio FX" then
-              put 1635083896 into tComponentType
-           else
-              put getIntegerFromFourCharCodeLittleEndian(pAUType) into tComponentType
-           end if
-        else
-           put 0 into tComponentType
-        end if
+
+         put 1635085685 into tComponentType -- Music Device
+
         ------------------------------- AUSubType --------------------------
         if pAUSubType is not "" then
            put getIntegerFromFourCharCodeBigEndian(pAUSubType) into tComponentSubType
-         else
-              put 0 into tComponentSubType
-         end if
+        else
+           put getIntegerFromFourCharCodeBigEndian("msyn") into tComponentSubType
+        end if
        ----------------------------- Manufacturers -------------------------
        if pAUManufacturer is not "" then
-          -- log pAUManufacturer
           if pAUManufacturer is "Apple" then
              put 1634758764 into tComponentManufacturer
           else if pAUManufacturer is "Native Instruments" then
@@ -244,7 +260,7 @@ public handler AVAudioUnitMIDIInstrumentInitWithDescr(in pAUType as optional Str
              put getIntegerFromFourCharCodeBigEndian(pAUManufacturer) into tComponentManufacturer
           end if
         else
-             put 0 into tComponentManufacturer
+             put 1634758764 into tComponentManufacturer -- Apple
         end if
 
          put [tComponentType,tComponentSubType,tComponentManufacturer,0,0] into tAudioComponentDescription
@@ -407,15 +423,20 @@ pBankLSB: Bank number Least Significant Byte
 
 Description: Loads a soundbank file or type SF2 or DLS into AVAudioSampler and optional sets it to a given program or patch and bank.
 */
-public handler AVAudioMusicInstrumentLoadBankProgram(in pSoundFontPath as optional String, in pProgramNum as optional Integer, in pBankMSB as optional Integer, in pBankLSB as optional Integer) returns optional any
+public handler AVAudioMusicInstrumentBankProgram( in pProgramNum as optional Integer, in pBankMSB as optional Integer, in pBankLSB as optional Integer, in pChannel as optional Integer) returns optional any
    variable tSoundFontNSURL as ObjcObject
-   variable tNSError as optional ObjcObject    variable tNSErrorDescriptionRef as ObjcObject
+   variable tNSError as optional ObjcObject
+   variable tNSErrorDescriptionRef as ObjcObject
    variable tErrorDescription as optional String
    variable tDidLoad as Boolean
+   variable tOSStatus as CSInt
+   variable tAVAudioUnit as ObjcId
+   variable tNSObj as ObjcId
+
    if sAVAudioUnitMIDIInstrument is not nothing then
-      if pSoundFontPath is nothing then
-         put "/System/Library/Components/CoreAudio.component/Contents/Resources/gs_instruments.dls" into pSoundFontPath
-      end if
+      -- if pSoundFontPath is nothing then
+      --    put "/System/Library/Components/CoreAudio.component/Contents/Resources/gs_instruments.dls" into pSoundFontPath
+      -- end if
       if pProgramNum is nothing then
          put 0 into pProgramNum
       end if
@@ -425,9 +446,27 @@ public handler AVAudioMusicInstrumentLoadBankProgram(in pSoundFontPath as option
       if pBankLSB is nothing then
          put 0 into pBankLSB
       end if
+      if pChannel is nothing then
+         put 0 into pChannel
+      end if
       unsafe
-         put objC_NSURLfileURLWithPath(StringToNSString(pSoundFontPath)) into tSoundFontNSURL
-         put objC_AVAudioUnitSamplerLoadSoundBankInstrURL(sAVAudioUnitMIDIInstrument,tSoundFontNSURL,pProgramNum,pBankMSB,pBankLSB,tNSError) into tDidLoad-- MSB 0x79 (121) for melodic bank?, 0x78 (120) or 0x7F (127) for drum bank?
+      put objC_NSURLfileURLWithPath(StringToNSString("/System/Library/Components/CoreAudio.component/Contents/Resources/gs_instruments.dls")) into tSoundFontNSURL
+      -- put objC_NSURLfileURLWithPath(StringToNSString(pSoundFontPath)) into tSoundFontNSURL
+         -- objC_AVAudioUnitMIDIInstrumentBankAndProgramChange(in pAVAUMIDIInstrInstr as ObjcId, in pProgram as UInt8, in pBankMSB as UInt8, in pBankLSB as UInt8, in pChanl as UInt8 ) returns nothing
+       objC_AVAudioUnitMIDIInstrumentBankAndProgramChange(sAVAudioUnitMIDIInstrument,pProgramNum,pBankMSB,pBankLSB,pChannel)-- MSB 0x79 (121) for melodic bank?, 0x78 (120) or 0x7F (127) for drum bank?
+      --  put objC_AVAudioUnitMIDIInstrumentLoadSoundBankInstrURL(sAVAudioUnitMIDIInstrument,tSoundFontNSURL,pProgramNum,pBankMSB,pBankLSB,tNSError) into tDidLoad-- MSB 0x79 (121) for melodic bank?, 0x78 (120) or 0x7F (127) for drum bank?
+         --put objC_AVAudioUnitSamplerLoadSoundBankInstrURL(sAVAudioUnitMIDIInstrument,tSoundFontNSURL,pProgramNum,pBankMSB,pBankLSB,tNSError) into tDidLoad-- MSB 0x79 (121) for melodic bank?, 0x78 (120) or 0x7F (127) for drum bank?
+
+         -- To load the Sound Font, set the kMusicDeviceProperty_SoundBankURL property on your unit. I’m using a SoundFont from MuseScore here.
+        put objC_AVAudioUnitGetAudioUnit(sAVAudioUnitMIDIInstrument) into tAVAudioUnit
+        -- log tAVAudioUnit
+         put c_AudioUnitSetProperty(tAVAudioUnit,1100,0,0,tSoundFontNSURL,0) into tOSStatus ---  UInt32(sizeof(bankURL.dynamicType) ) into tOSStatus --
+         -- 1100 = kMusicDeviceProperty_SoundBankURL
+         -- 0 is kAudioUnitScope_Global
+         -- OSStatus AudioUnitSetParameter(AudioUnit inUnit, AudioUnitParameterID inID, AudioUnitScope inScope, AudioUnitElement inElement, AudioUnitParameterValue inValue, UInt32 inBufferOffsetInFrames);
+         -- Parameters: inUnit The audio unit that you want to set a parameter value for. inID The audio unit parameter identifier. inScope The audio unit scope for the parameter. inElement The audio unit element for the parameter.
+         --                    inValue The value that you want to apply to the parameter. inBufferOffsetInFrames Set this to 0. To schedule the setting of a parameter value, use the AudioUnitScheduleParameters function.
+
           if tNSError is not nothing then
              put c_CFErrorCopyDescription(tNSError) into tNSErrorDescriptionRef
              put StringFromNSString(tNSErrorDescriptionRef) into tErrorDescription
@@ -518,13 +557,16 @@ public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
       put "Outputs: " & tNumber formatted as string & newline after tInfoChunk
       put objC_AVAudioUnitGetACDescription(sAVAudioUnitMIDIInstrument) into tAudioComponentDescription
       put "AudioComponentDescription: " after tInfoChunk
-      put getAudioComponentDescriptionCharCode(element 1 of tAudioComponentDescription) after tInfoChunk
+      put getFourCharCodeFromUint32(element 1 of tAudioComponentDescription) after tInfoChunk
+      -- put getAudioComponentDescriptionCharCode(element 1 of tAudioComponentDescription) after tInfoChunk
       -- put element 1 of tAudioComponentDescription formatted as string after tInfoChunk
       put "," after tInfoChunk
-      put getAudioComponentDescriptionCharCode(element 2 of tAudioComponentDescription) after tInfoChunk
+      put getFourCharCodeFromUint32(element 2 of tAudioComponentDescription) after tInfoChunk
+      -- put getAudioComponentDescriptionCharCode(element 2 of tAudioComponentDescription) after tInfoChunk
       -- put element 2 of tAudioComponentDescription formatted as string after tInfoChunk
       put "," after tInfoChunk
-      put getAudioComponentDescriptionCharCode(element 3 of tAudioComponentDescription) after tInfoChunk
+      put getFourCharCodeFromUint32(element 3 of tAudioComponentDescription) after tInfoChunk
+      -- put getAudioComponentDescriptionCharCode(element 3 of tAudioComponentDescription) after tInfoChunk
       -- put element 3 of tAudioComponentDescription formatted as string after tInfoChunk
       put "," after tInfoChunk
       put element 4 of tAudioComponentDescription formatted as string after tInfoChunk
