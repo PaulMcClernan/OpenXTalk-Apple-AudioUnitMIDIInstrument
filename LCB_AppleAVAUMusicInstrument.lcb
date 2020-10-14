@@ -150,35 +150,36 @@ private foreign handler objC_AVAudioUnitMIDIInstrumentPitchbend(in pAVAUMIDIInst
 private foreign handler objC_AVAudioUnitMIDIInstrumentProgramChange(in pAVAUMIDIInstrInstr as ObjcId, in pProgram as UInt8, in pChanl as UInt8 ) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-sendProgramChange:onChannel:"
 private foreign handler objC_AVAudioUnitMIDIInstrumentBankAndProgramChange(in pAVAUMIDIInstrInstr as ObjcId, in pProgram as UInt8, in pBankMSB as UInt8, in pBankLSB as UInt8, in pChanl as UInt8 ) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-sendProgramChange:bankMSB:bankLSB:onChannel:"
 -- - (void)sendMIDISysExEvent:(NSData *)midiData;
-private foreign handler objC_AVAudioUnitMIDIInstrumentLoadSoundBankInstrURL(in pAVAUSampler as ObjcId, in pSoundFontNSURL as ObjcId, \
+private foreign handler objC_AVAudioUnitMIDIInstrumentLoadSoundBankInstrURL(in pAVAUMIDIInstrInstr as ObjcId, in pSoundFontNSURL as ObjcId, \
       in pPrgChng as UInt8, in pBankChngMSB as UInt8, in pBankChngLSB as UInt8, out pNSError as optional ObjcId) returns CBool binds to "objc:AVAudioUnitSampler.-loadSoundBankInstrumentAtURL:program:bankMSB:bankLSB:error:"
-private foreign handler objC_AVAudioUnitMIDIInstrumentLoadEXSPresetOrSoundURL(in pAVAUSampler as ObjcId, in pFileURL as ObjcId, out pNSError as optional ObjcId) returns CBool binds to "objc:AVAudioUnitSampler.-loadInstrumentAtURL:error:"
+private foreign handler objC_AVAudioUnitMIDIInstrumentLoadEXSPresetOrSoundURL(in pAVAUMIDIInstrInstr as ObjcId, in pFileURL as ObjcId, out pNSError as optional ObjcId) returns CBool binds to "objc:AVAudioUnitSampler.-loadInstrumentAtURL:error:"
 -- (BOOL)loadAudioFilesAtURLs:(NSArray<NSURL *> *)audioFiles error:(NSError * _Nullable *)outError;
-private foreign handler objC_AVAudioUnitSamplerLoadSoundFilesURLs(in pAVAUSampler as ObjcId, in pNSArrayOfNSURLs as ObjcId, out pNSError as optional ObjcId) returns CBool binds to "objc:AVAudioUnitMIDIInstrument.-loadAudioFilesAtURLs:error:"
+private foreign handler objC_AVAudioUnitSamplerLoadSoundFilesURLs(in pAVAUMIDIInstrInstr as ObjcId, in pNSArrayOfNSURLs as ObjcId, out pNSError as optional ObjcId) returns CBool binds to "objc:AVAudioUnitMIDIInstrument.-loadAudioFilesAtURLs:error:"
 -- loadAudioFilesAtURLs:error: rteturns Boolean
-private foreign handler objC_AVAudioUnitMIDIInstrumentSetValForKey(in pAVAUSampler as ObjcId, in pValue as ObjcId, in pSelector as ObjcId) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-setValue:forKey:"
-private foreign handler objC_AVAudioUnitMIDIInstrumentGetValForKey(in pAVAUSampler as ObjcId, in pSelector as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.-valueForKey:"
+private foreign handler objC_AVAudioUnitMIDIInstrumentSetValForKey(in pAVAUMIDIInstrInstr as ObjcId, in pValue as ObjcId, in pSelector as ObjcId) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-setValue:forKey:"
+private foreign handler objC_AVAudioUnitMIDIInstrumentGetValForKey(in pAVAUMIDIInstrInstr as ObjcId, in pSelector as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.-valueForKey:"
 
-private foreign handler objC_AVAudioUnitMIDIInstrumentGetMasterGain(in pAVAUSampler as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.masterGain"
+private foreign handler objC_AVAudioUnitMIDIInstrumentGetMasterGain(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.masterGain"
 -- default value is 0.0 dB. The range of valid values is -90.0 dB to 12.0 dB.
-private foreign handler objC_AVAudioUnitMIDIInstrumentGetStereoPan(in pAVAUSampler as ObjcId, in pPan as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.stereoPan"
+private foreign handler objC_AVAudioUnitMIDIInstrumentGetStereoPan(in pAVAUMIDIInstrInstr as ObjcId, in pPan as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.stereoPan"
 -- stereoPan -- float -- default value is 0.0. The range of valid values is -1.0 to 1.0.
-private foreign handler objC_AVAudioUnitMIDIInstrumentGetGlobalTuning(in pAVAUSampler as ObjcId, in pGTuning as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.globalTuning"
+private foreign handler objC_AVAudioUnitMIDIInstrumentGetGlobalTuning(in pAVAUMIDIInstrInstr as ObjcId, in pGTuning as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.globalTuning"
 
-private foreign handler objC_AVAudioUnitMIDIInstrumentNoteOn(in pAVAUSampler as ObjcId,in pNoteNum as UInt8, in pNoteVelo as UInt8, in pNoteChan as UInt8) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-startNote:withVelocity:onChannel:"
-private foreign handler objC_AVAudioUnitMIDIInstrumentNoteOff(in pAVAUSampler as ObjcId, in pNoteNum as UInt8, in pNoteChan as UInt8) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-stopNote:onChannel:"
+private foreign handler objC_AVAudioUnitMIDIInstrumentNoteOn(in pAVAUMIDIInstrInstr as ObjcId,in pNoteNum as UInt8, in pNoteVelo as UInt8, in pNoteChan as UInt8) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-startNote:withVelocity:onChannel:"
+private foreign handler objC_AVAudioUnitMIDIInstrumentNoteOff(in pAVAUMIDIInstrInstr as ObjcId, in pNoteNum as UInt8, in pNoteChan as UInt8) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-stopNote:onChannel:"
 
-private foreign handler objC_AVAudioUnitGetACDescription(in pAVAUSampler as ObjcId) returns AudioComponentDescription binds to "objc:AVAudioUnit.audioComponentDescription"
-private foreign handler objC_AVAudioUnitGetName(in pAVAUSampler as ObjcId) returns ObjcId binds to "objc:AVAudioUnit.name"
-private foreign handler objC_AVAudioUnitGetManufacturer(in pAVAUSampler as ObjcId) returns ObjcId binds to "objc:AVAudioUnit.manufacturerName"
-private foreign handler objC_AVAudioUnitGetVersion(in pAVAUSampler as ObjcId) returns UInt64 binds to "objc:AVAudioUnit.version"
-private foreign handler objC_AVAudioUnitGetAudioUnit(in pAVAUSampler as ObjcId) returns optional ObjcId binds to "objc:AVAudioUnit.audioUnit"
--- private foreign handler objC_AVAudioUnitGetAUAudioUnit(in pAVAUSampler as ObjcId) returns ObjcId binds to "objc:AVAudioUnit.AUAudioUnit" -- macOS 10.11+ only
+private foreign handler objC_AVAudioUnitGetACDescription(in pAVAUMIDIInstrInstr as ObjcId) returns AudioComponentDescription binds to "objc:AVAudioUnit.audioComponentDescription"
+private foreign handler objC_AVAudioUnitGetName(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioUnit.name"
+private foreign handler objC_AVAudioUnitGetManufacturer(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioUnit.manufacturerName"
+private foreign handler objC_AVAudioUnitGetVersion(in pAVAUMIDIInstrInstr as ObjcId) returns UInt64 binds to "objc:AVAudioUnit.version"
+private foreign handler objC_AVAudioUnitGetAudioUnit(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcObject binds to "objc:AVAudioUnit.audioUnit"
+private foreign handler objC_AVAudioUnitGetAUAudioUnit(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioUnit.AUAudioUnit" -- macOS 10.11+ only
+private foreign handler objC_AVAudioUnitGetAUAudioUnitFactoryPresets(in pAUAudioUnit as ObjcId) returns ObjcId binds to "objc:AUAudioUnit.factoryPresets" -- macOS 10.11+ only
 
-private foreign handler c_AudioUnitUninitialize(in pAVAUSampler as ObjcId) returns CSInt binds to "c:AudioUnit.framework>AudioUnitUninitialize"
-private foreign handler c_AudioUnitInitialize(in pAVAUSampler as ObjcId) returns CSInt binds to "c:AudioUnit.framework>AudioUnitInitialize"
-private foreign handler c_AudioUnitGetProperty(in pAudioUnit as ObjcId, in pPropertyID as UInt32, in pScope as UInt32, in pElement as UInt32, \
-                                       out rData as optional ObjcId, out rDataSize as optional ObjcId) returns CSInt binds to "c:AudioUnit.framework>AudioUnitGetProperty"
+private foreign handler c_AudioUnitUninitialize(in pAVAUMIDIInstrInstr as ObjcId) returns CSInt binds to "c:AudioUnit.framework>AudioUnitUninitialize"
+private foreign handler c_AudioUnitInitialize(in pAVAUMIDIInstrInstr as ObjcId) returns CSInt binds to "c:AudioUnit.framework>AudioUnitInitialize"
+private foreign handler c_AudioUnitGetProperty(in pAudioUnit as ObjcId,in pPropertyID as UInt32,in pScope as UInt32, in pElement as UInt32, \
+                                       out rData as Pointer, inout rDataSize as Pointer) returns CSInt binds to "c:AudioUnit.framework>AudioUnitGetProperty"
 
 private foreign handler c_AudioUnitSetProperty(in pAudioUnit as ObjcId,in pPropertyID as UInt32,in pScope as UInt32, in pElement as UInt32, \
                                        in rData as optional ObjcId, in rTimeStamp as optional UInt32) returns CSInt binds to "c:AudioUnit.framework>AudioUnitSetProperty"
@@ -191,12 +192,12 @@ private foreign handler c_AudioUnitSetProperty(in pAudioUnit as ObjcId,in pPrope
                                        --                    inValue The value that you want to apply to the parameter. inBufferOffsetInFrames Set this to 0. To schedule the setting of a parameter value, use the AudioUnitScheduleParameters function.
 
 
-private foreign handler objC_AVAudioUnitComponentGetComponent(in pAVAUSampler as ObjcId) returns any binds to "objc:AVAudioUnitComponent.audioComponent"
-private foreign handler objC_AVAudioUnitComponentHasCustomView(in pAVAUSampler as ObjcId) returns CBool binds to "objc:AVAudioUnitComponent.hasCustomView"
+private foreign handler objC_AVAudioUnitComponentGetComponent(in pAVAUMIDIInstrInstr as ObjcId) returns any binds to "objc:AVAudioUnitComponent.audioComponent"
+private foreign handler objC_AVAudioUnitComponentHasCustomView(in pAVAUMIDIInstrInstr as ObjcId) returns CBool binds to "objc:AVAudioUnitComponent.hasCustomView"
 
-private foreign handler objC_AVAudioNodeGetNumberOfInputs(in pAVAUSampler as ObjcId) returns NaturalUInt binds to "objc:AVAudioNode.numberOfInputs"
-private foreign handler objC_AVAudioNodeGetNumberOfOutputs(in pAVAUSampler as ObjcId) returns NaturalUInt binds to "objc:AVAudioNode.numberOfOutputs"
-private foreign handler objC_AVAudioNodeGetEngine(in pAVAUSampler as ObjcId) returns ObjcId binds to "objc:AVAudioNode.engine"
+private foreign handler objC_AVAudioNodeGetNumberOfInputs(in pAVAUMIDIInstrInstr as ObjcId) returns NaturalUInt binds to "objc:AVAudioNode.numberOfInputs"
+private foreign handler objC_AVAudioNodeGetNumberOfOutputs(in pAVAUMIDIInstrInstr as ObjcId) returns NaturalUInt binds to "objc:AVAudioNode.numberOfOutputs"
+private foreign handler objC_AVAudioNodeGetEngine(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioNode.engine"
 
 
 -- foreign handler cSizeOf(in pPointer as Pointer) returns UIntSize binds to "c:sizeof"
@@ -270,8 +271,7 @@ public handler AVAudioUnitMIDIInstrumentInitWithDescr(in pAUType as optional Str
          -- log sAVAudioEngine
          put objC_AVAudioUnitMIDIInstrumentAlloc() into sAVAudioUnitMIDIInstrument
          put objC_AVAudioUnitMIDIInstrumentInitWithDescr(sAVAudioUnitMIDIInstrument, tAudioComponentDescription) into sAVAudioUnitMIDIInstrument
-         -- put objC_AVAudioUnitSamplerAlloc() into sAVAudioUnitMIDIInstrument
-         -- put objC_AVAudioUnitSamplerInit(sAVAudioUnitMIDIInstrument) into sAVAudioUnitMIDIInstrument
+
          -- log sAVAudioUnitMIDIInstrument
          objC_AVAudioEngineAttachNode(sAVAudioEngine,sAVAudioUnitMIDIInstrument)
          -- check engine to see if it attached the instrument node sucessfully:
@@ -459,7 +459,7 @@ public handler AVAudioMusicInstrumentBankProgram( in pProgramNum as optional Int
 
          -- To load the Sound Font, set the kMusicDeviceProperty_SoundBankURL property on your unit. I’m using a SoundFont from MuseScore here.
         put objC_AVAudioUnitGetAudioUnit(sAVAudioUnitMIDIInstrument) into tAVAudioUnit
-        -- log tAVAudioUnit
+        log tAVAudioUnit
          put c_AudioUnitSetProperty(tAVAudioUnit,1100,0,0,tSoundFontNSURL,0) into tOSStatus ---  UInt32(sizeof(bankURL.dynamicType) ) into tOSStatus --
          -- 1100 = kMusicDeviceProperty_SoundBankURL
          -- 0 is kAudioUnitScope_Global
@@ -530,18 +530,32 @@ Gets info About the running AVAudioSampler, mostly here for developement usage f
 */
 public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
    variable tAudioComponentDescription as AudioComponentDescription
-   variable tAudioUnitComponent as optional ObjcId
-   variable tAudioUnit as ObjcId
+   variable tAudioUnitComponent as optional any
+   variable tAUAudioUnit as ObjcObject
+   variable tAUAudioUnitFactoryPresets as Array
+   variable tAudioUnit as optional ObjcId
+
    variable tListIterand as any
    variable tNSError as optional ObjcObject
    variable tNSErrorDescriptionRef as ObjcId
    variable tErrorDescription as optional String
    variable tBool as CBool
+   variable tOSStatus as CSInt
    variable tInfoChunk as String
    variable tNSStrObj as optional ObjcId
    variable tStr as optional String
    variable tNSObj as optional ObjcId
+   variable tDataPtr as Pointer
+   variable tData as optional any
+
    variable tNumber as optional Number -- Integer
+   variable rPropertySizePtr as Pointer
+   variable rPropertySize as optional any
+
+   variable tAudioUnitProperty as UInt32
+   variable tAudioUnitScope as UInt32
+   variable tAudioUnitElement as UInt32
+
    unsafe
       put objC_AVAudioUnitGetName(sAVAudioUnitMIDIInstrument) into tNSStrObj
       put StringFromNSString(tNSStrObj) into tStr
@@ -573,10 +587,27 @@ public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
       put "," after tInfoChunk
       put element 5 of tAudioComponentDescription formatted as string after tInfoChunk
 
-      put objC_AVAudioUnitGetAudioUnit(sAVAudioUnitMIDIInstrument) into tAudioUnit
-      -- put objC_AVAudioUnitGetAUAudioUnit(sAVAudioUnitMIDIInstrument) into tAudioUnit
-      -- log tAudioUnit -- logging this crashes engine
+      -- put objC_AVAudioUnitGetAUAudioUnit(sAVAudioUnitMIDIInstrument) into tAUAudioUnit
+      -- log tAUAudioUnit
+      -- put objC_AVAudioUnitGetAUAudioUnitFactoryPresets(tAUAudioUnit) into tNSObj
+      -- put ArrayFromNSDictionary(tNSObj) into tAUAudioUnitFactoryPresets
+      -- log tAUAudioUnitFactoryPresets
 
+      -- put objC_AVAudioUnitGetAudioUnit(sAVAudioUnitMIDIInstrument) into tAudioUnit
+      -- log tAudioUnit
+      -- CFArrayRef presets = NULL;
+       -- propertySize = sizeof(presets);
+      put NumberToNSNumber(1024) into tNSObj
+      put PointerFromObjcObject(tNSObj) into rPropertySizePtr
+      -- put 1024 into rPropertySize
+      put 24 into tAudioUnitProperty -- _FactoryPresets = 24
+      put 0 into tAudioUnitScope-- _Global is 0
+      put 0 into tAudioUnitElement
+      put c_AudioUnitGetProperty(tAUAudioUnit,tAudioUnitProperty,tAudioUnitScope,tAudioUnitElement,tData,rPropertySizePtr) into tOSStatus
+      -- put NumberFromNSNumber(rPropertySizeNSNum) into rPropertySize
+      log [tData,rPropertySizePtr]
+      -- log tAudioUnit -- logging this crashes engine
+      ---put objC_AVAudioUnitComponentGetComponent(tAudioUnit) into tAudioUnitComponent
       -- put objC_AVAudioUnitComponentGetComponent(tAudioUnit) into tAudioUnitComponent
       -- log tAudioUnitComponent
       -- put objC_AVAudioUnitComponentHasCustomView(tAudioUnitComponent) into tBool
@@ -589,12 +620,6 @@ public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
       -- put objC_AVAudioNodeGetEngine(sAVAudioUnitMIDIInstrument) into tNSObj -- Null if Node is not attached to an AVAudioEngine
       -- log tNSObj
    end unsafe
-   -- Name: AUSampler
-   -- Manufacturer: Apple
-   -- Version: 65536
-   -- Inputs: 0
-   -- Outputs: 1
-   -- AudioComponentDescription: aumu,samp,appl,0,0
    return tInfoChunk
 end handler
 
@@ -715,7 +740,7 @@ Description:
 Sets the amount to shift sound output to the left or right in the range of -1.0 (left) to 1.0 (right)
 */
 public handler AVAudioSamplerSetStereoPan(in pBalance as optional Number) returns nothing
-   --private foreign handler objC_AVAudioUnitSamplerStereoPan(in pAVAUSampler as ObjcId, in pPan as NaturalFloat) returns nothing binds to "objc:AVAudioUnitSampler.stereoPan"
+   --private foreign handler objC_AVAudioUnitSamplerStereoPan(in pAVAUMIDIInstrInstr as ObjcId, in pPan as NaturalFloat) returns nothing binds to "objc:AVAudioUnitSampler.stereoPan"
    -- stereoPan -- float -- default value is 0.0. The range of valid values is -1.0 to 1.0.
    expect that (pBalance >= -1.0 and pBalance <= 1.0 ) because "Stereo pan values must be in the range of -1.0 to 1.0"
    if pBalance is nothing then
