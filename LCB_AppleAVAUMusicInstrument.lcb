@@ -1,18 +1,4 @@
- /**
-This library contains bindings for Apple's AVAudio Sampler Instrument AudioUnit, useful for creating musical audio output using Sounds (aif, wav, mp3) or Soundbank files (SF2, DLS, and some EXS format).
-
-OS:
-mac, iOS (untested)
-
-Edition: Community
-
-Description:
-This library is a wrapper for Apple's AVAudio Sampler Instrument AudioUnit.
-
->*Note:* This library is MIT licensed (permissive).
-> Please share and share a like.
-*/
-library community.appleavaumusicinstrument.paulmcclernan
+library community.appleavaumidiinstrument.paulmcclernan
 
 use com.livecode.engine
 use com.livecode.foreign
@@ -28,10 +14,12 @@ use com.livecode.string
 
 metadata version is "0.6"
 metadata author is "Paul McClernan"
-metadata title is "LCB AppleAVAUMusicInstrument library"
+metadata title is "LCB Apple AVAudioUnitMIDIInstrument library"
 metadata svgicon is "M66.43,52.07c-0.71,0.32-1.48,0.56-2.31,0.78c-2.35,0.65-5.44,0.04-5.44,0.04l-8.52,9.56c0,0,11.03,11.58,13.36,13.92 s4.02,6.19,4.02,6.19l8.77-19.76C76.31,62.8,67.18,58.92,66.43,52.07z M56.35,86.86c-2.83-2.4-16.4-15.09-16.4-15.09L21.22,90.12c0,0,3.25,1.93,5.41,1.86c5.6-0.17,10.48-3.77,15.46-3.77 c4.58,0,8.99,3.52,15.56,3.77c1.55,0.06,2.88-0.35,4.41-1.24c0.7-0.41,2.02-1.54,2.02-1.54S59.18,89.26,56.35,86.86z M52.45,18.42c5.85-5.85,5.42-15.63,5.42-15.63s-8.65,0.97-13.34,6.82c-5.22,6.51-5.07,13.39-4.94,14.51 C44.49,24.13,48.71,22.16,52.45,18.42z M18.38,48.03c-3.59,0.27-3.23,4.28-3.21,4.45l0.03,0.32l-0.23,0.23l-5.54,5.89l-5.85-5.95l8.91,24.95l18.58-18.16l-8.8-9.83 C22.28,49.93,19.79,47.92,18.38,48.03z M9.98,39.65c0,0,1.4-2.6,5.19-5.27c2.15-1.51,4.69-2.88,7.45-3.52c1.75-0.41,3.72-0.62,5.86-0.62 c3.63,0,9.12,1.35,9.12,1.35l-10.85,4.24c-1.77,0.8-2.58,2.62-2.85,3.38l14.4,13.75c3.71-3.62,6.78-6.15,9.99-9.57 c-0.51-4.23,0.89-8.11,3.22-10.81c4.73-5.48,13.47-2.78,13.47-2.78l-3.55,3.05c0,0-4.13,3.16-3.0AVAudioUnitMIDIInstrumentInitWithDescr1,6.79 c0.27,0.87,0.84,2.34,2.44,3.17c0.93,0.48,4.09,0.37,5.6-0.95C68.48,40.1,70.45,38,70.45,38s0.88-1.54,1.8-2.43 c1.11-1.08,3.56-2.91,3.56-2.91s-4.82-5.38-8.14-6.83c-2.91-1.27-6.15-1.89-9.71-1.91c-7.4-0.03-12.83,4.65-16.7,4.35 c-3.19-0.25-9.47-4.38-14.6-4.35c-7.22,0.05-13.04,2.44-17.47,7.33C5.44,35.37,4,45.11,4,45.11l1.89-1.93c0,0,2.98-0.11,3.34-0.41 c1.48-1.24,1.31-2.33,1.31-2.33L9.98,39.65z M18.15,46.11c1.68-0.19,4.88,2.09,4.88,2.09l9.22,10.03l4.11-3.86L21.75,39.42l0.13-0.52c0.03-0.14,0.88-3.49,3.9-4.84 l5.18-2.02c-1.95-0.07-5.6-0.11-7.97,0.42c-3.26,0.74-8.73,4.32-10.78,7.04c0.06,0.17,0.09,0.34,0.1,0.53 c0.08,1.49-1.41,3.45-2.02,3.98c-0.73,0.63-2.55,1.03-3.63,1.21l-3.94,3.94l6.59,6.6l3.85-3.86c-0.04-1.6,0.45-3.4,1.78-4.57 C15.67,46.71,16.48,46.3,18.15,46.11z M70.95,39.93c-0.62,0.44-4.18,6.07-9.58,4.98c-2.9-0.58-4.65-3.5-4.92-5.3c-0.6-4.07,1.8-6.16,3.56-7.69 c0.59-0.52,1.6-1.31,1.6-1.31s-6.16-0.73-9.16,3.5c-3.98,5.61-1.98,9.83-1.98,9.83S13.22,80.66,12.03,81.82 c-0.09,0.56-0.5,3.71,0.93,5.31c1.56,1.74,3.06,2.79,5.34,2.24c1.3-0.32,39.44-38.44,39.44-38.44s3.65,0.56,5.67,0.07 C68.3,49.8,70.71,46.32,70.95,39.93z M65.52,84.81c-0.14,0.85-0.52,1.48-1.2,1.99c-0.5,0.41-1.12,0.62-1.88,0.62c-2.8,0-6.23-3.51-6.24-3.52L41.82,70.25 l6.44-6.55c0,0,13.44,13.7,14.11,14.36C63.03,78.73,65.79,83.22,65.52,84.81z"
 ---------------------------------------------------------------------------------------------------------------------------
+public foreign type AudioComponentDescriptionReturn binds to "MCAggregateTypeInfo:bbbbbbbbbbbbjj" -- 3x 4CharOSTypes & 2X UInt32s
 public foreign type AudioComponentDescription binds to "MCAggregateTypeInfo:jjjjj" -- 5x OSType/UInt32s
+
 constant kAudioUnitType_MusicDevice is 1635085685 -- 'umua' reversed for Intel, PowerPC would be 1970107745 -- "aumu"
 constant kAudioUnitSubType_Sampler is 1935764848 -- 'pmas' reversed for Intel, PowerPC would be 1886216563 -- "samp"
 constant kAudioUnitSubType_DLSSynth is  1684828960 -- ' sld' reversed for Intel, PowerPC would be 544435300 --"dls "
@@ -66,7 +54,7 @@ public handler getFourCharCodeFromUint32( in pNum as optional any) returns optio
    variable tTempStr as String
    variable tNum as Number
    variable tBinsStr as String
-   log pNum
+   -- log pNum
    if pNum is not nothing then
       if pNum is a number then
          put pNum formatted as string into pNum
@@ -126,13 +114,17 @@ private foreign handler c_CFErrorCopyDescription(in pCFErrorRef as ObjcId) retur
 
 private foreign handler objC_AVAudioEngineAlloc() returns ObjcRetainedId binds to "objc:AVAudioEngine.+alloc" -- must be ObjcRetainedId
 private foreign handler objC_AVAudioEngineInit(in pAVAudioEngine as ObjcId) returns ObjcId binds to "objc:AVAudioEngine.-init"
-private foreign handler objC_AVAudioEngineConnectSourceToDest(in pAVAudioEngine as ObjcId, \
-                   in pSourceNode as ObjcId, in pDestinationNode as ObjcId, in pFormat as optional any) \
-                    returns nothing binds to "objc:AVAudioEngine.-connect:to:format:"
+private foreign handler objC_AVAudioEngineConnectSourceToDest(in pAVAudioEngine as ObjcId, in pSourceNode as ObjcId, in pDestinationNode as ObjcId, in pFormat as optional any) \
+                                                               returns nothing binds to "objc:AVAudioEngine.-connect:to:format:"
+private foreign handler objC_AVAudioEngineDisconnectInputNode(in pAVAudioEngine as ObjcId, in pSourceNode as ObjcId) returns nothing binds to "objc:AVAudioEngine.-disconnectNodeInput:"
+
 private foreign handler objC_AVAudioEngineGetMainMixerNode(in pAVAudioEngine as ObjcId) returns ObjcId binds to "objc:AVAudioEngine.mainMixerNode"
 private foreign handler objC_AVAudioEngineGetInputNode(in pAVAudioEngine as ObjcId) returns ObjcId binds to "objc:AVAudioEngine.inputNode"
 private foreign handler objC_AVAudioEngineGetOutputNode(in pAVAudioEngine as ObjcId) returns ObjcId binds to "objc:AVAudioEngine.outputNode"
+
 private foreign handler objC_AVAudioEngineAttachNode(in pAVAudioEngine as ObjcId, in pAVAudioNode as ObjcId) returns nothing binds to "objc:AVAudioEngine.-attachNode:"
+private foreign handler objC_AVAudioEngineDetachNode(in pAVAudioEngine as ObjcId, in pAVAudioNode as ObjcId) returns nothing binds to "objc:AVAudioEngine.-detachNode:"
+
 private foreign handler objC_AVAudioEnginePrepareToStart(in pAVAudioEngine as ObjcId) returns nothing binds to "objc:AVAudioEngine.-prepare"
 private foreign handler objC_AVAudioEngineStart(in pAVAudioEngine as ObjcId, out rError as optional ObjcId) returns CBool binds to "objc:AVAudioEngine.-startAndReturnError:"
 private foreign handler objC_AVAudioEngineReset(in pAVAudioEngine as ObjcId) returns nothing binds to "objc:AVAudioEngine.-reset"
@@ -150,12 +142,6 @@ private foreign handler objC_AVAudioUnitMIDIInstrumentPitchbend(in pAVAUMIDIInst
 private foreign handler objC_AVAudioUnitMIDIInstrumentProgramChange(in pAVAUMIDIInstrInstr as ObjcId, in pProgram as UInt8, in pChanl as UInt8 ) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-sendProgramChange:onChannel:"
 private foreign handler objC_AVAudioUnitMIDIInstrumentBankAndProgramChange(in pAVAUMIDIInstrInstr as ObjcId, in pProgram as UInt8, in pBankMSB as UInt8, in pBankLSB as UInt8, in pChanl as UInt8 ) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-sendProgramChange:bankMSB:bankLSB:onChannel:"
 -- - (void)sendMIDISysExEvent:(NSData *)midiData;
-private foreign handler objC_AVAudioUnitMIDIInstrumentLoadSoundBankInstrURL(in pAVAUMIDIInstrInstr as ObjcId, in pSoundFontNSURL as ObjcId, \
-      in pPrgChng as UInt8, in pBankChngMSB as UInt8, in pBankChngLSB as UInt8, out pNSError as optional ObjcId) returns CBool binds to "objc:AVAudioUnitSampler.-loadSoundBankInstrumentAtURL:program:bankMSB:bankLSB:error:"
-private foreign handler objC_AVAudioUnitMIDIInstrumentLoadEXSPresetOrSoundURL(in pAVAUMIDIInstrInstr as ObjcId, in pFileURL as ObjcId, out pNSError as optional ObjcId) returns CBool binds to "objc:AVAudioUnitSampler.-loadInstrumentAtURL:error:"
--- (BOOL)loadAudioFilesAtURLs:(NSArray<NSURL *> *)audioFiles error:(NSError * _Nullable *)outError;
-private foreign handler objC_AVAudioUnitSamplerLoadSoundFilesURLs(in pAVAUMIDIInstrInstr as ObjcId, in pNSArrayOfNSURLs as ObjcId, out pNSError as optional ObjcId) returns CBool binds to "objc:AVAudioUnitMIDIInstrument.-loadAudioFilesAtURLs:error:"
--- loadAudioFilesAtURLs:error: rteturns Boolean
 private foreign handler objC_AVAudioUnitMIDIInstrumentSetValForKey(in pAVAUMIDIInstrInstr as ObjcId, in pValue as ObjcId, in pSelector as ObjcId) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-setValue:forKey:"
 private foreign handler objC_AVAudioUnitMIDIInstrumentGetValForKey(in pAVAUMIDIInstrInstr as ObjcId, in pSelector as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.-valueForKey:"
 
@@ -168,119 +154,326 @@ private foreign handler objC_AVAudioUnitMIDIInstrumentGetGlobalTuning(in pAVAUMI
 private foreign handler objC_AVAudioUnitMIDIInstrumentNoteOn(in pAVAUMIDIInstrInstr as ObjcId,in pNoteNum as UInt8, in pNoteVelo as UInt8, in pNoteChan as UInt8) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-startNote:withVelocity:onChannel:"
 private foreign handler objC_AVAudioUnitMIDIInstrumentNoteOff(in pAVAUMIDIInstrInstr as ObjcId, in pNoteNum as UInt8, in pNoteChan as UInt8) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-stopNote:onChannel:"
 
-private foreign handler objC_AVAudioUnitGetACDescription(in pAVAUMIDIInstrInstr as ObjcId) returns AudioComponentDescription binds to "objc:AVAudioUnit.audioComponentDescription"
-private foreign handler objC_AVAudioUnitGetName(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioUnit.name"
-private foreign handler objC_AVAudioUnitGetManufacturer(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioUnit.manufacturerName"
-private foreign handler objC_AVAudioUnitGetVersion(in pAVAUMIDIInstrInstr as ObjcId) returns UInt64 binds to "objc:AVAudioUnit.version"
-private foreign handler objC_AVAudioUnitGetAudioUnit(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcObject binds to "objc:AVAudioUnit.audioUnit"
 private foreign handler objC_AVAudioUnitGetAUAudioUnit(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioUnit.AUAudioUnit" -- macOS 10.11+ only
 private foreign handler objC_AVAudioUnitGetAUAudioUnitFactoryPresets(in pAUAudioUnit as ObjcId) returns ObjcId binds to "objc:AUAudioUnit.factoryPresets" -- macOS 10.11+ only
 
 private foreign handler c_AudioUnitUninitialize(in pAVAUMIDIInstrInstr as ObjcId) returns CSInt binds to "c:AudioUnit.framework>AudioUnitUninitialize"
 private foreign handler c_AudioUnitInitialize(in pAVAUMIDIInstrInstr as ObjcId) returns CSInt binds to "c:AudioUnit.framework>AudioUnitInitialize"
-private foreign handler c_AudioUnitGetProperty(in pAudioUnit as ObjcId,in pPropertyID as UInt32,in pScope as UInt32, in pElement as UInt32, \
-                                       out rData as Pointer, inout rDataSize as Pointer) returns CSInt binds to "c:AudioUnit.framework>AudioUnitGetProperty"
 
-private foreign handler c_AudioUnitSetProperty(in pAudioUnit as ObjcId,in pPropertyID as UInt32,in pScope as UInt32, in pElement as UInt32, \
-                                       in rData as optional ObjcId, in rTimeStamp as optional UInt32) returns CSInt binds to "c:AudioUnit.framework>AudioUnitSetProperty"
+private foreign handler c_AudioUnitGetProperty(in pAudioUnit as Pointer,in pPropertyID as UInt32,in pScope as UInt32, in pElement as UInt32, \
+                                       out rProp as any, inout rDataSize as UInt32) returns CSInt binds to "c:AudioUnit.framework>AudioUnitGetProperty"
+private foreign handler c_AudioUnitGetPropertyInfo(in pAudioUnit as Pointer,in pPropertyID as UInt32,in pScope as UInt32, in pElement as UInt32, \
+                                       out rDataSize as optional Uint32, out rWriteable as CBool) returns CSInt binds to "c:AudioUnit.framework>AudioUnitGetPropertyInfo"
 
-                                       -- put c_AudioUnitSetProperty(tAVAudioUnit,NumberToNSNumber(1100),NumberToNSNumber(0),NumberToNSNumber(0),tSoundFontNSURL,NumberToNSNumber(0)) into tOSStatus ---  UInt32(sizeof(bankURL.dynamicType) ) into tOSStatus --
-                                       -- 1100 = kMusicDeviceProperty_SoundBankURL
-                                       -- 0 is kAudioUnitScope_Global
-                                       -- OSStatus AudioUnitSetParameter(AudioUnit inUnit, AudioUnitParameterID inID, AudioUnitScope inScope, AudioUnitElement inElement, AudioUnitParameterValue inValue, UInt32 inBufferOffsetInFrames);
-                                       -- Parameters: inUnit The audio unit that you want to set a parameter value for. inID The audio unit parameter identifier. inScope The audio unit scope for the parameter. inElement The audio unit element for the parameter.
-                                       --                    inValue The value that you want to apply to the parameter. inBufferOffsetInFrames Set this to 0. To schedule the setting of a parameter value, use the AudioUnitScheduleParameters function.
+private foreign handler c_AudioUnitSetProperty(in pAudioUnit as Pointer,in pPropertyID as UInt32,in pScope as UInt32, in pElement as UInt32, \
+                                       in rProp as any, in rTimeStamp as optional UInt32) returns CSInt binds to "c:AudioUnit.framework>AudioUnitSetProperty"
 
+private foreign handler c_AudioUnitGetPropertyFactoryPresets(in pAudioUnit as Pointer, in pPropertyID as UInt32 , in pScope as UInt32, in pElement as UInt32, \
+                                       out rProp as optional Pointer, inout rDataSize as UInt32) returns CSInt binds to "c:AudioUnit.framework>AudioUnitGetProperty"
 
-private foreign handler objC_AVAudioUnitComponentGetComponent(in pAVAUMIDIInstrInstr as ObjcId) returns any binds to "objc:AVAudioUnitComponent.audioComponent"
-private foreign handler objC_AVAudioUnitComponentHasCustomView(in pAVAUMIDIInstrInstr as ObjcId) returns CBool binds to "objc:AVAudioUnitComponent.hasCustomView"
 
 private foreign handler objC_AVAudioNodeGetNumberOfInputs(in pAVAUMIDIInstrInstr as ObjcId) returns NaturalUInt binds to "objc:AVAudioNode.numberOfInputs"
 private foreign handler objC_AVAudioNodeGetNumberOfOutputs(in pAVAUMIDIInstrInstr as ObjcId) returns NaturalUInt binds to "objc:AVAudioNode.numberOfOutputs"
 private foreign handler objC_AVAudioNodeGetEngine(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioNode.engine"
 
+private foreign handler objC_AVAudioUnitAUComponentManager() returns ObjcId binds to "objc:AVAudioUnitComponentManager.+sharedAudioUnitComponentManager"
+private foreign handler objC_AVAudioUnitGetAudioUnitsFromACDesc(in pSharedAudioUnitComponentManager as ObjcId, in pAudioComponentDescription as AudioComponentDescription) returns ObjcId \
+                        binds to "objc:AVAudioUnitComponentManager.-componentsMatchingDescription:"
+
+private foreign handler objC_AVAudioUnitGetACDescription(in pAVAUMIDIInstrInstr as ObjcId) returns AudioComponentDescription binds to "objc:AVAudioUnit.audioComponentDescription"
+private foreign handler objC_AVAudioUnitComponentGetACDescription(in pAVAudioUnit as ObjcId) returns AudioComponentDescriptionReturn binds to "objc:AVAudioUnitComponent.audioComponentDescription"
+
+private foreign handler objC_AVAudioUnitGetName(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioUnit.name"
+private foreign handler objC_AVAudioUnitComponentGetName(in pAVAudioUnit as ObjcId) returns ObjcId binds to "objc:AVAudioUnitComponent.name"
+
+private foreign handler objC_AVAudioUnitGetManufacturer(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioUnit.manufacturerName"
+private foreign handler objC_AVAudioUnitComponentGetManufacturer(in pAVAudioUnit as ObjcId) returns ObjcId binds to "objc:AVAudioUnitComponent.manufacturerName"
+
+private foreign handler objC_AVAudioUnitGetVersion(in pAVAUMIDIInstrInstr as ObjcId) returns UInt64 binds to "objc:AVAudioUnit.version"
+private foreign handler objC_AVAudioUnitComponentGetVersion(in pAVAudioUnit as ObjcId) returns UInt64 binds to "objc:AVAudioUnitComponent.version"
+
+private foreign handler objC_AVAudioUnitGetAudioUnit(in pAVAUMIDIInstrInstr as ObjcId) returns Pointer binds to "objc:AVAudioUnit.audioUnit"
+private foreign handler objC_AVAudioUnitComponentGetAudioUnit(in pAVAudioUnit as ObjcId) returns ObjcId binds to "objc:AVAudioUnitComponent.audioUnit" -- macOS 10.11+ only
+
+private foreign handler objC_AVAudioUnitAUComponentManagerTagNames(in pSharedAudioUnitComponentManager as ObjcId) returns ObjcId binds to "objc:AVAudioUnitComponentManager.tagNames"
+private foreign handler objC_AVAudioUnitGetHasMIDIInput(in pAVAudioUnit as ObjcId) returns CBool binds to "objc:AVAudioUnitComponent.hasMIDIInput"
+private foreign handler objC_AVAudioUnitGetHasMIDIOutput(in pAVAudioUnit as ObjcId) returns CBool binds to "objc:AVAudioUnitComponent.hasMIDIOutput"
+private foreign handler objC_AVAudioUnitGetIconURL(in pAVAudioUnit as ObjcId) returns ObjcId binds to "objc:AVAudioUnitComponent.iconURL"
+private foreign handler objC_AVAudioUnitGetComponentURL(in pAVAudioUnit as ObjcId) returns ObjcId binds to "objc:AVAudioUnitComponent.componentURL"
+private foreign handler objC_AVAudioUnitGetArchitectures(in pAVAudioUnit as ObjcId) returns ObjcId binds to "objc:AVAudioUnitComponent.availableArchitectures"
+private foreign handler objC_AVAudioUnitGetVersionNSStr(in pAVAudioUnit as ObjcId) returns ObjcId binds to "objc:AVAudioUnitComponent.versionString"
+private foreign handler objC_AVAudioUnitGetTypeName(in pAVAudioUnit as ObjcId) returns ObjcId binds to "objc:AVAudioUnitComponent.typeName"
+
+private foreign handler objC_AVAudioUnitGetConfignDict(in pAVAudioUnit as ObjcId) returns optional any binds to "objc:AVAudioUnitComponent.configurationDictionary"
+
+private foreign handler objC_AVAudioUnitGetIsSandboxSafe(in pAVAudioUnit as ObjcId) returns CBool binds to "objc:AVAudioUnitComponent.isSandboxSafe"
+
+private foreign handler objC_AVAudioUnitComponentHasCustomView(in pAVAudioUnit as ObjcId) returns CBool binds to "objc:AVAudioUnitComponent.hasCustomView"
+private foreign handler objC_AVAudioUnitComponentGetAllTagNames(in pAVAudioUnit as ObjcId) returns ObjcId binds to "objc:AVAudioUnitComponent.allTagNames"
+private foreign handler objC_AVAudioUnitComponentGetComponent(in pAVAudioUnit as ObjcId) returns optional any binds to "objc:AVAudioUnitComponent.audioComponent"
+private foreign handler objC_AVAudioUnitComponentPassesValidation(in pAVAudioUnit as ObjcId) returns CBool binds to "objc:AVAudioUnitComponent.passesAUVal"
 
 -- foreign handler cSizeOf(in pPointer as Pointer) returns UIntSize binds to "c:sizeof"
 foreign handler cSizeOf(in pPointer as Pointer) returns UIntSize binds to "<builtin>"
 
-
 private variable sAVAudioEngine as optional ObjcObject
+private variable sAVAudioMainMixerNode as optional ObjcObject
 private variable sAVAudioUnitMIDIInstrument as optional ObjcObject
 
+public handler AVAudioUnitCMGetMIDIInstruments(in pAUSubType as optional String, in pAUManufacturer as optional String) returns optional any
+   variable tCBool as Boolean
+   variable tArray as Array
+   variable tList as optional List
+   variable tElement as optional any
+   variable tNSNumber as optional ObjcObject
+   variable tNumber as optional Number
+   variable tTempNSObj as optional ObjcObject
+   variable rTempStr as optional String
+   variable tTempStr as optional String
+   variable tOSStatus as optional CSInt
+
+   variable tAVAudioUnitsManagerInstance as optional ObjcObject
+   variable tAudioComponentDescription as optional AudioComponentDescription
+   variable tAudioComponentDescrParse as optional AudioComponentDescriptionReturn
+   variable tMatchingtAudioComponentsNSArray as optional ObjcObject
+   variable tAVAUAudioComponent as optional ObjcObject
+   variable tAudioComponent as optional ObjcObject
+
+   variable tAudioComponentsList as optional List
+   variable tComponentType as UInt32
+   variable tComponentSubType as UInt32
+   variable tComponentManufacturer as UInt32
+   variable tComponentFlags as UInt32
+   variable tComponentFlagsMask as UInt32
+   unsafe
+   ------------------- Get Shared AUComponentManager -------------------------
+    put objC_AVAudioUnitAUComponentManager() into tAVAudioUnitsManagerInstance
+    ----------------------------- ComponentType ------------------------------
+    put 1635085685 into tComponentType -- aumu - kAudioUnitType_MusicDevice
+   ------------------------------- AUSubType --------------------------
+   if pAUSubType is not "" then
+      put getIntegerFromFourCharCodeBigEndian(pAUSubType) into tComponentSubType
+    else
+      put 0 into tComponentSubType
+    end if
+  ----------------------------- Manufacturers -------------------------
+  if pAUManufacturer is not "" then
+     -- log pAUManufacturer
+     if pAUManufacturer is "Apple" then
+        put 1634758764 into tComponentManufacturer
+     else if pAUManufacturer is "Native Instruments" then
+        put 760105261 into tComponentManufacturer
+     else
+        put getIntegerFromFourCharCodeBigEndian(pAUManufacturer) into tComponentManufacturer
+     end if
+   else
+        put 0 into tComponentManufacturer
+   end if
+
+    put [tComponentType,tComponentSubType,tComponentManufacturer,0,0] into tAudioComponentDescription
+    put objC_AVAudioUnitGetAudioUnitsFromACDesc(tAVAudioUnitsManagerInstance,tAudioComponentDescription) into tMatchingtAudioComponentsNSArray
+   if tMatchingtAudioComponentsNSArray is not nothing then
+      put ListFromNSArray(tMatchingtAudioComponentsNSArray) into tAudioComponentsList
+      put "" into rTempStr
+      repeat for each element tAVAUAudioComponent in tAudioComponentsList
+
+         put objC_AVAudioUnitGetName(tAVAUAudioComponent) into tTempNSObj
+         if tTempNSObj is not nothing then
+            put StringFromNSString(tTempNSObj) after rTempStr
+         else
+            put "Unnammed" after rTempStr
+         end if
+         put "," after rTempStr
+
+         put objC_AVAudioUnitGetManufacturer(tAVAUAudioComponent) into tTempNSObj
+         if tTempNSObj is not nothing then
+            put StringFromNSString(tTempNSObj) after rTempStr
+         else
+            put "Unknown" after rTempStr
+         end if
+         put "," after rTempStr
+
+         -- put objC_AVAudioUnitGetVersion(tAVAUAudioComponent) into tNumber -- NaturalUInt
+         -- put tNumber formatted as string & newline after rTempStr
+         put objC_AVAudioUnitGetVersionNSStr(tAVAUAudioComponent) into tTempNSObj
+         if tTempNSObj is not nothing then
+            put "v." & StringFromNSString(tTempNSObj) after rTempStr
+         else
+            put "Unknown" after rTempStr
+         end if
+         put "," after rTempStr
+
+         if objC_AVAudioUnitGetHasMIDIInput(tAVAUAudioComponent) then
+            put "MIDI In," after rTempStr
+         else
+            put "No MIDI In," after rTempStr
+         end if
+         if objC_AVAudioUnitGetHasMIDIOutput(tAVAUAudioComponent) then
+            put "MIDI Out," after rTempStr
+         else
+            put "No MIDI Out," after rTempStr
+         end if
+         if the last char of rTempStr is "," then
+            delete the last char of rTempStr
+         end if
+         put "," after rTempStr
+
+         ----------------------- Architectures ---------------------
+         put objC_AVAudioUnitGetArchitectures(tAVAUAudioComponent) into tTempNSObj -- an NS Array of Constants that corespond to CPU Architectures
+         put ListFromNSArray(tTempNSObj) into tList
+         if tList is the empty list then
+            put "Unknown" after rTempStr
+         else
+            repeat for each element tNumber in tList
+            -- ArchitecturePPC=0x00000012= 18 --- ArchitecturePPC64=0x01000012= 16777234   --- ArchitectureI386=0x00000007= 7 --- ArchitectureX86_64=0x01000007= 16777223
+               if tNumber = 18 then
+                     put "PPC " after rTempStr
+                  else if tNumber = 16777234 then
+                     put "PPC64 " after rTempStr
+                  else if tNumber = 7 then
+                     put "x86 " after rTempStr
+                  else if tNumber = 16777223 then
+                     put "x86_64 " after rTempStr
+                  else if tNumber = 16777228 then
+                     put "ARM64 " after rTempStr
+                  end if
+            end repeat
+            if the last char of rTempStr is " " then
+               delete the last char of rTempStr
+            end if
+         end if
+         put "," after rTempStr
+
+         put objC_AVAudioUnitComponentGetACDescription(tAVAUAudioComponent) into tAudioComponentDescrParse
+         --- Type OStype ---
+         put the char with code (element 4 of tAudioComponentDescrParse) & the char with code (element 3 of tAudioComponentDescrParse) & \
+            the char with code (element 2 of tAudioComponentDescrParse) & the char with code (element 1 of tAudioComponentDescrParse) & "," after rTempStr
+         --- SubType OStype ---
+         put the char with code (element 8 of tAudioComponentDescrParse) & the char with code (element 7 of tAudioComponentDescrParse) & \
+            the char with code (element 6 of tAudioComponentDescrParse) & the char with code (element 5 of tAudioComponentDescrParse) & "," after rTempStr
+         --- Manufacturer OStype ---
+         put the char with code (element 12 of tAudioComponentDescrParse) & the char with code (element 11 of tAudioComponentDescrParse) & \
+            the char with code (element 10 of tAudioComponentDescrParse)  & the char with code (element 9 of tAudioComponentDescrParse) & "," after rTempStr
+
+         put objC_AVAudioUnitGetIsSandboxSafe( tAVAUAudioComponent ) into tCBool
+         if tCBool is true then
+            put "true \t" after rTempStr
+         else
+            put "false \t" after rTempStr
+         end if
+
+         -- put objC_AVAudioUnitComponentHasCustomView( tAVAUAudioComponent ) into tCBool
+         -- if tCBool is true then
+         --    put "true \t" after rTempStr
+         -- else
+         --    put "false \t" after rTempStr
+         -- end if
+
+         -----  userTagNames [String] -- get & set property can be used to add tags by users
+
+         --------- component URL -----------------
+         --put objC_AVAudioUnitGetComponentURL( tAVAUAudioComponent ) into tTempNSObj
+         --put objC_NSURLGetAbsoluteString(tTempNSObj) into tTempNSObj
+         --if tTempNSObj is not nothing then
+            --put StringFromNSString(tTempNSObj) & "," after rTempStr
+         --end if
+         --------- component Icon URL -----------------
+         --put nothing into tTempNSObj
+         --put objC_AVAudioUnitGetIconURL( tAVAUAudioComponent ) into tTempNSObj
+         -- put objC_NSURLGetPath(tTempNSObj) into tTempNSObj
+         --if tTempNSObj is not nothing then
+         ---   put StringFromNSString(tTempNSObj) & "," after rTempStr
+         --end if
+         -----------------------------------------------------------
+         ---------- CRASHES LC ENGINE:
+         -- put objC_AVAudioUnitComponentGetComponent( tAVAUAudioComponent ) into tTempNSObj -- Use to get underlying Audio Component for use with lower level Core Audio API
+         -- log tElement
+
+        -- configurationDictionary
+        -- put objC_AVAudioUnitGetConfignDict(tAVAUAudioComponent) into tElement-- this seems to be unused -- returns <null>
+        -- log tElement
+       --  put objC_AVAudioUnitComponentPassesValidation( tAVAUAudioComponent ) into tCBool
+        -- if tCBool is true then
+       --     put "true \t" after rTempStr
+        -- else
+       --     put "false \t" after rTempStr
+       --  end if
+
+        put "\n" after rTempStr
+       end repeat
+    end if
+   end unsafe
+   return rTempStr
+end handler
 
 /**
-Setup Audio Engine with attached Sampler AudioUnit.
+Setup Audio Engine with attached MIDIInstrument AudioUnit.
 
 Type: function
 
 Example:
-AVAudioEngineSamplerInit()
+AVAudioEngineMIDIInstrumentInit()
 
-Returns: True on success, False or error string on failure, or the string "AVAudioSampler is already running."
+Returns: True on success, False or error string on failure, or the string "AVAudioUnitMIDIInstrument is already running."
 
 Description:
-Attempts to initializes instances of Audio Engine, Output Mixer, and Sampler AudioUnit and attach them together.
+Attempts to initializes instances of Audio Engine, Output Mixer, and MIDIInstrument AudioUnit and attach them together.
 */
-public handler AVAudioUnitMIDIInstrumentInitWithDescr(in pAUType as optional String, in pAUSubType as optional String, in pAUManufacturer as optional String) returns optional any
+public handler AVAudioUnitMIDIInstrumentInitWithDescr(in pAUSubType as optional String, in pAUManufacturer as optional String) returns optional any
    variable tSoundFontNSURL as ObjcObject
    variable tAVAudioEngineDidStart as Boolean
    variable tNSError as optional ObjcObject
    variable tNSErrorDescriptionRef as ObjcObject
    variable tErrorDescription as optional String
    variable tAudioComponentDescription as AudioComponentDescription
-   variable tNSObj as optional ObjcId
+   variable tNSObj as optional ObjcObject
    variable tNumber as optional Number -- Integer
    variable tComponentType as UInt32
    variable tComponentSubType as UInt32
    variable tComponentManufacturer as UInt32
    variable tComponentFlags as UInt32
    variable tComponentFlagsMask as UInt32
-   variable tAVAudioUnit as optional ObjcObject
+   variable tAudioUnit as optional ObjcObject
+
+   ----------------------------- ComponentType ------------------------------
+   put 1635085685 into tComponentType -- Music Device - pAUType as optional String
+   ------------------------------- AUSubType --------------------------
+   if pAUSubType is not "" then
+      put getIntegerFromFourCharCodeBigEndian(pAUSubType) into tComponentSubType
+   else
+      put getIntegerFromFourCharCodeBigEndian("msyn") into tComponentSubType
+   end if
+   ----------------------------- Manufacturers -------------------------
+   if pAUManufacturer is not "" then
+      if pAUManufacturer is "Apple" then
+         put 1634758764 into tComponentManufacturer
+      else if pAUManufacturer is "Native Instruments" then
+         put 760105261 into tComponentManufacturer
+      else
+         put getIntegerFromFourCharCodeBigEndian(pAUManufacturer) into tComponentManufacturer
+      end if
+   else
+      put 1634758764 into tComponentManufacturer -- Apple
+   end if
+   put [tComponentType,tComponentSubType,tComponentManufacturer,0,0] into tAudioComponentDescription
+
    if sAVAudioEngine is nothing then
       unsafe
-        -- put [0,0,0,0,0] into tAudioComponentDescription
-        ------------------- Get Shared AUComponentManager -------------------------
-         -- put objC_AVAudioUnitAUComponentManager() into tAVAudioUnitsManagerInstance
-         ----------------------------- ComponentType ------------------------------
-
-         put 1635085685 into tComponentType -- Music Device
-
-        ------------------------------- AUSubType --------------------------
-        if pAUSubType is not "" then
-           put getIntegerFromFourCharCodeBigEndian(pAUSubType) into tComponentSubType
-        else
-           put getIntegerFromFourCharCodeBigEndian("msyn") into tComponentSubType
-        end if
-       ----------------------------- Manufacturers -------------------------
-       if pAUManufacturer is not "" then
-          if pAUManufacturer is "Apple" then
-             put 1634758764 into tComponentManufacturer
-          else if pAUManufacturer is "Native Instruments" then
-             put 760105261 into tComponentManufacturer
-          else
-             put getIntegerFromFourCharCodeBigEndian(pAUManufacturer) into tComponentManufacturer
-          end if
-        else
-             put 1634758764 into tComponentManufacturer -- Apple
-        end if
-
-         put [tComponentType,tComponentSubType,tComponentManufacturer,0,0] into tAudioComponentDescription
-
          put objC_AVAudioEngineAlloc() into sAVAudioEngine
          put objC_AVAudioEngineInit(sAVAudioEngine) into sAVAudioEngine
          -- log sAVAudioEngine
          put objC_AVAudioUnitMIDIInstrumentAlloc() into sAVAudioUnitMIDIInstrument
          put objC_AVAudioUnitMIDIInstrumentInitWithDescr(sAVAudioUnitMIDIInstrument, tAudioComponentDescription) into sAVAudioUnitMIDIInstrument
-
          -- log sAVAudioUnitMIDIInstrument
          objC_AVAudioEngineAttachNode(sAVAudioEngine,sAVAudioUnitMIDIInstrument)
          -- check engine to see if it attached the instrument node sucessfully:
          -- put objC_AVAudioNodeGetEngine(sAVAudioUnitMIDIInstrument) into tNSObj -- Null if Node is not attached to an AVAudioEngine
+
          -- put objC_AVAudioEngineGetOutputNode(sAVAudioEngine) into tNSObj
          -- put objC_AVAudioEngineGetInputNode(sAVAudioEngine) into tNSObj
-         put objC_AVAudioEngineGetMainMixerNode(sAVAudioEngine) into tNSObj
-         -- engine.connect(sampler, to: engine.mainMixerNode, format: nil)
-         objC_AVAudioEngineConnectSourceToDest(sAVAudioEngine,sAVAudioUnitMIDIInstrument,tNSObj,nothing)
+         put objC_AVAudioEngineGetMainMixerNode(sAVAudioEngine) into sAVAudioMainMixerNode
+         -- engine.connect(MIDIInstrument, to: engine.mainMixerNode, format: nil)
+         objC_AVAudioEngineConnectSourceToDest(sAVAudioEngine,sAVAudioUnitMIDIInstrument,sAVAudioMainMixerNode,nothing)
          objC_AVAudioEnginePrepareToStart(sAVAudioEngine)
          put objC_AVAudioEngineStart(sAVAudioEngine,tNSError) into tAVAudioEngineDidStart
          if tAVAudioEngineDidStart is true then
@@ -296,24 +489,44 @@ public handler AVAudioUnitMIDIInstrumentInitWithDescr(in pAUType as optional Str
          end if
       end unsafe
    else
-      return "AVEngine is already running."
+      unsafe
+         objC_AVAudioEngineStop(sAVAudioEngine)
+         objC_AVAudioEngineDisconnectInputNode(sAVAudioEngine,sAVAudioUnitMIDIInstrument)
+         objC_AVAudioEngineDetachNode(sAVAudioEngine,sAVAudioUnitMIDIInstrument)
+         -- objC_AVAudioEngineDetachNode(sAVAudioEngine,sAVAudioMainMixerNode)
+
+         put objC_AVAudioUnitMIDIInstrumentAlloc() into sAVAudioUnitMIDIInstrument
+         put objC_AVAudioUnitMIDIInstrumentInitWithDescr(sAVAudioUnitMIDIInstrument, tAudioComponentDescription) into sAVAudioUnitMIDIInstrument
+         -- log sAVAudioUnitMIDIInstrument
+         objC_AVAudioEngineAttachNode(sAVAudioEngine,sAVAudioUnitMIDIInstrument)
+         -- check engine to see if it attached the instrument node sucessfully:
+         -- put objC_AVAudioNodeGetEngine(sAVAudioUnitMIDIInstrument) into tNSObj -- Null if Node is not attached to an AVAudioEngine
+
+         -- put objC_AVAudioEngineGetOutputNode(sAVAudioEngine) into tNSObj
+         -- put objC_AVAudioEngineGetInputNode(sAVAudioEngine) into tNSObj
+         put objC_AVAudioEngineGetMainMixerNode(sAVAudioEngine) into sAVAudioMainMixerNode
+         -- engine.connect(MIDIInstrument, to: engine.mainMixerNode, format: nil)
+         objC_AVAudioEngineConnectSourceToDest(sAVAudioEngine,sAVAudioUnitMIDIInstrument,sAVAudioMainMixerNode,nothing)
+         objC_AVAudioEnginePrepareToStart(sAVAudioEngine)
+         put objC_AVAudioEngineStart(sAVAudioEngine,tNSError) into tAVAudioEngineDidStart
+      end unsafe
    end if
 end handler
 
 /**
-Check if AVAudioSampler's AudioEngine is already running.
+Check if AVAudioUnitMIDIInstrument's AudioEngine is already running.
 
 Type: function
 
 Example:
-AVAudioSamplerEngineIsRunning()
+AVAudioUnitMIDIInstrumentEngineIsRunning()
 
-Returns: True if the AVAudioSampler's AudioEngine is already running, false if it is not.
+Returns: True if the AVAudioUnitMIDIInstrument's AudioEngine is already running, false if it is not.
 
 Description:
-Check if AVAudioSampler's AudioEngine instance is already running.
+Check if AVAudioUnitMIDIInstrument's AudioEngine instance is already running.
 */
-public handler AVAudioEngineIsRunning() returns optional any
+public handler AVAudioUnitMIDIInstrumentEngineIsRunning() returns optional any
    if sAVAudioEngine is nothing then
       return false
    else
@@ -326,17 +539,17 @@ public handler AVAudioEngineIsRunning() returns optional any
 end handler
 
 /**
-Restarts the AVAudioSampler Engine.
+Restarts the AVAudioUnitMIDIInstrument Engine.
 
 Type: command
 
 Example:
-AVAudioSamplerEngineRestart
+AVAudioUnitMIDIInstrumentEngineRestart
 
 Description:
-Restarts the AVAudioSampler Engine after it has been stopped or paused.
+Restarts the AVAudioUnitMIDIInstrument Engine after it has been stopped or paused.
 */
-public handler AVAudioEngineRestart() returns nothing
+public handler AVAudioUnitMIDIInstrumentEngineRestart() returns nothing
    variable tAVAudioEngineDidStart as Boolean
    variable tNSError as optional ObjcObject
    variable tNSErrorDescriptionRef as ObjcObject
@@ -354,58 +567,58 @@ public handler AVAudioEngineRestart() returns nothing
 end handler
 
 /**
-Stops the AVAudioSampler Engine running.
+Stops the AVAudioUnitMIDIInstrument Engine running.
 
 Type: command
 
 Example:
-AVAudioSamplerEngineStop
+AVAudioUnitMIDIInstrumentEngineStop
 
 Description:
-Stops the running AVAudioSampler Engine. The Engine should be stopped or paused when not in use to avoid device CPU and battery useage.
+Stops the running AVAudioUnitMIDIInstrument Engine. The Engine should be stopped or paused when not in use to avoid device CPU and battery useage.
 */
-public handler AVAudioEngineStop() returns nothing
+public handler AVAudioUnitMIDIInstrumentEngineStop() returns nothing
    unsafe
       objC_AVAudioEngineStop(sAVAudioEngine)
    end unsafe
 end handler
 
 /**
-Temporarily pauses the running AVAudioSampler Engine.
+Temporarily pauses the running AVAudioUnitMIDIInstrument Engine.
 
 Type: command
 
 Example:
-AVAudioSamplerEnginePause
+AVAudioUnitMIDIInstrumentEnginePause
 
 Description:
-Temporarily pauses the running AVAudioSampler Engine. The Engine should be stopped or paused when not in use to avoid device CPU and battery useage.
+Temporarily pauses the running AVAudioUnitMIDIInstrument Engine. The Engine should be stopped or paused when not in use to avoid device CPU and battery useage.
 */
-public handler AVAudioEnginePause() returns nothing
+public handler AVAudioUnitMIDIInstrumentEnginePause() returns nothing
    unsafe
       objC_AVAudioEnginePause(sAVAudioEngine)
    end unsafe
 end handler
 
 /**
-Resets the AVAudioSampler Engine to default state.
+Resets the AVAudioUnitMIDIInstrument Engine to default state.
 
 Type: command
 
 Example:
-AVAudioSamplerEngineReset
+AVAudioUnitMIDIInstrumentEngineReset
 
 Description:
-This resets AVAudioSampler Engine to it's default state. Use it, for example, to silence effects such as delay echoes.
+This resets AVAudioUnitMIDIInstrument Engine to it's default state. Use it, for example, to silence effects such as delay echoes.
 */
-public handler AVAudioEngineReset() returns nothing
+public handler AVAudioUnitMIDIInstrumentEngineReset() returns nothing
    unsafe
       objC_AVAudioEngineReset(sAVAudioEngine)
    end unsafe
 end handler
 
 /**
-Loads a soundbank file or type SF2 or DLS into AVAudioSampler and optional sets it to a given program or patch and bank.
+Loads a soundbank file or type SF2 or DLS into AVAudioUnitMIDIInstrument and optional sets it to a given program or patch and bank.
 
 Type: command
 
@@ -423,7 +636,7 @@ pBankLSB: Bank number Least Significant Byte
 
 Description: Loads a soundbank file or type SF2 or DLS into AVAudioSampler and optional sets it to a given program or patch and bank.
 */
-public handler AVAudioMusicInstrumentBankProgram( in pProgramNum as optional Integer, in pBankMSB as optional Integer, in pBankLSB as optional Integer, in pChannel as optional Integer) returns optional any
+public handler AVAudioUnitMIDIInstrumentBankProgram( in pProgramNum as optional Integer, in pBankMSB as optional Integer, in pBankLSB as optional Integer, in pChannel as optional Integer) returns optional any
    variable tSoundFontNSURL as ObjcObject
    variable tNSError as optional ObjcObject
    variable tNSErrorDescriptionRef as ObjcObject
@@ -450,7 +663,7 @@ public handler AVAudioMusicInstrumentBankProgram( in pProgramNum as optional Int
          put 0 into pChannel
       end if
       unsafe
-      put objC_NSURLfileURLWithPath(StringToNSString("/System/Library/Components/CoreAudio.component/Contents/Resources/gs_instruments.dls")) into tSoundFontNSURL
+      -- put objC_NSURLfileURLWithPath(StringToNSString("/System/Library/Components/CoreAudio.component/Contents/Resources/gs_instruments.dls")) into tSoundFontNSURL
       -- put objC_NSURLfileURLWithPath(StringToNSString(pSoundFontPath)) into tSoundFontNSURL
          -- objC_AVAudioUnitMIDIInstrumentBankAndProgramChange(in pAVAUMIDIInstrInstr as ObjcId, in pProgram as UInt8, in pBankMSB as UInt8, in pBankLSB as UInt8, in pChanl as UInt8 ) returns nothing
        objC_AVAudioUnitMIDIInstrumentBankAndProgramChange(sAVAudioUnitMIDIInstrument,pProgramNum,pBankMSB,pBankLSB,pChannel)-- MSB 0x79 (121) for melodic bank?, 0x78 (120) or 0x7F (127) for drum bank?
@@ -458,9 +671,9 @@ public handler AVAudioMusicInstrumentBankProgram( in pProgramNum as optional Int
          --put objC_AVAudioUnitSamplerLoadSoundBankInstrURL(sAVAudioUnitMIDIInstrument,tSoundFontNSURL,pProgramNum,pBankMSB,pBankLSB,tNSError) into tDidLoad-- MSB 0x79 (121) for melodic bank?, 0x78 (120) or 0x7F (127) for drum bank?
 
          -- To load the Sound Font, set the kMusicDeviceProperty_SoundBankURL property on your unit. I’m using a SoundFont from MuseScore here.
-        put objC_AVAudioUnitGetAudioUnit(sAVAudioUnitMIDIInstrument) into tAVAudioUnit
-        log tAVAudioUnit
-         put c_AudioUnitSetProperty(tAVAudioUnit,1100,0,0,tSoundFontNSURL,0) into tOSStatus ---  UInt32(sizeof(bankURL.dynamicType) ) into tOSStatus --
+       --  put objC_AVAudioUnitGetAudioUnit(sAVAudioUnitMIDIInstrument) into tAVAudioUnit
+        -- log tAVAudioUnit
+         -- put c_AudioUnitSetProperty(tAVAudioUnit,1100,0,0,tSoundFontNSURL,0) into tOSStatus ---  UInt32(sizeof(bankURL.dynamicType) ) into tOSStatus --
          -- 1100 = kMusicDeviceProperty_SoundBankURL
          -- 0 is kAudioUnitScope_Global
          -- OSStatus AudioUnitSetParameter(AudioUnit inUnit, AudioUnitParameterID inID, AudioUnitScope inScope, AudioUnitElement inElement, AudioUnitParameterValue inValue, UInt32 inBufferOffsetInFrames);
@@ -478,6 +691,35 @@ public handler AVAudioMusicInstrumentBankProgram( in pProgramNum as optional Int
     end if
  end handler
 
+ public handler AVAudioUnitMIDIInstrumentProgram( in pProgramNum as optional Integer, in pChannel as optional Integer) returns optional any
+    variable tSoundFontNSURL as ObjcObject
+    variable tNSError as optional ObjcObject
+    variable tNSErrorDescriptionRef as ObjcObject
+    variable tErrorDescription as optional String
+    variable tDidLoad as Boolean
+    variable tOSStatus as CSInt
+    variable tAVAudioUnit as ObjcId
+    variable tNSObj as ObjcId
+
+    if sAVAudioUnitMIDIInstrument is not nothing then
+       if pProgramNum is nothing then
+          put 0 into pProgramNum
+       end if
+       if pChannel is nothing then
+          put 0 into pChannel
+       end if
+       unsafe
+         objC_AVAudioUnitMIDIInstrumentProgramChange(sAVAudioUnitMIDIInstrument,pProgramNum,pChannel)-- MSB 0x79 (121) for melodic bank?, 0x78 (120) or 0x7F (127) for drum bank?
+           if tNSError is not nothing then
+              put c_CFErrorCopyDescription(tNSError) into tNSErrorDescriptionRef
+              put StringFromNSString(tNSErrorDescriptionRef) into tErrorDescription
+              return tErrorDescription
+           else
+             return true
+           end if
+        end unsafe
+     end if
+  end handler
 /**
 Attempts to Load an EXS or AUPreset file into the AVAudioSampler.
 
@@ -516,24 +758,26 @@ Description: Attempts to Load an EXS Patch (Logic or GarageBand Instrument) or a
 -- end handler
 
 /**
-Gets info About the running AVAudioSampler.
+Gets info About the running AVAudioUnitMIDIInstrument.
 
 Type: function
 
 Example:
-get AVAudioSamplerInfo()
+get AVAudioUnitMIDIInstrumentInfo()
 
 Returns: Comma seperated string of items. Name, Manufacturer, Version, Number of Inputs, Number of Outputs, AudioComponentDescription
 
 Description:
-Gets info About the running AVAudioSampler, mostly here for developement usage for now.
+Gets info About the running AVAudioUnitMIDIInstrument, mostly here for developement usage for now.
 */
 public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
    variable tAudioComponentDescription as AudioComponentDescription
    variable tAudioUnitComponent as optional any
    variable tAUAudioUnit as ObjcObject
-   variable tAUAudioUnitFactoryPresets as Array
-   variable tAudioUnit as optional ObjcId
+   variable tAUAudioUnitFactoryPresetsList as List
+   variable tAUAudioUnitFactoryPresetsArray as Array
+
+   variable tAudioUnit as Pointer
 
    variable tListIterand as any
    variable tNSError as optional ObjcObject
@@ -545,12 +789,16 @@ public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
    variable tNSStrObj as optional ObjcId
    variable tStr as optional String
    variable tNSObj as optional ObjcId
-   variable tDataPtr as Pointer
-   variable tData as optional any
+   variable tNSObject as optional ObjcObject
+   variable tDataPtr as optional Pointer
+   variable tData as any
+
+   variable rWriteable as Boolean
+   variable rDataSize as UInt32
 
    variable tNumber as optional Number -- Integer
    variable rPropertySizePtr as Pointer
-   variable rPropertySize as optional any
+   variable rAnything as optional any
 
    variable tAudioUnitProperty as UInt32
    variable tAudioUnitScope as UInt32
@@ -572,40 +820,60 @@ public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
       put objC_AVAudioUnitGetACDescription(sAVAudioUnitMIDIInstrument) into tAudioComponentDescription
       put "AudioComponentDescription: " after tInfoChunk
       put getFourCharCodeFromUint32(element 1 of tAudioComponentDescription) after tInfoChunk
-      -- put getAudioComponentDescriptionCharCode(element 1 of tAudioComponentDescription) after tInfoChunk
-      -- put element 1 of tAudioComponentDescription formatted as string after tInfoChunk
       put "," after tInfoChunk
       put getFourCharCodeFromUint32(element 2 of tAudioComponentDescription) after tInfoChunk
-      -- put getAudioComponentDescriptionCharCode(element 2 of tAudioComponentDescription) after tInfoChunk
-      -- put element 2 of tAudioComponentDescription formatted as string after tInfoChunk
       put "," after tInfoChunk
       put getFourCharCodeFromUint32(element 3 of tAudioComponentDescription) after tInfoChunk
-      -- put getAudioComponentDescriptionCharCode(element 3 of tAudioComponentDescription) after tInfoChunk
-      -- put element 3 of tAudioComponentDescription formatted as string after tInfoChunk
+
       put "," after tInfoChunk
       put element 4 of tAudioComponentDescription formatted as string after tInfoChunk
       put "," after tInfoChunk
       put element 5 of tAudioComponentDescription formatted as string after tInfoChunk
 
-      -- put objC_AVAudioUnitGetAUAudioUnit(sAVAudioUnitMIDIInstrument) into tAUAudioUnit
+      --put objC_AVAudioUnitGetAUAudioUnit(sAVAudioUnitMIDIInstrument) into tAUAudioUnit
       -- log tAUAudioUnit
       -- put objC_AVAudioUnitGetAUAudioUnitFactoryPresets(tAUAudioUnit) into tNSObj
       -- put ArrayFromNSDictionary(tNSObj) into tAUAudioUnitFactoryPresets
       -- log tAUAudioUnitFactoryPresets
 
-      -- put objC_AVAudioUnitGetAudioUnit(sAVAudioUnitMIDIInstrument) into tAudioUnit
+      -- put  objC_AVAudioUnitMIDIInstrumentGetValForKey(sAVAudioUnitMIDIInstrument,StringToNSString("factoryPresets")) into tNSObject
+
+      put objC_AVAudioUnitGetAudioUnit(sAVAudioUnitMIDIInstrument) into tAudioUnit
       -- log tAudioUnit
       -- CFArrayRef presets = NULL;
        -- propertySize = sizeof(presets);
-      put NumberToNSNumber(1024) into tNSObj
-      put PointerFromObjcObject(tNSObj) into rPropertySizePtr
-      -- put 1024 into rPropertySize
-      put 24 into tAudioUnitProperty -- _FactoryPresets = 24
-      put 0 into tAudioUnitScope-- _Global is 0
+
+      put true into rWriteable
+      put 1 into rDataSize
+      put 24 into tAudioUnitProperty -- kAudioUnitProperty_FactoryPresets = 24
+      -- put 36 into tAudioUnitProperty -- kAudioUnitProperty_PresentPreset = 36
+      put 0 into tAudioUnitScope -- _Global is 0
       put 0 into tAudioUnitElement
-      put c_AudioUnitGetProperty(tAUAudioUnit,tAudioUnitProperty,tAudioUnitScope,tAudioUnitElement,tData,rPropertySizePtr) into tOSStatus
+      put c_AudioUnitGetPropertyInfo(tAudioUnit,tAudioUnitProperty,tAudioUnitScope,tAudioUnitElement,rDataSize,rWriteable) into tOSStatus
+      log [rDataSize,rWriteable]
+      -- put NumberToNSNumber(rDataSize) into tNSObj
+      -- put PointerFromObjcObject(tNSObj) into rPropertySizePtr
+
+      put c_AudioUnitGetPropertyFactoryPresets(tAudioUnit,tAudioUnitProperty,tAudioUnitScope,tAudioUnitElement,tDataPtr,rDataSize) into tOSStatus
+      if tDataPtr is not nothing then
+         put PointerToObjcObject(tDataPtr) into tNSObject
+         log tNSObject
+         if tNSObject is not nothing then
+            put ArrayFromNSDictionary(tNSObject) into tAUAudioUnitFactoryPresetsArray
+            -- put ListFromNSArray(tNSObject) into tAUAudioUnitFactoryPresetsList
+            log tAUAudioUnitFactoryPresetsArray
+         end if
+      end if
       -- put NumberFromNSNumber(rPropertySizeNSNum) into rPropertySize
-      log [tData,rPropertySizePtr]
+      -- log [tNSObj,rDataSize]
+      -- if tNSObj is not nothing then
+      --    put ListFromNSArray(tNSObj) into tAUAudioUnitFactoryPresetsList
+      --    log tAUAudioUnitFactoryPresetsList
+      -- end if
+      -- put ArrayFromNSDictionary(tNSObj) into tAUAudioUnitFactoryPresetsArray
+      -- log [the keys of tAUAudioUnitFactoryPresetsArray]
+      -- put objC_AVAudioUnitGetConfignDict(tAUAudioUnit) into rAnything
+      -- log rAnything
       -- log tAudioUnit -- logging this crashes engine
       ---put objC_AVAudioUnitComponentGetComponent(tAudioUnit) into tAudioUnitComponent
       -- put objC_AVAudioUnitComponentGetComponent(tAudioUnit) into tAudioUnitComponent
@@ -624,70 +892,24 @@ public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
 end handler
 
 /**
-Attempts one or more individual sound files into the AVAudioSampler.
+Sets the master gain value for the AVAudioUnitMIDIInstrument in the dB range of -90.0 to 12.0
 
 Type: command
 
-Syntax: AVAudioSamplerLoadSoundFiles pSoundFilesPathsListStr
+Syntax: AVAudioUnitMIDIInstrumentSetMasterGain <pGain>
 
 Example:
-put "/System/Library/Sounds/Sosumi.aiff" into pSoundFilesPathsListStr
-AVAudioSamplerLoadSoundFiles pSoundFilesPathsListStr
-
-Parameters:
-pSoundFilesPathsListStr: The file or paths (line delimited) to one or more sound files.
-
-Description: Attempts one or more individual sound files from given line delimited list of file paths into the AVAudioSampler.
-The sounds maybe in any of a number of natively supported formats such as (.caf, .mp3, .aif).
-*/
-public handler AVAudioSamplerLoadSoundFiles(in pSoundFilesPathsListStr as String) returns optional any
-   variable tListIterand as any
-   variable tSoundFilesPathsList as List
-   variable tSoundFilesNSURLsList as List
-   variable tSoundFilesURLsNSArray as ObjcId
-   variable tNSError as optional ObjcId
-   variable tNSErrorDescriptionRef as ObjcId
-   variable tErrorDescription as optional String
-   variable tDidLoad as Boolean
-   split pSoundFilesPathsListStr by newline into tSoundFilesPathsList
-   if sAVAudioUnitMIDIInstrument is not nothing then
-      unsafe
-         repeat for each element tListIterand in tSoundFilesPathsList
-            push objC_NSURLfileURLWithPath(StringToNSString(tListIterand)) onto tSoundFilesNSURLsList
-         end repeat
-         put ListToNSArray(tSoundFilesNSURLsList) into tSoundFilesURLsNSArray -- does not retain, should be fixed in LC 9.0.4, must call retain
-         put objC_NSObjectRetain(tSoundFilesURLsNSArray) into tSoundFilesURLsNSArray -- this won't be needed after https://github.com/livecode/livecode/pull/6880 is merged
-         put objC_AVAudioUnitSamplerLoadSoundFilesURLs(sAVAudioUnitMIDIInstrument,tSoundFilesURLsNSArray,tNSError) into tDidLoad
-         if tNSError is not nothing then
-            put c_CFErrorCopyDescription(tNSError) into tNSErrorDescriptionRef
-            put StringFromNSString(tNSErrorDescriptionRef) into tErrorDescription
-            return tErrorDescription
-         else
-            return true
-         end if
-      end unsafe
-   end if
-end handler
-
-/**
-Sets the master gain value for the AVAudioSampler in the dB range of -90.0 to 12.0
-
-Type: command
-
-Syntax: AVAudioSamplerSetMasterGain <pGain>
-
-Example:
-AVAudioSamplerSetMasterGain 12.0 -- Amplified!
-AVAudioSamplerSetMasterGain 0 -- Normal Gain
-AVAudioSamplerSetMasterGain -90.0 -- Can't even hear this!
+AVAudioUnitMIDIInstrumentSetMasterGain 12.0 -- Amplified!
+AVAudioUnitMIDIInstrumentSetMasterGain 0 -- Normal Gain
+AVAudioUnitMIDIInstrumentSetMasterGain -90.0 -- Can't even hear this!
 
 Parameters:
 pGain: The amount of gain on sound output in the dB range of -90.0 to 12.0
 
 Description:
-Sets the master gain value for the AVAudioSampler sound output in the dB range of -90.0 (silent) to 12.0 (amplified)
+Sets the master gain value for the AVAudioUnitMIDIInstrument sound output in the dB range of -90.0 (silent) to 12.0 (amplified)
 */
-public handler AVAudioSamplerSetMasterGain(in pGain as optional NaturalFloat) returns nothing
+public handler AVAudioUnitMIDIInstrumentSetMasterGain(in pGain as optional NaturalFloat) returns nothing
    expect that (pGain >= -90.0 and pGain <= 12.0 ) because "Master Gain values must be in the dB range of -90.0 to 12.0"
    -- masterGain -- float -- Adjustment for the gain, in decibels, of all the notes played.
    -- default value is 0.0 dB. The range of valid values is -90.0 dB to 12.0 dB.
@@ -700,19 +922,19 @@ public handler AVAudioSamplerSetMasterGain(in pGain as optional NaturalFloat) re
 end handler
 
 /**
-Gets the value of the current gain amount (dB) that the AVAudioSampler sound output is set for.
+Gets the value of the current gain amount (dB) that the AVAudioUnitMIDIInstrument sound output is set for.
 
 Type: function
 
 Example:
-AVAudioSamplerGetMasterGain()
+AVAudioUnitMIDIInstrumentGetMasterGain()
 
 Returns: number in the range of -90.0 to 12.0, the amount of gain (dB) that sound output is currently set for.
 
 Description:
-Gets the value of the current gain amount (dB) that the AVAudioSampler sound output is set for.
+Gets the value of the current gain amount (dB) that the AVAudioUnitMIDIInstrument sound output is set for.
 */
-public handler AVAudioSamplerGetMasterGain() returns Number
+public handler AVAudioUnitMIDIInstrumentGetMasterGain() returns Number
    variable rGain as ObjcId
    variable tGain as NaturalFloat
    unsafe
@@ -726,12 +948,12 @@ Sets the Stereo pan values in the range of -1.0 (left) to 1.0 (right)
 
 Type: command
 
-Syntax: AVAudioSamplerSetStereoPan <pBalance>
+Syntax: AVAudioUnitMIDIInstrumentSetStereoPan <pBalance>
 
 Example:
-AVAudioSamplerSetStereoPan -1.0 -- all sounds output in left speaker
-AVAudioSamplerSetStereoPan 0 -- all sounds centered
-AVAudioSamplerSetStereoPan 1.0 -- all sounds output in right speaker
+AVAudioUnitMIDIInstrumentSetStereoPan -1.0 -- all sounds output in left speaker
+AVAudioUnitMIDIInstrumentSetStereoPan 0 -- all sounds centered
+AVAudioUnitMIDIInstrumentSetStereoPan 1.0 -- all sounds output in right speaker
 
 Parameters:
 pBalance: The amount to shift sound output to the left or the right
@@ -739,37 +961,37 @@ pBalance: The amount to shift sound output to the left or the right
 Description:
 Sets the amount to shift sound output to the left or right in the range of -1.0 (left) to 1.0 (right)
 */
-public handler AVAudioSamplerSetStereoPan(in pBalance as optional Number) returns nothing
-   --private foreign handler objC_AVAudioUnitSamplerStereoPan(in pAVAUMIDIInstrInstr as ObjcId, in pPan as NaturalFloat) returns nothing binds to "objc:AVAudioUnitSampler.stereoPan"
+public handler AVAudioUnitMIDIInstrumentSetStereoPan(in pBalance as optional Number) returns nothing
+   --private foreign handler objC_AVAudioUnitMIDIInstrumentStereoPan(in pAVAUMIDIInstrInstr as ObjcId, in pPan as NaturalFloat) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.stereoPan"
    -- stereoPan -- float -- default value is 0.0. The range of valid values is -1.0 to 1.0.
    expect that (pBalance >= -1.0 and pBalance <= 1.0 ) because "Stereo pan values must be in the range of -1.0 to 1.0"
    if pBalance is nothing then
       put 0.0 into pBalance
    end if
    unsafe
-    objC_AVAudioUnitMIDIInstrumentSetValForKey(sAVAudioUnitMIDIInstrument,NumberToNSNumber(pBalance),StringToNSString("pan"))
+    objC_AVAudioUnitMIDIInstrumentSetValForKey(sAVAudioUnitMIDIInstrument,NumberToNSNumber(pBalance),StringToNSString("stereoPan"))
    end unsafe
 end handler
 
 /**
-Sets the global tuning value for the AVAudioSampler in cents (-2400 to 2400)
+Sets the global tuning value for the AVAudioUnitMIDIInstrument in cents (-2400 to 2400)
 
 Type: command
 
-Syntax: AVAudioSamplerSetGlobalTuning <pCents>
+Syntax: AVAudioUnitMIDIInstrumentSetGlobalTuning <pCents>
 
 Example:
-AVAudioSamplerPitchbend 2400 -- shifts all pitches up 2400 cents (two octaves)
-AVAudioSamplerPitchbend 0 -- default value, no pitch shift
-AVAudioSamplerPitchbend -2400 -- shifts all pitches down -2400 cents (two octaves)
+AVAudioUnitMIDIInstrumentPitchbend 2400 -- shifts all pitches up 2400 cents (two octaves)
+AVAudioUnitMIDIInstrumentPitchbend 0 -- default value, no pitch shift
+AVAudioUnitMIDIInstrumentPitchbend -2400 -- shifts all pitches down -2400 cents (two octaves)
 
 Parameters:
 pCents: The amount in cents to shift all pitches
 
 Description:
-Sets the global tuning value for the AVAudioSampler, shifting all pitches down or up in the range of -2400 to 2400
+Sets the global tuning value for the AVAudioUnitMIDIInstrument, shifting all pitches down or up in the range of -2400 to 2400
 */
-public handler AVAudioSamplerSetGlobalTuning(in pCents as optional Number) returns nothing
+public handler AVAudioUnitMIDIInstrumentSetGlobalTuning(in pCents as optional Number) returns nothing
    expect that (pCents >= -2400 and pCents <= 2400 ) because "Global tuning values must be in the range of -2400 to 2400 (cents)"
    -- globalTuning -- @property(nonatomic) float globalTuning; -- The tuning unit is cents.
    -- The default value is 0.0 -- The range of valid values is -2400 to 2400 cents.
@@ -786,10 +1008,10 @@ Immediately sends a MIDI Note On message with the given pitch and velocity on th
 
 Type: command
 
-Syntax: AVAudioUnitSamplerNoteOn <MIDINoteNumber>,pMIDIVelocityNumber,<pMIDIChannelNumber>
+Syntax: AVAudioUnitMIDIInstrumentNoteOn <MIDINoteNumber>,pMIDIVelocityNumber,<pMIDIChannelNumber>
 
 Example:
-AVAudioUnitSamplerNoteOn 60,127,1 -- 60=Middle C, 127=Full velocity, 1=MIDI channel 1
+AVAudioUnitMIDIInstrumentNoteOn 60,127,1 -- 60=Middle C, 127=Full velocity, 1=MIDI channel 1
 
 Parameters:
 pMIDINoteNum: The number of the pitch to turn on, 0 to 127, 60 = Middle C
@@ -798,7 +1020,7 @@ pMIDIChanNum: The MIDI Channel to play the note on, 1 to 16
 
 Description: Immediately sends a MIDI Note On message with the given pitch and velocity on the given channel.
 */
-public handler AVAudioSamplerNoteOn(in pNoteNum as Integer, in pNoteVelo as Integer, in pNoteChan as Number) returns nothing
+public handler AVAudioUnitMIDIInstrumentNoteOn(in pNoteNum as Integer, in pNoteVelo as Integer, in pNoteChan as Number) returns nothing
    expect that (pNoteNum >= 0 and pNoteNum <= 127 ) because "MIDI pitch values must be in the range of 0 to 127"
    expect that (pNoteVelo >= 0 and pNoteVelo <= 127 ) because "MIDI veloctiy values must be in the range of 0 to 127"
    expect that (pNoteChan >= 1 and pNoteChan <= 16 ) because "MIDI channel values must be in the range of 1 to 16"
@@ -809,17 +1031,17 @@ public handler AVAudioSamplerNoteOn(in pNoteNum as Integer, in pNoteVelo as Inte
 end handler
 
 /**
-Name: AVAudioSamplerNoteOff
+Name: AVAudioUnitMIDIInstrumentNoteOff
 
 Type: command
 
-Syntax: AVAudioUnitSamplerNoteOff <MIDINoteNumber>,<MIDIChannelNumber>
+Syntax: AVAudioUnitMIDIInstrumentNoteOff <MIDINoteNumber>,<MIDIChannelNumber>
 
 Summary:
 Immediately sends a MIDI Note Off message with the given pitch and velocity on the given channel.
 
 Example:
-AVAudioUnitSamplerNoteOff 60,1 -- Turns off Middle C on MIDI channel 1
+AVAudioUnitMIDIInstrumentNoteOff 60,1 -- Turns off Middle C on MIDI channel 1
 
 Parameters:
 pMIDINoteNum: The number of the pitch to turn off, 0 to 127, 60 = Middle C
@@ -828,7 +1050,7 @@ pMIDIChanNum: The MIDI Channel to send the message to, 0 to 15, 0 = Channel 1
 Description:
 Immediately sends a MIDI Note Off message with the given pitch on the given channel.
 */
-public handler AVAudioSamplerNoteOff(in pNoteNum as Integer, in pNoteChan as Number) returns nothing
+public handler AVAudioUnitMIDIInstrumentNoteOff(in pNoteNum as Integer, in pNoteChan as Number) returns nothing
    expect that (pNoteNum >= 0 and pNoteNum <= 127 ) because "MIDI pitch values must be in the range of 0 to 127"
    expect that (pNoteChan >= 1 and pNoteChan <= 16 ) because "MIDI channel values must be in the range of 1 to 16"
    subtract 1 from pNoteChan -- actual channel range is 0 to 15
@@ -842,12 +1064,12 @@ The send pitchbend with fine range from 0 to 16384, 8192 is centered (no bend)
 
 Type: command
 
-Syntax: AVAudioSamplerPitchbend <pPitchBendCoarseNFine>,<pMIDIChanNum>
+Syntax: AVAudioUnitMIDIInstrumentPitchbend <pPitchBendCoarseNFine>,<pMIDIChanNum>
 
 Example:
-AVAudioSamplerPitchbend 0,1 -- Pitchbend Maximum Down, channel 1
-AVAudioSamplerPitchbend 16384,1 -- Pitchbend Maximum Up, channel 1
-AVAudioSamplerPitchbend 8192,1 -- Centered / No Bend, channel 1
+AVAudioUnitMIDIInstrumentPitchbend 0,1 -- Pitchbend Maximum Down, channel 1
+AVAudioUnitMIDIInstrumentPitchbend 16384,1 -- Pitchbend Maximum Up, channel 1
+AVAudioUnitMIDIInstrumentPitchbend 8192,1 -- Centered / No Bend, channel 1
 
 Parameters:
 pPitchBendCoarseNFine: The number of the pitch bend 'position'
@@ -856,7 +1078,7 @@ pMIDIChanNum: MIDI Channel to send the bend value on, 1 to 16
 Description:
 The send pitchbend with fine range from 0 to 16384, 8192 is centered (no bend)
 */
-public handler AVAudioSamplerPitchbend(in pBend as Uint16) returns nothing
+public handler AVAudioUnitMIDIInstrumentPitchbend(in pBend as Uint16) returns nothing
    expect that (pBend >= 0 and pBend <= 16384 ) because "MIDI controller selection must be in the range of 0 to 16384, 8192 is no bend"
 
    -- expect that (pMIDIChanNum >= 1 and pMIDIChanNum <= 16 ) because "MIDI channel values must be in the range of 1 to 16"
@@ -869,17 +1091,17 @@ public handler AVAudioSamplerPitchbend(in pBend as Uint16) returns nothing
 end handler
 
 /**
-Name: AVAudioSamplerController
+Name: AVAudioUnitMIDIInstrumentController
 
 Type: command
 
-Syntax: AVAudioSamplerController <pController>, <pControllerVal>, <pMIDIChanNum>
+Syntax: AVAudioUnitMIDIInstrumentController <pController>, <pControllerVal>, <pMIDIChanNum>
 
 Summary:
 The send a controller with a single data byte value to on a given channel
 
 Example:
-AVAudioSamplerController 7,127,1 -- 7 = Volume Controller, Data Byte 1, channel 1
+AVAudioUnitMIDIInstrumentController 7,127,1 -- 7 = Volume Controller, Data Byte 1, channel 1
 
 Parameters:
 pController: The number of the MIDI Controller to set values for
@@ -889,7 +1111,7 @@ pMIDIChanNum: MIDI Channel to send the controller value on, 1 to 16
 Description:
 The send a controller with a single data byte value to on a given channel
 */
-public handler AVAudioSamplerController(pController as UInt8, in pValue as UInt8, in pChanl as UInt8) returns nothing
+public handler AVAudioUnitMIDIInstrumentController(pController as UInt8, in pValue as UInt8, in pChanl as UInt8) returns nothing
    unsafe
       objC_AVAudioUnitMIDIInstrumentController(sAVAudioUnitMIDIInstrument,pController,pValue,0)
    end unsafe
