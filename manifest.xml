@@ -35,6 +35,9 @@
   <handler name="AVAudioUnitMIDIInstrumentInfo" parameters="" return="optional any"/>
   <handler name="AVAudioUnitMIDIInstrumentSetVolume" parameters="in optional integer" return="nothing"/>
   <handler name="AVAudioUnitMIDIInstrumentGetVolume" parameters="" return="number"/>
+  <handler name="AVAudioUnitMIDIInstrumentSetReverbBlend" parameters="in optional integer" return="nothing"/>
+  <handler name="AVAudioUnitMIDIInstrumentReverBlend" parameters="" return="number"/>
+  <handler name="AVAudioUnitMIDIInstrumentPan" parameters="in optional number" return="nothing"/>
   <handler name="AVAudioUnitMIDIInstrumentNoteOn" parameters="in integer,in integer,in number" return="nothing"/>
   <handler name="AVAudioUnitMIDIInstrumentNoteOff" parameters="in integer,in number" return="nothing"/>
   <handler name="AVAudioUnitMIDIInstrumentPitchbend" parameters="in Uint16" return="nothing"/>

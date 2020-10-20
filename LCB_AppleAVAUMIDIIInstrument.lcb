@@ -144,6 +144,7 @@ private foreign handler objC_AVAudioUnitMIDIInstrumentBankAndProgramChange(in pA
 -- - (void)sendMIDISysExEvent:(NSData *)midiData;
 private foreign handler objC_AVAudioUnitMIDIInstrumentSetValForKey(in pAVAUMIDIInstrInstr as ObjcId, in pValue as ObjcId, in pSelector as ObjcId) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-setValue:forKey:"
 private foreign handler objC_AVAudioUnitMIDIInstrumentGetValForKey(in pAVAUMIDIInstrInstr as ObjcId, in pSelector as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.-valueForKey:"
+private foreign handler objC_AUAudioUnitGetValForKey(in pAVAudioUnit as ObjcId, in pSelector as ObjcId) returns ObjcId binds to "objc:AUAudioUnit.-valueForKey:"
 
 private foreign handler objC_AVAudioUnitMIDIInstrumentGetVolume(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.volume"
 private foreign handler objC_AVAudioUnitMIDIInstrumentSetVolume(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.setVolume"
@@ -833,9 +834,10 @@ public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
       -- put ArrayFromNSDictionary(tNSObj) into tAUAudioUnitFactoryPresets
       -- log tAUAudioUnitFactoryPresets
 
-      -- put  objC_AVAudioUnitMIDIInstrumentGetValForKey(sAVAudioUnitMIDIInstrument,StringToNSString("factoryPresets")) into tNSObject
-
-      put objC_AVAudioUnitGetAudioUnit(sAVAudioUnitMIDIInstrument) into tAudioUnit
+      put objC_AVAudioUnitGetAUAudioUnit(sAVAudioUnitMIDIInstrument) into tAUAudioUnit
+      put objC_AUAudioUnitGetValForKey(tAUAudioUnit,StringToNSString("factoryPresets")) into tNSObject
+      -- put objC_AVAudioUnitMIDIInstrumentGetValForKey(sAVAudioUnitMIDIInstrument,StringToNSString("volume")) into rVolume
+      log tNSObject
       -- log tAudioUnit
       -- CFArrayRef presets = NULL;
        -- propertySize = sizeof(presets);
@@ -846,21 +848,21 @@ public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
       -- put 36 into tAudioUnitProperty -- kAudioUnitProperty_PresentPreset = 36
       put 0 into tAudioUnitScope -- _Global is 0
       put 0 into tAudioUnitElement
-      put c_AudioUnitGetPropertyInfo(tAudioUnit,tAudioUnitProperty,tAudioUnitScope,tAudioUnitElement,rDataSize,rWriteable) into tOSStatus
-      log [rDataSize,rWriteable]
+      -- put c_AudioUnitGetPropertyInfo(tAudioUnit,tAudioUnitProperty,tAudioUnitScope,tAudioUnitElement,rDataSize,rWriteable) into tOSStatus
+      -- log [rDataSize,rWriteable]
       -- put NumberToNSNumber(rDataSize) into tNSObj
       -- put PointerFromObjcObject(tNSObj) into rPropertySizePtr
 
-      put c_AudioUnitGetPropertyFactoryPresets(tAudioUnit,tAudioUnitProperty,tAudioUnitScope,tAudioUnitElement,tDataPtr,rDataSize) into tOSStatus
-      if tDataPtr is not nothing then
-         put PointerToObjcObject(tDataPtr) into tNSObject
-         log tNSObject
-         if tNSObject is not nothing then
-            put ArrayFromNSDictionary(tNSObject) into tAUAudioUnitFactoryPresetsArray
-            -- put ListFromNSArray(tNSObject) into tAUAudioUnitFactoryPresetsList
-            log tAUAudioUnitFactoryPresetsArray
-         end if
-      end if
+      -- put c_AudioUnitGetPropertyFactoryPresets(tAudioUnit,tAudioUnitProperty,tAudioUnitScope,tAudioUnitElement,tDataPtr,rDataSize) into tOSStatus
+      -- if tDataPtr is not nothing then
+      --   put PointerToObjcObject(tDataPtr) into tNSObject
+      --   log tNSObject
+      --   if tNSObject is not nothing then
+      --      put ArrayFromNSDictionary(tNSObject) into tAUAudioUnitFactoryPresetsArray
+      --      -- put ListFromNSArray(tNSObject) into tAUAudioUnitFactoryPresetsList
+      --      log tAUAudioUnitFactoryPresetsArray
+      --   end if
+      -- end if
       -- put NumberFromNSNumber(rPropertySizeNSNum) into rPropertySize
       -- log [tNSObj,rDataSize]
       -- if tNSObj is not nothing then
@@ -953,7 +955,7 @@ Description:
 Sets The blend level of the Reverb Effect of the AudioUnit MIDIInstrument, in the range of 0.0 to 1.0
 */
 public handler AVAudioUnitMIDIInstrumentSetReverbBlend(in pReverbBlend as optional Integer) returns nothing
-   if pVolume is nothing then
+   if pReverbBlend is nothing then
       put 1.0 into pReverbBlend
    end if
    unsafe

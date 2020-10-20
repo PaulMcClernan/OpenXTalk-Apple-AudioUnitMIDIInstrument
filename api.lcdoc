@@ -7,6 +7,52 @@ version: 0.1
 author: Paul McClernan
 
 
+Name: AVAudioUnitMIDIInstrumentPitchbend
+
+Type: command
+
+Syntax: AVAudioUnitMIDIInstrumentPitchbend <pPitchBendCoarseNFine>,<pMIDIChanNum>
+
+Summary: The send pitchbend with fine range from 0 to 16384, 8192 is centered (no bend)
+
+Example:
+AVAudioUnitMIDIInstrumentPitchbend 0,1 -- Pitchbend Maximum Down, channel 1
+AVAudioUnitMIDIInstrumentPitchbend 16384,1 -- Pitchbend Maximum Up, channel 1
+AVAudioUnitMIDIInstrumentPitchbend 8192,1 -- Centered / No Bend, channel 1
+
+Parameters: 
+
+pPitchBendCoarseNFine: The number of the pitch bend 'position'
+
+pMIDIChanNum: MIDI Channel to send the bend value on, 1 to 16
+
+Description: The send pitchbend with fine range from 0 to 16384, 8192 is centered (no bend)
+
+
+
+
+Name: AVAudioUnitMIDIInstrumentPan
+
+Type: command
+
+Syntax: AVAudioUnitMIDIInstrumentPan <pBalance>
+
+Summary: Sets the Stereo pan values in the range of -1.0 (left) to 1.0 (right)
+
+Example:
+AVAudioUnitMIDIInstrumentPan -1.0 -- all sounds output in left speaker
+AVAudioUnitMIDIInstrumentPan 0 -- all sounds centered
+AVAudioUnitMIDIInstrumentPan 1.0 -- all sounds output in right speaker
+
+Parameters: 
+
+pBalance: The amount to shift sound output to the left or the right
+
+Description: Sets the amount to shift sound output to the left or right in the range of -1.0 (left) to 1.0 (right)
+
+
+
+
 Name: AVAudioUnitMIDIInstrumentEngineIsRunning
 
 Type: function
@@ -107,13 +153,47 @@ Type: function
 
 Syntax: AVAudioUnitMIDIInstrumentGetVolume()
 
-Summary: Gets the value of the current gain amount (dB) that the AVAudioSampler sound output is set for.
+Summary: Gets the current main volume or loudness level of the AudioUnit MIDIInstrument
 
 Example: AVAudioUnitMIDIInstrumentGetVolume()
 
 Returns: number for volume that AudioUnit sound output is currently set for.
 
-Description: Gets the value of the current gain amount (dB) that the AVAudioSampler sound output is set for.
+Description: Gets the current main volume or loudness level of the AudioUnit MIDIInstrument
+
+
+
+
+Name: AVAudioUnitMIDIInstrumentReverBlend
+
+Type: function
+
+Syntax: AVAudioUnitMIDIInstrumentReverBlend()
+
+Summary: Gets The blend level of the Reverb Effect of the AudioUnit MIDIInstrument
+
+Example: AVAudioUnitMIDIInstrumentGetVolume()
+
+Returns: The blend level of the Reverb Effect
+
+Description: Gets The blend level of the Reverb Effect of the AudioUnit MIDIInstrument
+
+
+
+
+Name: AVAudioUnitMIDIInstrumentInfo
+
+Type: function
+
+Syntax: AVAudioUnitMIDIInstrumentInfo()
+
+Summary: Gets info About the running AVAudioUnitMIDIInstrument.
+
+Example: get AVAudioUnitMIDIInstrumentInfo()
+
+Returns: Comma seperated string of items. Name, Manufacturer, Version, Number of Inputs, Number of Outputs, AudioComponentDescription
+
+Description: Gets info About the running AVAudioUnitMIDIInstrument, mostly here for developement usage for now.
 
 
 
@@ -139,23 +219,6 @@ Description: Immediately sends a MIDI Note Off message with the given pitch on t
 
 
 
-Name: AVAudioUnitMIDIInstrumentInfo
-
-Type: function
-
-Syntax: AVAudioUnitMIDIInstrumentInfo()
-
-Summary: Gets info About the running AVAudioUnitMIDIInstrument.
-
-Example: get AVAudioUnitMIDIInstrumentInfo()
-
-Returns: Comma seperated string of items. Name, Manufacturer, Version, Number of Inputs, Number of Outputs, AudioComponentDescription
-
-Description: Gets info About the running AVAudioUnitMIDIInstrument, mostly here for developement usage for now.
-
-
-
-
 Name: AVAudioUnitMIDIInstrumentEngineReset
 
 Type: command
@@ -175,9 +238,9 @@ Name: AVAudioUnitMIDIInstrumentSetVolume
 
 Type: command
 
-Syntax: AVAudioUnitMIDIInstrumentSetVolume <pGain>
+Syntax: AVAudioUnitMIDIInstrumentSetVolume <pVolume>
 
-Summary: Sets the master gain value for the AVAudioSampler in the dB range of -90.0 to 12.0
+Summary: Sets the main volume or loudness level of the AudioUnit MIDIInstrument , turn it up to 11!
 
 Example:
 AVAudioUnitMIDIInstrumentGetVolume 11.0 -- Turn it Up to 11 !!!
@@ -186,32 +249,24 @@ AVAudioUnitMIDIInstrumentGetVolume -5.0
 
 Parameters: 
 
-pGain: The amount of gain on sound output in the dB range of -90.0 to 12.0
+pVolume: The amount of volume for sound output
 
-Description: Sets the master gain value for the AVAudioSampler sound output in the dB range of -90.0 (silent) to 12.0 (amplified)
-
-
+Description: Sets the main volume or loudness level of the AudioUnit MIDIInstrument , turn it up to 11!
 
 
-Name: AVAudioUnitMIDIInstrumentNoteOn
+
+
+Name: AVAudioUnitMIDIInstrumentEnginePause
 
 Type: command
 
-Syntax: AVAudioUnitMIDIInstrumentNoteOn <MIDINoteNumber>,pMIDIVelocityNumber,<pMIDIChannelNumber>
+Syntax: AVAudioUnitMIDIInstrumentEnginePause()
 
-Summary: Immediately sends a MIDI Note On message with the given pitch and velocity on the given channel.
+Summary: Temporarily pauses the running AVAudioUnitMIDIInstrument Engine.
 
-Example: AVAudioUnitMIDIInstrumentNoteOn 60,127,1 -- 60=Middle C, 127=Full velocity, 1=MIDI channel 1
+Example: AVAudioUnitMIDIInstrumentEnginePause
 
-Parameters: 
-
-pMIDINoteNum: The number of the pitch to turn on, 0 to 127, 60 = Middle C
-
-pMIDIVeloNum: The velocity to play the given pitch at, 0 to 127
-
-pMIDIChanNum: The MIDI Channel to play the note on, 1 to 16
-
-Description: Immediately sends a MIDI Note On message with the given pitch and velocity on the given channel.
+Description: Temporarily pauses the running AVAudioUnitMIDIInstrument Engine. The Engine should be stopped or paused when not in use to avoid device CPU and battery useage.
 
 
 
@@ -243,41 +298,46 @@ Description: Loads a soundbank file or type SF2 or DLS into AVAudioSampler and o
 
 
 
-Name: AVAudioUnitMIDIInstrumentEnginePause
+Name: AVAudioUnitMIDIInstrumentSetReverbBlend
 
 Type: command
 
-Syntax: AVAudioUnitMIDIInstrumentEnginePause()
+Syntax: AVAudioUnitMIDIInstrumentSetReverbBlend <pReverbBlend>
 
-Summary: Temporarily pauses the running AVAudioUnitMIDIInstrument Engine.
-
-Example: AVAudioUnitMIDIInstrumentEnginePause
-
-Description: Temporarily pauses the running AVAudioUnitMIDIInstrument Engine. The Engine should be stopped or paused when not in use to avoid device CPU and battery useage.
-
-
-
-
-Name: AVAudioUnitMIDIInstrumentPitchbend
-
-Type: command
-
-Syntax: AVAudioUnitMIDIInstrumentPitchbend <pPitchBendCoarseNFine>,<pMIDIChanNum>
-
-Summary: The send pitchbend with fine range from 0 to 16384, 8192 is centered (no bend)
+Summary: Sets The blend level of the Reverb Effect of the AudioUnit MIDIInstrument
 
 Example:
-AVAudioUnitMIDIInstrumentPitchbend 0,1 -- Pitchbend Maximum Down, channel 1
-AVAudioUnitMIDIInstrumentPitchbend 16384,1 -- Pitchbend Maximum Up, channel 1
-AVAudioUnitMIDIInstrumentPitchbend 8192,1 -- Centered / No Bend, channel 1
+AVAudioUnitMIDIInstrumentSetReverbBlend 0 -- Dry / No reverb
+AVAudioUnitMIDIInstrumentGetVolume 1.0 full blend of Reverb effect
 
 Parameters: 
 
-pPitchBendCoarseNFine: The number of the pitch bend 'position'
+pReverbBlend: The amount to blend reverb effect
 
-pMIDIChanNum: MIDI Channel to send the bend value on, 1 to 16
+Description: Sets The blend level of the Reverb Effect of the AudioUnit MIDIInstrument, in the range of 0.0 to 1.0
 
-Description: The send pitchbend with fine range from 0 to 16384, 8192 is centered (no bend)
+
+
+
+Name: AVAudioUnitMIDIInstrumentNoteOn
+
+Type: command
+
+Syntax: AVAudioUnitMIDIInstrumentNoteOn <MIDINoteNumber>,pMIDIVelocityNumber,<pMIDIChannelNumber>
+
+Summary: Immediately sends a MIDI Note On message with the given pitch and velocity on the given channel.
+
+Example: AVAudioUnitMIDIInstrumentNoteOn 60,127,1 -- 60=Middle C, 127=Full velocity, 1=MIDI channel 1
+
+Parameters: 
+
+pMIDINoteNum: The number of the pitch to turn on, 0 to 127, 60 = Middle C
+
+pMIDIVeloNum: The velocity to play the given pitch at, 0 to 127
+
+pMIDIChanNum: The MIDI Channel to play the note on, 1 to 16
+
+Description: Immediately sends a MIDI Note On message with the given pitch and velocity on the given channel.
 
 
 
