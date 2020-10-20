@@ -2,85 +2,9 @@ Library:
 
 Type: 
 
-version: 0.6
+version: 0.1
 
 author: Paul McClernan
-
-
-Name: AVAudioUnitMIDIInstrumentSetStereoPan
-
-Type: command
-
-Syntax: AVAudioUnitMIDIInstrumentSetStereoPan <pBalance>
-
-Summary: Sets the Stereo pan values in the range of -1.0 (left) to 1.0 (right)
-
-Example:
-AVAudioUnitMIDIInstrumentSetStereoPan -1.0 -- all sounds output in left speaker
-AVAudioUnitMIDIInstrumentSetStereoPan 0 -- all sounds centered
-AVAudioUnitMIDIInstrumentSetStereoPan 1.0 -- all sounds output in right speaker
-
-Parameters: 
-
-pBalance: The amount to shift sound output to the left or the right
-
-Description: Sets the amount to shift sound output to the left or right in the range of -1.0 (left) to 1.0 (right)
-
-
-
-
-Name: AVAudioUnitMIDIInstrumentSetMasterGain
-
-Type: command
-
-Syntax: AVAudioUnitMIDIInstrumentSetMasterGain <pGain>
-
-Summary: Sets the master gain value for the AVAudioUnitMIDIInstrument in the dB range of -90.0 to 12.0
-
-Example:
-AVAudioUnitMIDIInstrumentSetMasterGain 12.0 -- Amplified!
-AVAudioUnitMIDIInstrumentSetMasterGain 0 -- Normal Gain
-AVAudioUnitMIDIInstrumentSetMasterGain -90.0 -- Can't even hear this!
-
-Parameters: 
-
-pGain: The amount of gain on sound output in the dB range of -90.0 to 12.0
-
-Description: Sets the master gain value for the AVAudioUnitMIDIInstrument sound output in the dB range of -90.0 (silent) to 12.0 (amplified)
-
-
-
-
-Name: AVAudioUnitMIDIInstrumentGetMasterGain
-
-Type: function
-
-Syntax: AVAudioUnitMIDIInstrumentGetMasterGain()
-
-Summary: Gets the value of the current gain amount (dB) that the AVAudioUnitMIDIInstrument sound output is set for.
-
-Example: AVAudioUnitMIDIInstrumentGetMasterGain()
-
-Returns: number in the range of -90.0 to 12.0, the amount of gain (dB) that sound output is currently set for.
-
-Description: Gets the value of the current gain amount (dB) that the AVAudioUnitMIDIInstrument sound output is set for.
-
-
-
-
-Name: AVAudioUnitMIDIInstrumentEngineRestart
-
-Type: command
-
-Syntax: AVAudioUnitMIDIInstrumentEngineRestart()
-
-Summary: Restarts the AVAudioUnitMIDIInstrument Engine.
-
-Example: AVAudioUnitMIDIInstrumentEngineRestart
-
-Description: Restarts the AVAudioUnitMIDIInstrument Engine after it has been stopped or paused.
-
-
 
 
 Name: AVAudioUnitMIDIInstrumentEngineIsRunning
@@ -96,6 +20,21 @@ Example: AVAudioUnitMIDIInstrumentEngineIsRunning()
 Returns: True if the AVAudioUnitMIDIInstrument's AudioEngine is already running, false if it is not.
 
 Description: Check if AVAudioUnitMIDIInstrument's AudioEngine instance is already running.
+
+
+
+
+Name: AVAudioUnitMIDIInstrumentEngineRestart
+
+Type: command
+
+Syntax: AVAudioUnitMIDIInstrumentEngineRestart()
+
+Summary: Restarts the AVAudioUnitMIDIInstrument Engine.
+
+Example: AVAudioUnitMIDIInstrumentEngineRestart
+
+Description: Restarts the AVAudioUnitMIDIInstrument Engine after it has been stopped or paused.
 
 
 
@@ -162,6 +101,23 @@ Parameters:
 
 
 
+Name: AVAudioUnitMIDIInstrumentGetVolume
+
+Type: function
+
+Syntax: AVAudioUnitMIDIInstrumentGetVolume()
+
+Summary: Gets the value of the current gain amount (dB) that the AVAudioSampler sound output is set for.
+
+Example: AVAudioUnitMIDIInstrumentGetVolume()
+
+Returns: number for volume that AudioUnit sound output is currently set for.
+
+Description: Gets the value of the current gain amount (dB) that the AVAudioSampler sound output is set for.
+
+
+
+
 Name: AVAudioUnitMIDIInstrumentNoteOff
 
 Type: command
@@ -200,28 +156,6 @@ Description: Gets info About the running AVAudioUnitMIDIInstrument, mostly here 
 
 
 
-Name: AVAudioUnitMIDIInstrumentSetGlobalTuning
-
-Type: command
-
-Syntax: AVAudioUnitMIDIInstrumentSetGlobalTuning <pCents>
-
-Summary: Sets the global tuning value for the AVAudioUnitMIDIInstrument in cents (-2400 to 2400)
-
-Example:
-AVAudioUnitMIDIInstrumentPitchbend 2400 -- shifts all pitches up 2400 cents (two octaves)
-AVAudioUnitMIDIInstrumentPitchbend 0 -- default value, no pitch shift
-AVAudioUnitMIDIInstrumentPitchbend -2400 -- shifts all pitches down -2400 cents (two octaves)
-
-Parameters: 
-
-pCents: The amount in cents to shift all pitches
-
-Description: Sets the global tuning value for the AVAudioUnitMIDIInstrument, shifting all pitches down or up in the range of -2400 to 2400
-
-
-
-
 Name: AVAudioUnitMIDIInstrumentEngineReset
 
 Type: command
@@ -233,6 +167,28 @@ Summary: Resets the AVAudioUnitMIDIInstrument Engine to default state.
 Example: AVAudioUnitMIDIInstrumentEngineReset
 
 Description: This resets AVAudioUnitMIDIInstrument Engine to it's default state. Use it, for example, to silence effects such as delay echoes.
+
+
+
+
+Name: AVAudioUnitMIDIInstrumentSetVolume
+
+Type: command
+
+Syntax: AVAudioUnitMIDIInstrumentSetVolume <pGain>
+
+Summary: Sets the master gain value for the AVAudioSampler in the dB range of -90.0 to 12.0
+
+Example:
+AVAudioUnitMIDIInstrumentGetVolume 11.0 -- Turn it Up to 11 !!!
+AVAudioUnitMIDIInstrumentGetVolume 0 -- Silent
+AVAudioUnitMIDIInstrumentGetVolume -5.0
+
+Parameters: 
+
+pGain: The amount of gain on sound output in the dB range of -90.0 to 12.0
+
+Description: Sets the master gain value for the AVAudioSampler sound output in the dB range of -90.0 (silent) to 12.0 (amplified)
 
 
 
@@ -260,21 +216,6 @@ Description: Immediately sends a MIDI Note On message with the given pitch and v
 
 
 
-Name: AVAudioUnitMIDIInstrumentEnginePause
-
-Type: command
-
-Syntax: AVAudioUnitMIDIInstrumentEnginePause()
-
-Summary: Temporarily pauses the running AVAudioUnitMIDIInstrument Engine.
-
-Example: AVAudioUnitMIDIInstrumentEnginePause
-
-Description: Temporarily pauses the running AVAudioUnitMIDIInstrument Engine. The Engine should be stopped or paused when not in use to avoid device CPU and battery useage.
-
-
-
-
 Name: AVAudioUnitMIDIInstrumentBankProgram
 
 Type: command
@@ -298,6 +239,21 @@ pBankMSB: Bank number Most Significant Byte
 pBankLSB: Bank number Least Significant Byte
 
 Description: Loads a soundbank file or type SF2 or DLS into AVAudioSampler and optional sets it to a given program or patch and bank.
+
+
+
+
+Name: AVAudioUnitMIDIInstrumentEnginePause
+
+Type: command
+
+Syntax: AVAudioUnitMIDIInstrumentEnginePause()
+
+Summary: Temporarily pauses the running AVAudioUnitMIDIInstrument Engine.
+
+Example: AVAudioUnitMIDIInstrumentEnginePause
+
+Description: Temporarily pauses the running AVAudioUnitMIDIInstrument Engine. The Engine should be stopped or paused when not in use to avoid device CPU and battery useage.
 
 
 

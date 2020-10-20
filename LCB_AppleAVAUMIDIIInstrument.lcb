@@ -12,7 +12,7 @@ use com.livecode.bitwise
 use com.livecode.math
 use com.livecode.string
 
-metadata version is "0.6"
+metadata version is "0.1"
 metadata author is "Paul McClernan"
 metadata title is "LCB Apple AVAudioUnitMIDIInstrument library"
 metadata svgicon is "M66.43,52.07c-0.71,0.32-1.48,0.56-2.31,0.78c-2.35,0.65-5.44,0.04-5.44,0.04l-8.52,9.56c0,0,11.03,11.58,13.36,13.92 s4.02,6.19,4.02,6.19l8.77-19.76C76.31,62.8,67.18,58.92,66.43,52.07z M56.35,86.86c-2.83-2.4-16.4-15.09-16.4-15.09L21.22,90.12c0,0,3.25,1.93,5.41,1.86c5.6-0.17,10.48-3.77,15.46-3.77 c4.58,0,8.99,3.52,15.56,3.77c1.55,0.06,2.88-0.35,4.41-1.24c0.7-0.41,2.02-1.54,2.02-1.54S59.18,89.26,56.35,86.86z M52.45,18.42c5.85-5.85,5.42-15.63,5.42-15.63s-8.65,0.97-13.34,6.82c-5.22,6.51-5.07,13.39-4.94,14.51 C44.49,24.13,48.71,22.16,52.45,18.42z M18.38,48.03c-3.59,0.27-3.23,4.28-3.21,4.45l0.03,0.32l-0.23,0.23l-5.54,5.89l-5.85-5.95l8.91,24.95l18.58-18.16l-8.8-9.83 C22.28,49.93,19.79,47.92,18.38,48.03z M9.98,39.65c0,0,1.4-2.6,5.19-5.27c2.15-1.51,4.69-2.88,7.45-3.52c1.75-0.41,3.72-0.62,5.86-0.62 c3.63,0,9.12,1.35,9.12,1.35l-10.85,4.24c-1.77,0.8-2.58,2.62-2.85,3.38l14.4,13.75c3.71-3.62,6.78-6.15,9.99-9.57 c-0.51-4.23,0.89-8.11,3.22-10.81c4.73-5.48,13.47-2.78,13.47-2.78l-3.55,3.05c0,0-4.13,3.16-3.0AVAudioUnitMIDIInstrumentInitWithDescr1,6.79 c0.27,0.87,0.84,2.34,2.44,3.17c0.93,0.48,4.09,0.37,5.6-0.95C68.48,40.1,70.45,38,70.45,38s0.88-1.54,1.8-2.43 c1.11-1.08,3.56-2.91,3.56-2.91s-4.82-5.38-8.14-6.83c-2.91-1.27-6.15-1.89-9.71-1.91c-7.4-0.03-12.83,4.65-16.7,4.35 c-3.19-0.25-9.47-4.38-14.6-4.35c-7.22,0.05-13.04,2.44-17.47,7.33C5.44,35.37,4,45.11,4,45.11l1.89-1.93c0,0,2.98-0.11,3.34-0.41 c1.48-1.24,1.31-2.33,1.31-2.33L9.98,39.65z M18.15,46.11c1.68-0.19,4.88,2.09,4.88,2.09l9.22,10.03l4.11-3.86L21.75,39.42l0.13-0.52c0.03-0.14,0.88-3.49,3.9-4.84 l5.18-2.02c-1.95-0.07-5.6-0.11-7.97,0.42c-3.26,0.74-8.73,4.32-10.78,7.04c0.06,0.17,0.09,0.34,0.1,0.53 c0.08,1.49-1.41,3.45-2.02,3.98c-0.73,0.63-2.55,1.03-3.63,1.21l-3.94,3.94l6.59,6.6l3.85-3.86c-0.04-1.6,0.45-3.4,1.78-4.57 C15.67,46.71,16.48,46.3,18.15,46.11z M70.95,39.93c-0.62,0.44-4.18,6.07-9.58,4.98c-2.9-0.58-4.65-3.5-4.92-5.3c-0.6-4.07,1.8-6.16,3.56-7.69 c0.59-0.52,1.6-1.31,1.6-1.31s-6.16-0.73-9.16,3.5c-3.98,5.61-1.98,9.83-1.98,9.83S13.22,80.66,12.03,81.82 c-0.09,0.56-0.5,3.71,0.93,5.31c1.56,1.74,3.06,2.79,5.34,2.24c1.3-0.32,39.44-38.44,39.44-38.44s3.65,0.56,5.67,0.07 C68.3,49.8,70.71,46.32,70.95,39.93z M65.52,84.81c-0.14,0.85-0.52,1.48-1.2,1.99c-0.5,0.41-1.12,0.62-1.88,0.62c-2.8,0-6.23-3.51-6.24-3.52L41.82,70.25 l6.44-6.55c0,0,13.44,13.7,14.11,14.36C63.03,78.73,65.79,83.22,65.52,84.81z"
@@ -145,11 +145,8 @@ private foreign handler objC_AVAudioUnitMIDIInstrumentBankAndProgramChange(in pA
 private foreign handler objC_AVAudioUnitMIDIInstrumentSetValForKey(in pAVAUMIDIInstrInstr as ObjcId, in pValue as ObjcId, in pSelector as ObjcId) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-setValue:forKey:"
 private foreign handler objC_AVAudioUnitMIDIInstrumentGetValForKey(in pAVAUMIDIInstrInstr as ObjcId, in pSelector as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.-valueForKey:"
 
-private foreign handler objC_AVAudioUnitMIDIInstrumentGetMasterGain(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.masterGain"
--- default value is 0.0 dB. The range of valid values is -90.0 dB to 12.0 dB.
-private foreign handler objC_AVAudioUnitMIDIInstrumentGetStereoPan(in pAVAUMIDIInstrInstr as ObjcId, in pPan as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.stereoPan"
--- stereoPan -- float -- default value is 0.0. The range of valid values is -1.0 to 1.0.
-private foreign handler objC_AVAudioUnitMIDIInstrumentGetGlobalTuning(in pAVAUMIDIInstrInstr as ObjcId, in pGTuning as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.globalTuning"
+private foreign handler objC_AVAudioUnitMIDIInstrumentGetVolume(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.volume"
+private foreign handler objC_AVAudioUnitMIDIInstrumentSetVolume(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.setVolume"
 
 private foreign handler objC_AVAudioUnitMIDIInstrumentNoteOn(in pAVAUMIDIInstrInstr as ObjcId,in pNoteNum as UInt8, in pNoteVelo as UInt8, in pNoteChan as UInt8) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-startNote:withVelocity:onChannel:"
 private foreign handler objC_AVAudioUnitMIDIInstrumentNoteOff(in pAVAUMIDIInstrInstr as ObjcId, in pNoteNum as UInt8, in pNoteChan as UInt8) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-stopNote:onChannel:"
@@ -891,55 +888,97 @@ public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
    return tInfoChunk
 end handler
 
+
 /**
-Sets the master gain value for the AVAudioUnitMIDIInstrument in the dB range of -90.0 to 12.0
+Sets the main volume or loudness level of the AudioUnit MIDIInstrument , turn it up to 11!
 
 Type: command
 
-Syntax: AVAudioUnitMIDIInstrumentSetMasterGain <pGain>
+Syntax: AVAudioUnitMIDIInstrumentSetVolume <pVolume>
 
 Example:
-AVAudioUnitMIDIInstrumentSetMasterGain 12.0 -- Amplified!
-AVAudioUnitMIDIInstrumentSetMasterGain 0 -- Normal Gain
-AVAudioUnitMIDIInstrumentSetMasterGain -90.0 -- Can't even hear this!
+AVAudioUnitMIDIInstrumentGetVolume 11.0 -- Turn it Up to 11 !!!
+AVAudioUnitMIDIInstrumentGetVolume 0 -- Silent
+AVAudioUnitMIDIInstrumentGetVolume -5.0
 
 Parameters:
-pGain: The amount of gain on sound output in the dB range of -90.0 to 12.0
-
+pVolume: The amount of volume for sound output
 Description:
-Sets the master gain value for the AVAudioUnitMIDIInstrument sound output in the dB range of -90.0 (silent) to 12.0 (amplified)
+Sets the main volume or loudness level of the AudioUnit MIDIInstrument , turn it up to 11!
 */
-public handler AVAudioUnitMIDIInstrumentSetMasterGain(in pGain as optional NaturalFloat) returns nothing
-   expect that (pGain >= -90.0 and pGain <= 12.0 ) because "Master Gain values must be in the dB range of -90.0 to 12.0"
-   -- masterGain -- float -- Adjustment for the gain, in decibels, of all the notes played.
-   -- default value is 0.0 dB. The range of valid values is -90.0 dB to 12.0 dB.
-   if pGain is nothing then
-      put 0.0 into pGain
+public handler AVAudioUnitMIDIInstrumentSetVolume(in pVolume as optional Integer) returns nothing
+   if pVolume is nothing then
+      put 1.0 into pVolume
    end if
    unsafe
-    objC_AVAudioUnitMIDIInstrumentSetValForKey(sAVAudioUnitMIDIInstrument,NumberToNSNumber(pGain),StringToNSString("masterGain"))
+    objC_AVAudioUnitMIDIInstrumentSetValForKey(sAVAudioUnitMIDIInstrument,NumberToNSNumber(pVolume),StringToNSString("volume"))
    end unsafe
 end handler
 
 /**
-Gets the value of the current gain amount (dB) that the AVAudioUnitMIDIInstrument sound output is set for.
+Gets the current main volume or loudness level of the AudioUnit MIDIInstrument
 
 Type: function
 
 Example:
-AVAudioUnitMIDIInstrumentGetMasterGain()
+AVAudioUnitMIDIInstrumentGetVolume()
 
-Returns: number in the range of -90.0 to 12.0, the amount of gain (dB) that sound output is currently set for.
+Returns: number for volume that AudioUnit sound output is currently set for.
 
 Description:
-Gets the value of the current gain amount (dB) that the AVAudioUnitMIDIInstrument sound output is set for.
+Gets the current main volume or loudness level of the AudioUnit MIDIInstrument
 */
-public handler AVAudioUnitMIDIInstrumentGetMasterGain() returns Number
-   variable rGain as ObjcId
-   variable tGain as NaturalFloat
+public handler AVAudioUnitMIDIInstrumentGetVolume() returns Number
+   variable rVolume as ObjcId
    unsafe
-    put  objC_AVAudioUnitMIDIInstrumentGetValForKey(sAVAudioUnitMIDIInstrument,StringToNSString("masterGain")) into rGain
-    return NumberFromNSNumber(rGain)
+    put objC_AVAudioUnitMIDIInstrumentGetValForKey(sAVAudioUnitMIDIInstrument,StringToNSString("volume")) into rVolume
+    return NumberFromNSNumber(rVolume)
+   end unsafe
+end handler
+
+/**
+Sets The blend level of the Reverb Effect of the AudioUnit MIDIInstrument
+
+Type: command
+
+Syntax: AVAudioUnitMIDIInstrumentSetReverbBlend <pReverbBlend>
+
+Example:
+AVAudioUnitMIDIInstrumentSetReverbBlend 0 -- Dry / No reverb
+AVAudioUnitMIDIInstrumentGetVolume 1.0 full blend of Reverb effect
+
+Parameters:
+pReverbBlend: The amount to blend reverb effect
+Description:
+Sets The blend level of the Reverb Effect of the AudioUnit MIDIInstrument, in the range of 0.0 to 1.0
+*/
+public handler AVAudioUnitMIDIInstrumentSetReverbBlend(in pReverbBlend as optional Integer) returns nothing
+   if pVolume is nothing then
+      put 1.0 into pReverbBlend
+   end if
+   unsafe
+    objC_AVAudioUnitMIDIInstrumentSetValForKey(sAVAudioUnitMIDIInstrument,NumberToNSNumber(pReverbBlend),StringToNSString("reverbBlend"))
+   end unsafe
+end handler
+
+/**
+Gets The blend level of the Reverb Effect of the AudioUnit MIDIInstrument
+
+Type: function
+
+Example:
+AVAudioUnitMIDIInstrumentGetVolume()
+
+Returns: The blend level of the Reverb Effect
+
+Description:
+Gets The blend level of the Reverb Effect of the AudioUnit MIDIInstrument
+*/
+public handler AVAudioUnitMIDIInstrumentReverBlend() returns Number
+   variable rReverbBlend as ObjcId
+   unsafe
+    put objC_AVAudioUnitMIDIInstrumentGetValForKey(sAVAudioUnitMIDIInstrument,StringToNSString("reverbBlend")) into rReverbBlend
+    return NumberFromNSNumber(rReverbBlend)
    end unsafe
 end handler
 
@@ -948,12 +987,12 @@ Sets the Stereo pan values in the range of -1.0 (left) to 1.0 (right)
 
 Type: command
 
-Syntax: AVAudioUnitMIDIInstrumentSetStereoPan <pBalance>
+Syntax: AVAudioUnitMIDIInstrumentPan <pBalance>
 
 Example:
-AVAudioUnitMIDIInstrumentSetStereoPan -1.0 -- all sounds output in left speaker
-AVAudioUnitMIDIInstrumentSetStereoPan 0 -- all sounds centered
-AVAudioUnitMIDIInstrumentSetStereoPan 1.0 -- all sounds output in right speaker
+AVAudioUnitMIDIInstrumentPan -1.0 -- all sounds output in left speaker
+AVAudioUnitMIDIInstrumentPan 0 -- all sounds centered
+AVAudioUnitMIDIInstrumentPan 1.0 -- all sounds output in right speaker
 
 Parameters:
 pBalance: The amount to shift sound output to the left or the right
@@ -961,45 +1000,15 @@ pBalance: The amount to shift sound output to the left or the right
 Description:
 Sets the amount to shift sound output to the left or right in the range of -1.0 (left) to 1.0 (right)
 */
-public handler AVAudioUnitMIDIInstrumentSetStereoPan(in pBalance as optional Number) returns nothing
-   --private foreign handler objC_AVAudioUnitMIDIInstrumentStereoPan(in pAVAUMIDIInstrInstr as ObjcId, in pPan as NaturalFloat) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.stereoPan"
+public handler AVAudioUnitMIDIInstrumentPan(in pBalance as optional Number) returns nothing
+   --private foreign handler objC_AVAudioUnitSamplerStereoPan(in pAVAUSampler as ObjcId, in pPan as NaturalFloat) returns nothing binds to "objc:AVAudioUnitSampler.stereoPan"
    -- stereoPan -- float -- default value is 0.0. The range of valid values is -1.0 to 1.0.
    expect that (pBalance >= -1.0 and pBalance <= 1.0 ) because "Stereo pan values must be in the range of -1.0 to 1.0"
    if pBalance is nothing then
       put 0.0 into pBalance
    end if
    unsafe
-    objC_AVAudioUnitMIDIInstrumentSetValForKey(sAVAudioUnitMIDIInstrument,NumberToNSNumber(pBalance),StringToNSString("stereoPan"))
-   end unsafe
-end handler
-
-/**
-Sets the global tuning value for the AVAudioUnitMIDIInstrument in cents (-2400 to 2400)
-
-Type: command
-
-Syntax: AVAudioUnitMIDIInstrumentSetGlobalTuning <pCents>
-
-Example:
-AVAudioUnitMIDIInstrumentPitchbend 2400 -- shifts all pitches up 2400 cents (two octaves)
-AVAudioUnitMIDIInstrumentPitchbend 0 -- default value, no pitch shift
-AVAudioUnitMIDIInstrumentPitchbend -2400 -- shifts all pitches down -2400 cents (two octaves)
-
-Parameters:
-pCents: The amount in cents to shift all pitches
-
-Description:
-Sets the global tuning value for the AVAudioUnitMIDIInstrument, shifting all pitches down or up in the range of -2400 to 2400
-*/
-public handler AVAudioUnitMIDIInstrumentSetGlobalTuning(in pCents as optional Number) returns nothing
-   expect that (pCents >= -2400 and pCents <= 2400 ) because "Global tuning values must be in the range of -2400 to 2400 (cents)"
-   -- globalTuning -- @property(nonatomic) float globalTuning; -- The tuning unit is cents.
-   -- The default value is 0.0 -- The range of valid values is -2400 to 2400 cents.
-   if pCents is nothing then
-      put 0 into pCents
-   end if
-   unsafe
-        objC_AVAudioUnitMIDIInstrumentSetValForKey(sAVAudioUnitMIDIInstrument,NumberToNSNumber(pCents),StringToNSString("globalTuning"))
+   objC_AVAudioUnitMIDIInstrumentSetValForKey(sAVAudioUnitMIDIInstrument,NumberToNSNumber(pBalance),StringToNSString("pan"))
    end unsafe
 end handler
 

@@ -7,3 +7,7 @@
 *.lci
 *.xml
 *.lcm
+.DS_Store
+.DS_Store
+*.lcdoc
+*.xml

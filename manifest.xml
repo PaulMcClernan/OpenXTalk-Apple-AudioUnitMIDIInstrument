@@ -2,7 +2,7 @@
   <name>community.appleavaumidiinstrument.paulmcclernan</name>
   <title>LCB Apple AVAudioUnitMIDIInstrument library</title>
   <author>Paul McClernan</author>
-  <version>0.6</version>
+  <version>0.1</version>
   <license>community</license>
   <type>library</type>
   <requires name="com.livecode.foreign"/>
@@ -33,10 +33,8 @@
   <handler name="AVAudioUnitMIDIInstrumentBankProgram" parameters="in optional integer,in optional integer,in optional integer,in optional integer" return="optional any"/>
   <handler name="AVAudioUnitMIDIInstrumentProgram" parameters="in optional integer,in optional integer" return="optional any"/>
   <handler name="AVAudioUnitMIDIInstrumentInfo" parameters="" return="optional any"/>
-  <handler name="AVAudioUnitMIDIInstrumentSetMasterGain" parameters="in optional NaturalFloat" return="nothing"/>
-  <handler name="AVAudioUnitMIDIInstrumentGetMasterGain" parameters="" return="number"/>
-  <handler name="AVAudioUnitMIDIInstrumentSetStereoPan" parameters="in optional number" return="nothing"/>
-  <handler name="AVAudioUnitMIDIInstrumentSetGlobalTuning" parameters="in optional number" return="nothing"/>
+  <handler name="AVAudioUnitMIDIInstrumentSetVolume" parameters="in optional integer" return="nothing"/>
+  <handler name="AVAudioUnitMIDIInstrumentGetVolume" parameters="" return="number"/>
   <handler name="AVAudioUnitMIDIInstrumentNoteOn" parameters="in integer,in integer,in number" return="nothing"/>
   <handler name="AVAudioUnitMIDIInstrumentNoteOff" parameters="in integer,in number" return="nothing"/>
   <handler name="AVAudioUnitMIDIInstrumentPitchbend" parameters="in Uint16" return="nothing"/>
