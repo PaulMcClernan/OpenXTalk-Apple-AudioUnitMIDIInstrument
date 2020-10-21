@@ -128,7 +128,9 @@ private foreign handler objC_AVAudioUnitMIDIInstrumentBankAndProgramChange(in pA
 private foreign handler objC_AVAudioUnitMIDIInstrumentSetValForKey(in pAVAUMIDIInstrInstr as ObjcId, in pValue as ObjcId, in pSelector as ObjcId) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-setValue:forKey:"
 private foreign handler objC_AVAudioUnitMIDIInstrumentGetValForKey(in pAVAUMIDIInstrInstr as ObjcId, in pSelector as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.-valueForKey:"
 private foreign handler objC_AUAudioUnitGetValForKey(in pAUAudioUnit as ObjcId, in pSelector as ObjcId) returns ObjcId binds to "objc:AUAudioUnit.-valueForKey:"
+private foreign handler objC_AUAudioUnitSetValForKey(in pAUAudioUnit as ObjcId, in pValue as ObjcId, in pSelector as ObjcId) returns nothing binds to "objc:AUAudioUnit.-setValue:forKey:"
 private foreign handler objC_AUAudioUnitPresetGetValForKey(in pAUAudioUnit as ObjcId, in pSelector as ObjcId) returns ObjcId binds to "objc:AUAudioUnitPreset.-valueForKey:"
+
 private foreign handler objC_AUAudioUnitPresetName(in pAUAudioUnit as ObjcId) returns ObjcId binds to "objc:AUAudioUnitPreset.name"
 private foreign handler objC_AUAudioUnitPresetNumber(in pAUAudioUnit as ObjcId) returns ObjcId binds to "objc:AUAudioUnitPreset.number"
 
@@ -141,6 +143,7 @@ private foreign handler objC_AVAudioUnitMIDIInstrumentNoteOff(in pAVAUMIDIInstrI
 
 private foreign handler objC_AVAudioUnitGetAUAudioUnit(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioUnit.AUAudioUnit" -- macOS 10.11+ only
 private foreign handler objC_AVAudioUnitGetAUAudioUnitFactoryPresets(in pAUAudioUnit as ObjcId) returns ObjcId binds to "objc:AUAudioUnit.factoryPresets" -- macOS 10.11+ only
+private foreign handler objC_AVAudioUnitCurrentPreset(in pAUAudioUnit as ObjcId) returns ObjcId binds to "objc:AUAudioUnit.currentPreset" -- macOS 10.11+ only
 
 private foreign handler c_AudioUnitUninitialize(in pAVAUMIDIInstrInstr as ObjcId) returns CSInt binds to "c:AudioUnit.framework>AudioUnitUninitialize"
 private foreign handler c_AudioUnitInitialize(in pAVAUMIDIInstrInstr as ObjcId) returns CSInt binds to "c:AudioUnit.framework>AudioUnitInitialize"
@@ -676,7 +679,7 @@ public handler AVAudioUnitMIDIInstrumentBankProgram( in pProgramNum as optional 
     end if
  end handler
 
- public handler AVAudioUnitMIDIInstrumentProgram( in pProgramNum as optional Integer, in pChannel as optional Integer) returns optional any
+public handler AVAudioUnitMIDIInstrumentProgram( in pProgramNum as optional Integer, in pChannel as optional Integer) returns optional any
     variable tSoundFontNSURL as ObjcObject
     variable tNSError as optional ObjcObject
     variable tNSErrorDescriptionRef as ObjcObject
@@ -704,7 +707,8 @@ public handler AVAudioUnitMIDIInstrumentBankProgram( in pProgramNum as optional 
            end if
         end unsafe
      end if
-  end handler
+end handler
+
 /**
 Attempts to Load an EXS or AUPreset file into the AVAudioSampler.
 
@@ -759,10 +763,6 @@ public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
    variable tAudioComponentDescription as AudioComponentDescription
    variable tAudioUnitComponent as optional any
    variable tAUAudioUnit as ObjcObject
-   variable tAUAudioUnitPreset as ObjcObject
-   variable tAUAudioUnitFactoryPresetsList as List
-   variable tAUAudioUnitFactoryPresetsArray as Array
-
    variable tAudioUnit as Pointer
 
    variable tListIterand as any
@@ -816,12 +816,42 @@ public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
       put "," after tInfoChunk
       put element 5 of tAudioComponentDescription formatted as string after tInfoChunk
 
-      --put objC_AVAudioUnitGetAUAudioUnit(sAVAudioUnitMIDIInstrument) into tAUAudioUnit
-      -- log tAUAudioUnit
-      -- put objC_AVAudioUnitGetAUAudioUnitFactoryPresets(tAUAudioUnit) into tNSObj
-      -- put ArrayFromNSDictionary(tNSObj) into tAUAudioUnitFactoryPresets
-      -- log tAUAudioUnitFactoryPresets
+            -- put objC_AVAudioUnitComponentGetComponent(tAudioUnit) into tAudioUnitComponent
+      -- log tAudioUnitComponent
+      -- put objC_AVAudioUnitComponentHasCustomView(tAudioUnitComponent) into tBool
+      -- if tBool then
+      --   put "Has Custom View" & newline after tInfoChunk
+      -- else
+      --   put "Does Not Have Custom View" & newline after tInfoChunk
+      -- end if
+      -- check engine to see if itsAVAudioUnitMIDIInstrument is attached to it
+      -- put objC_AVAudioNodeGetEngine(sAVAudioUnitMIDIInstrument) into tNSObj -- Null if Node is not attached to an AVAudioEngine
+      -- log tNSObj
+   end unsafe
+   return tInfoChunk
+end handler
 
+
+public handler AVAudioUnitMIDIInstrumentGetFactoryPresets() returns String
+   variable tAUAudioUnit as ObjcObject
+   variable tAUAudioUnitPreset as ObjcObject
+   variable tAUAudioUnitFactoryPresetsList as List
+   variable tAudioUnit as Pointer
+
+   variable tNSError as optional ObjcObject
+   variable tNSErrorDescriptionRef as ObjcId
+   variable tErrorDescription as optional String
+   variable tOSStatus as CSInt
+
+   variable rReturnString as String
+   variable tNSStrObj as optional ObjcId
+   variable tStr as optional String
+   variable tNumber as optional Number
+   variable tNSObj as optional ObjcId
+   variable tNSObject as optional ObjcObject
+   put "" into rReturnString
+   unsafe
+      -- put objC_AVAudioUnitGetAUAudioUnitFactoryPresets(tAUAudioUnit) into tNSObj
       put objC_AVAudioUnitGetAUAudioUnit(sAVAudioUnitMIDIInstrument) into tAUAudioUnit
       put objC_AUAudioUnitGetValForKey(tAUAudioUnit,StringToNSString("factoryPresets")) into tNSObject
       if tNSObject is not nothing then
@@ -845,31 +875,9 @@ public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
             else
                put 0 into tNumber
             end if
-            log [tNumber,tStr]
+            put tNumber formatted as string &"-"& tStr & "\n" after rReturnString
          end repeat
       end if
-
-      -- log tNSObject
-      -- put objC_AVAudioUnitMIDIInstrumentGetValForKey(sAVAudioUnitMIDIInstrument,StringToNSString("volume")) into rVolume
-      -- put objC_NSObjectClassName(tNSObject) into tNSObj
-      -- put objC_NSObjectDescription(tNSObject) into tNSObj
-      -- put StringFromNSString(tNSObj) into tStr
-
-      -- log tAudioUnit
-      -- CFArrayRef presets = NULL;
-       -- propertySize = sizeof(presets);
-
-      -- put true into rWriteable
-      -- put 1 into rDataSize
-      -- put 24 into tAudioUnitProperty -- kAudioUnitProperty_FactoryPresets = 24
-      -- put 36 into tAudioUnitProperty -- kAudioUnitProperty_PresentPreset = 36
-      -- put 0 into tAudioUnitScope -- _Global is 0
-      -- put 0 into tAudioUnitElement
-      -- put c_AudioUnitGetPropertyInfo(tAudioUnit,tAudioUnitProperty,tAudioUnitScope,tAudioUnitElement,rDataSize,rWriteable) into tOSStatus
-      -- log [rDataSize,rWriteable]
-      -- put NumberToNSNumber(rDataSize) into tNSObj
-      -- put PointerFromObjcObject(tNSObj) into rPropertySizePtr
-
       -- put c_AudioUnitGetPropertyFactoryPresets(tAudioUnit,tAudioUnitProperty,tAudioUnitScope,tAudioUnitElement,tDataPtr,rDataSize) into tOSStatus
       -- if tDataPtr is not nothing then
       --   put PointerToObjcObject(tDataPtr) into tNSObject
@@ -880,33 +888,54 @@ public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
       --      log tAUAudioUnitFactoryPresetsArray
       --   end if
       -- end if
-      -- put NumberFromNSNumber(rPropertySizeNSNum) into rPropertySize
-      -- log [tNSObj,rDataSize]
-      -- if tNSObj is not nothing then
-      --    put ListFromNSArray(tNSObj) into tAUAudioUnitFactoryPresetsList
-      --    log tAUAudioUnitFactoryPresetsList
-      -- end if
-      -- put ArrayFromNSDictionary(tNSObj) into tAUAudioUnitFactoryPresetsArray
-      -- log [the keys of tAUAudioUnitFactoryPresetsArray]
-      -- put objC_AVAudioUnitGetConfignDict(tAUAudioUnit) into rAnything
-      -- log rAnything
-      -- log tAudioUnit -- logging this crashes engine
-      ---put objC_AVAudioUnitComponentGetComponent(tAudioUnit) into tAudioUnitComponent
-      -- put objC_AVAudioUnitComponentGetComponent(tAudioUnit) into tAudioUnitComponent
-      -- log tAudioUnitComponent
-      -- put objC_AVAudioUnitComponentHasCustomView(tAudioUnitComponent) into tBool
-      -- if tBool then
-      --   put "Has Custom View" & newline after tInfoChunk
-      -- else
-      --   put "Does Not Have Custom View" & newline after tInfoChunk
-      -- end if
-      -- check engine to see if itsAVAudioUnitMIDIInstrument is attached to it
-      -- put objC_AVAudioNodeGetEngine(sAVAudioUnitMIDIInstrument) into tNSObj -- Null if Node is not attached to an AVAudioEngine
-      -- log tNSObj
+      return rReturnString
    end unsafe
-   return tInfoChunk
 end handler
 
+
+public handler AVAudioUnitMIDIInstrumentSetPresetNumber(in pPresetNum as Integer) returns String
+   variable tAUAudioUnit as ObjcId -- ObjcObject
+   variable tAUAudioUnitPreset as ObjcId --ObjcObject
+   variable tAUAudioUnitFactoryPresetsList as List
+   variable tAudioUnit as Pointer
+
+   variable tNSError as optional ObjcObject
+   variable tNSErrorDescriptionRef as ObjcId
+   variable tErrorDescription as optional String
+   variable tOSStatus as CSInt
+
+   variable rReturnString as String
+   variable tNSStrObj as optional ObjcId
+   variable tStr as optional String
+   variable tNumber as optional Number
+   variable tNSObj as optional ObjcId
+   variable tNSObject as optional ObjcObject
+   put "" into rReturnString
+   unsafe
+      -- put objC_AVAudioUnitGetAUAudioUnitFactoryPresets(tAUAudioUnit) into tNSObj
+      put objC_AVAudioUnitGetAUAudioUnit(sAVAudioUnitMIDIInstrument) into tAUAudioUnit
+      put objC_AUAudioUnitGetValForKey(tAUAudioUnit,StringToNSString("factoryPresets")) into tNSObject
+      if tNSObject is not nothing then
+         put ListFromNSArray(tNSObject) into tAUAudioUnitFactoryPresetsList
+         put element pPresetNum+1 of tAUAudioUnitFactoryPresetsList into tAUAudioUnitPreset
+         objC_AUAudioUnitSetValForKey(tAUAudioUnit,tAUAudioUnitPreset,StringToNSString("currentPreset"))
+         put objC_AUAudioUnitPresetGetValForKey(tAUAudioUnitPreset,StringToNSString("name")) into tNSStrObj
+         if tNSStrObj is not nothing then
+            put StringFromNSString(tNSStrObj) into tStr
+         else
+            put "" into tStr
+         end if
+         put objC_AUAudioUnitPresetGetValForKey(tAUAudioUnitPreset,StringToNSString("number")) into tNSObj
+         if tNSObj is not nothing then
+            put NumberFromNSNumber(tNSObj) into tNumber
+         else
+            put 0 into tNumber
+         end if
+         put tNumber formatted as string &"-"& tStr & "\n" after rReturnString
+      end if
+   end unsafe
+   return rReturnString
+end handler
 
 /**
 Sets the main volume or loudness level of the AudioUnit MIDIInstrument , turn it up to 11!
