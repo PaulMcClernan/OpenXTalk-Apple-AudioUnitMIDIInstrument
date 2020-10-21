@@ -81,24 +81,6 @@ public handler getFourCharCodeFromUint32( in pNum as optional any) returns optio
    end if
 end handler
 
-private handler getAudioComponentDescriptionCharCode(in pConstant as Number) returns String
-   if pConstant is 1635085685 then
-      return "aumu"
-   else if pConstant is 1935764848 then
-      return "samp"
-   else if pConstant is 1684828960 then
-      return "dls "
-   else if pConstant is 1836284270 then
-      return "msyn"
-   else if pConstant is 1634758764 then
-      return "appl"
-   else if pConstant is 1635086197 then
-      return "auou"
-   else if pConstant is 1919512419 then
-      return "rioc"
-   end if
-end handler
-
 private foreign handler objC_NSURLURLWithString(in pURLString as ObjcId) returns ObjcId binds to "objc:NSURL.+URLWithString:"
 private foreign handler objC_NSURLfileOrDirURLWithPath(in pPathString as ObjcId, in pIsDir as CBool) returns ObjcId binds to "objc:.NSURL.+fileURLWithPath:isDirectory:"
 private foreign handler objC_NSURLfileURLWithPath(in pPathString as ObjcId) returns ObjcId binds to "objc:NSURL.+fileURLWithPath:"
@@ -106,7 +88,8 @@ private foreign handler objC_NSErrorAlloc() returns ObjcId binds to "objc:NSErro
 private foreign handler objC_NSObjectRetain(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.-retain"
 private foreign handler objC_NSObjectAutoRealease(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.-autorelease"
 private foreign handler objC_NSObjectRelease(in pNSObj as ObjcId) returns nothing binds to "objc:NSObject.-release"
-
+private foreign handler objC_NSObjectDescription(in pNSObj as optional ObjcId) returns ObjcRetainedId binds to "objc:NSObject.+description"
+private foreign handler objC_NSObjectClassName(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.className"
 private foreign handler objC_NSMutableArrayAlloc() returns ObjcRetainedId binds to "objc:NSMutableArray.+alloc"
 private foreign handler objC_NSMutableArrayInitWithCapacity(in pNSMutableArray as ObjcId, in pCapacity as NaturalFloat) returns ObjcId binds to "objc:NSMutableArray.-initWithCapacity:"
 private foreign handler objC_NSMutableArrayInitWithNSArray(in pNSMutableArray as ObjcId, in pNSArray as ObjcId) returns ObjcId binds to "objc:NSMutableArray.-initWithArray:"
@@ -836,8 +819,13 @@ public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
 
       put objC_AVAudioUnitGetAUAudioUnit(sAVAudioUnitMIDIInstrument) into tAUAudioUnit
       put objC_AUAudioUnitGetValForKey(tAUAudioUnit,StringToNSString("factoryPresets")) into tNSObject
-      -- put objC_AVAudioUnitMIDIInstrumentGetValForKey(sAVAudioUnitMIDIInstrument,StringToNSString("volume")) into rVolume
       log tNSObject
+      -- put objC_AVAudioUnitMIDIInstrumentGetValForKey(sAVAudioUnitMIDIInstrument,StringToNSString("volume")) into rVolume
+      put   objC_NSObjectClassName(tNSObject) into tNSObj
+      -- put objC_NSObjectDescription(tNSObject) into tNSObj
+      put StringFromNSString(tNSObj) into tStr
+      log tStr
+
       -- log tAudioUnit
       -- CFArrayRef presets = NULL;
        -- propertySize = sizeof(presets);
