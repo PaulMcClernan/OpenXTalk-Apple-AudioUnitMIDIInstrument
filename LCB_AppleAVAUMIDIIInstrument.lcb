@@ -127,7 +127,11 @@ private foreign handler objC_AVAudioUnitMIDIInstrumentBankAndProgramChange(in pA
 -- - (void)sendMIDISysExEvent:(NSData *)midiData;
 private foreign handler objC_AVAudioUnitMIDIInstrumentSetValForKey(in pAVAUMIDIInstrInstr as ObjcId, in pValue as ObjcId, in pSelector as ObjcId) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-setValue:forKey:"
 private foreign handler objC_AVAudioUnitMIDIInstrumentGetValForKey(in pAVAUMIDIInstrInstr as ObjcId, in pSelector as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.-valueForKey:"
-private foreign handler objC_AUAudioUnitGetValForKey(in pAVAudioUnit as ObjcId, in pSelector as ObjcId) returns ObjcId binds to "objc:AUAudioUnit.-valueForKey:"
+private foreign handler objC_AUAudioUnitGetValForKey(in pAUAudioUnit as ObjcId, in pSelector as ObjcId) returns ObjcId binds to "objc:AUAudioUnit.-valueForKey:"
+private foreign handler objC_AUAudioUnitPresetGetValForKey(in pAUAudioUnit as ObjcId, in pSelector as ObjcId) returns ObjcId binds to "objc:AUAudioUnitPreset.-valueForKey:"
+private foreign handler objC_AUAudioUnitPresetName(in pAUAudioUnit as ObjcId) returns ObjcId binds to "objc:AUAudioUnitPreset.name"
+private foreign handler objC_AUAudioUnitPresetNumber(in pAUAudioUnit as ObjcId) returns ObjcId binds to "objc:AUAudioUnitPreset.number"
+
 
 private foreign handler objC_AVAudioUnitMIDIInstrumentGetVolume(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.volume"
 private foreign handler objC_AVAudioUnitMIDIInstrumentSetVolume(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.setVolume"
@@ -755,6 +759,7 @@ public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
    variable tAudioComponentDescription as AudioComponentDescription
    variable tAudioUnitComponent as optional any
    variable tAUAudioUnit as ObjcObject
+   variable tAUAudioUnitPreset as ObjcObject
    variable tAUAudioUnitFactoryPresetsList as List
    variable tAUAudioUnitFactoryPresetsArray as Array
 
@@ -819,23 +824,47 @@ public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
 
       put objC_AVAudioUnitGetAUAudioUnit(sAVAudioUnitMIDIInstrument) into tAUAudioUnit
       put objC_AUAudioUnitGetValForKey(tAUAudioUnit,StringToNSString("factoryPresets")) into tNSObject
-      log tNSObject
+      if tNSObject is not nothing then
+         put ListFromNSArray(tNSObject) into tAUAudioUnitFactoryPresetsList
+         repeat for each element tAUAudioUnitPreset in tAUAudioUnitFactoryPresetsList
+            --put objC_NSObjectClassName(tAUAudioUnitPreset) into tNSObj
+            -- put StringFromNSString(tNSObj) into tStr
+            -- log tStr
+            put objC_AUAudioUnitPresetGetValForKey(tAUAudioUnitPreset,StringToNSString("name")) into tNSStrObj
+            -- put objC_AUAudioUnitPresetName(tAUAudioUnit) into tNSStrObj
+
+            if tNSStrObj is not nothing then
+               put StringFromNSString(tNSStrObj) into tStr
+            else
+               put "" into tStr
+            end if
+            put objC_AUAudioUnitPresetGetValForKey(tAUAudioUnitPreset,StringToNSString("number")) into tNSObj
+            -- put objC_AUAudioUnitPresetNumber(tAUAudioUnit) into tNSObj
+            if tNSObj is not nothing then
+               put NumberFromNSNumber(tNSObj) into tNumber
+            else
+               put 0 into tNumber
+            end if
+            log [tNumber,tStr]
+         end repeat
+      end if
+
+      -- log tNSObject
       -- put objC_AVAudioUnitMIDIInstrumentGetValForKey(sAVAudioUnitMIDIInstrument,StringToNSString("volume")) into rVolume
-      put   objC_NSObjectClassName(tNSObject) into tNSObj
+      -- put objC_NSObjectClassName(tNSObject) into tNSObj
       -- put objC_NSObjectDescription(tNSObject) into tNSObj
-      put StringFromNSString(tNSObj) into tStr
-      log tStr
+      -- put StringFromNSString(tNSObj) into tStr
 
       -- log tAudioUnit
       -- CFArrayRef presets = NULL;
        -- propertySize = sizeof(presets);
 
-      put true into rWriteable
-      put 1 into rDataSize
-      put 24 into tAudioUnitProperty -- kAudioUnitProperty_FactoryPresets = 24
+      -- put true into rWriteable
+      -- put 1 into rDataSize
+      -- put 24 into tAudioUnitProperty -- kAudioUnitProperty_FactoryPresets = 24
       -- put 36 into tAudioUnitProperty -- kAudioUnitProperty_PresentPreset = 36
-      put 0 into tAudioUnitScope -- _Global is 0
-      put 0 into tAudioUnitElement
+      -- put 0 into tAudioUnitScope -- _Global is 0
+      -- put 0 into tAudioUnitElement
       -- put c_AudioUnitGetPropertyInfo(tAudioUnit,tAudioUnitProperty,tAudioUnitScope,tAudioUnitElement,rDataSize,rWriteable) into tOSStatus
       -- log [rDataSize,rWriteable]
       -- put NumberToNSNumber(rDataSize) into tNSObj
