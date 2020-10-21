@@ -917,7 +917,7 @@ public handler AVAudioUnitMIDIInstrumentSetPresetNumber(in pPresetNum as Integer
       put objC_AUAudioUnitGetValForKey(tAUAudioUnit,StringToNSString("factoryPresets")) into tNSObject
       if tNSObject is not nothing then
          put ListFromNSArray(tNSObject) into tAUAudioUnitFactoryPresetsList
-         put element pPresetNum+1 of tAUAudioUnitFactoryPresetsList into tAUAudioUnitPreset
+         put element pPresetNum of tAUAudioUnitFactoryPresetsList into tAUAudioUnitPreset
          objC_AUAudioUnitSetValForKey(tAUAudioUnit,tAUAudioUnitPreset,StringToNSString("currentPreset"))
          put objC_AUAudioUnitPresetGetValForKey(tAUAudioUnitPreset,StringToNSString("name")) into tNSStrObj
          if tNSStrObj is not nothing then
