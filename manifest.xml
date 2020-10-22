@@ -32,6 +32,7 @@
   <handler name="AVAudioUnitMIDIInstrumentEngineReset" parameters="" return="nothing"/>
   <handler name="AVAudioUnitMIDIInstrumentBankProgram" parameters="in optional integer,in optional integer,in optional integer,in optional integer" return="optional any"/>
   <handler name="AVAudioUnitMIDIInstrumentProgram" parameters="in optional integer,in optional integer" return="optional any"/>
+  <handler name="AVAudioUnitMIDIInstrumentLoadAUPreset" parameters="in optional string" return="optional any"/>
   <handler name="AVAudioUnitMIDIInstrumentInfo" parameters="" return="optional any"/>
   <handler name="AVAudioUnitMIDIInstrumentGetFactoryPresets" parameters="" return="string"/>
   <handler name="AVAudioUnitMIDIInstrumentSetPresetNumber" parameters="in integer" return="string"/>

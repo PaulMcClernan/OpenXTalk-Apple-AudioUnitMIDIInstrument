@@ -134,12 +134,13 @@ private foreign handler objC_AUAudioUnitPresetGetValForKey(in pAUAudioUnit as Ob
 private foreign handler objC_AUAudioUnitPresetName(in pAUAudioUnit as ObjcId) returns ObjcId binds to "objc:AUAudioUnitPreset.name"
 private foreign handler objC_AUAudioUnitPresetNumber(in pAUAudioUnit as ObjcId) returns ObjcId binds to "objc:AUAudioUnitPreset.number"
 
-
 private foreign handler objC_AVAudioUnitMIDIInstrumentGetVolume(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.volume"
 private foreign handler objC_AVAudioUnitMIDIInstrumentSetVolume(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.setVolume"
 
 private foreign handler objC_AVAudioUnitMIDIInstrumentNoteOn(in pAVAUMIDIInstrInstr as ObjcId,in pNoteNum as UInt8, in pNoteVelo as UInt8, in pNoteChan as UInt8) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-startNote:withVelocity:onChannel:"
 private foreign handler objC_AVAudioUnitMIDIInstrumentNoteOff(in pAVAUMIDIInstrInstr as ObjcId, in pNoteNum as UInt8, in pNoteChan as UInt8) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-stopNote:onChannel:"
+
+private foreign handler objC_AVAudioUnitLoadPresetURL(in pAVAudioUnit as ObjcId, in pFileURL as ObjcId, out pNSError as optional ObjcId) returns CBool binds to "objc:AVAudioUnit.loadAudioUnitPresetAtURL:error:"
 
 private foreign handler objC_AVAudioUnitGetAUAudioUnit(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioUnit.AUAudioUnit" -- macOS 10.11+ only
 private foreign handler objC_AVAudioUnitGetAUAudioUnitFactoryPresets(in pAUAudioUnit as ObjcId) returns ObjcId binds to "objc:AUAudioUnit.factoryPresets" -- macOS 10.11+ only
@@ -710,41 +711,43 @@ public handler AVAudioUnitMIDIInstrumentProgram( in pProgramNum as optional Inte
 end handler
 
 /**
-Attempts to Load an EXS or AUPreset file into the AVAudioSampler.
+Attempts to Load an AUPreset file into the AVAudioUnitMIDIInstrument.
 
 Type: command
 
-Syntax: AVAudioSamplerLoadEXSPresetOrSound pEXSPresetOrSoundPath
+Syntax: AVAudioUnitMIDIInstrumentLoadAUPreset pAUPresetPath
 
 Example:
 put "/Library/Application Support/GarageBand/Instrument Library/Sampler/Sampler Instruments/iOS Instruments/Flute iOS KB.exs" into pEXSPresetOrSoundPath
-AVAudioSamplerLoadEXSPresetOrSound pEXSPresetOrSoundPath
+AVAudioSamplerLoadEXSPresetOrSound pAUPresetPath
 
 Parameters:
-pEXSPresetOrSoundPath: The file path to a EXS or AUPreset file
+pAUPresetPath: The file path to a EXS or AUPreset file
 
-Description: Attempts to Load an EXS Patch (Logic or GarageBand Instrument) or an AUPreset file into the AVAudioSampler.
+Description: Attempts to Load an Patch AUPreset file into the AVAudioUnitMIDIInstrument.
 */
--- public handler AVAudioSamplerLoadEXSPresetOrSound(in pEXSPresetOrSoundPath as optional String) returns optional any
---   variable tEXSPresetOrSoundURL as ObjcObject
---   variable tNSError as optional ObjcId
---   variable tNSErrorDescriptionRef as ObjcId
---   variable tErrorDescription as optional String
---   variable tDidLoad as Boolean
---   if sAVAudioUnitMIDIInstrument is not nothing then
---      unsafe
---         put objC_NSURLfileURLWithPath(StringToNSString(pEXSPresetOrSoundPath)) into tEXSPresetOrSoundURL
---          put objC_AVAudioUnitSamplerLoadEXSPresetOrSoundURL(sAVAudioUnitMIDIInstrument,tEXSPresetOrSoundURL,tNSError) into tDidLoad
---         if tNSError is not nothing then
---            put c_CFErrorCopyDescription(tNSError) into tNSErrorDescriptionRef
---            put StringFromNSString(tNSErrorDescriptionRef) into tErrorDescription
---            return tErrorDescription
---         else
---            return true
---         end if
---      end unsafe
---   end if
--- end handler
+public handler AVAudioUnitMIDIInstrumentLoadAUPreset(in pAUPresetPath as optional String) returns optional any
+   variable tAUPresetURL as ObjcObject
+   variable tNSError as optional ObjcId
+   variable tNSErrorDescriptionRef as ObjcId
+   variable tErrorDescription as optional String
+   variable tDidLoad as Boolean
+   if sAVAudioUnitMIDIInstrument is not nothing then
+      unsafe
+         log pAUPresetPath
+         put objC_NSURLfileURLWithPath(StringToNSString(pAUPresetPath)) into tAUPresetURL
+         log tAUPresetURL
+         put objC_AVAudioUnitLoadPresetURL(sAVAudioUnitMIDIInstrument,tAUPresetURL,tNSError) into tDidLoad
+         if tNSError is not nothing then
+            put c_CFErrorCopyDescription(tNSError) into tNSErrorDescriptionRef
+            put StringFromNSString(tNSErrorDescriptionRef) into tErrorDescription
+            return tErrorDescription
+         else
+            return true
+         end if
+      end unsafe
+   end if
+end handler
 
 /**
 Gets info About the running AVAudioUnitMIDIInstrument.
@@ -878,6 +881,32 @@ public handler AVAudioUnitMIDIInstrumentGetFactoryPresets() returns String
             put tNumber formatted as string &"-"& tStr & "\n" after rReturnString
          end repeat
       end if
+      put objC_AUAudioUnitGetValForKey(tAUAudioUnit,StringToNSString("userPresets")) into tNSObject
+      if tNSObject is not nothing then
+         put ListFromNSArray(tNSObject) into tAUAudioUnitFactoryPresetsList
+         repeat for each element tAUAudioUnitPreset in tAUAudioUnitFactoryPresetsList
+            --put objC_NSObjectClassName(tAUAudioUnitPreset) into tNSObj
+            -- put StringFromNSString(tNSObj) into tStr
+            -- log tStr
+            put objC_AUAudioUnitPresetGetValForKey(tAUAudioUnitPreset,StringToNSString("name")) into tNSStrObj
+            -- put objC_AUAudioUnitPresetName(tAUAudioUnit) into tNSStrObj
+
+            if tNSStrObj is not nothing then
+               put StringFromNSString(tNSStrObj) into tStr
+            else
+               put "" into tStr
+            end if
+            put objC_AUAudioUnitPresetGetValForKey(tAUAudioUnitPreset,StringToNSString("number")) into tNSObj
+            -- put objC_AUAudioUnitPresetNumber(tAUAudioUnit) into tNSObj
+            if tNSObj is not nothing then
+               put NumberFromNSNumber(tNSObj) into tNumber
+            else
+               put 0 into tNumber
+            end if
+            put tNumber formatted as string &"-"& tStr & "\n" after rReturnString
+         end repeat
+      end if
+
       -- put c_AudioUnitGetPropertyFactoryPresets(tAudioUnit,tAudioUnitProperty,tAudioUnitScope,tAudioUnitElement,tDataPtr,rDataSize) into tOSStatus
       -- if tDataPtr is not nothing then
       --   put PointerToObjcObject(tDataPtr) into tNSObject
@@ -919,6 +948,7 @@ public handler AVAudioUnitMIDIInstrumentSetPresetNumber(in pPresetNum as Integer
          put ListFromNSArray(tNSObject) into tAUAudioUnitFactoryPresetsList
          put element pPresetNum of tAUAudioUnitFactoryPresetsList into tAUAudioUnitPreset
          objC_AUAudioUnitSetValForKey(tAUAudioUnit,tAUAudioUnitPreset,StringToNSString("currentPreset"))
+         -- objC_AVAudioUnitCurrentPreset(tAUAudioUnit,tAUAudioUnitPreset,StringToNSString("currentPreset"))
          put objC_AUAudioUnitPresetGetValForKey(tAUAudioUnitPreset,StringToNSString("name")) into tNSStrObj
          if tNSStrObj is not nothing then
             put StringFromNSString(tNSStrObj) into tStr

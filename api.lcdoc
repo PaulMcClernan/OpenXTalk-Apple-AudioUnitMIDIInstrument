@@ -53,19 +53,23 @@ Description: Sets the amount to shift sound output to the left or right in the r
 
 
 
-Name: AVAudioUnitMIDIInstrumentEngineIsRunning
+Name: AVAudioUnitMIDIInstrumentLoadAUPreset
 
-Type: function
+Type: command
 
-Syntax: AVAudioUnitMIDIInstrumentEngineIsRunning()
+Syntax: AVAudioUnitMIDIInstrumentLoadAUPreset pAUPresetPath
 
-Summary: Check if AVAudioUnitMIDIInstrument's AudioEngine is already running.
+Summary: Attempts to Load an AUPreset file into the AVAudioUnitMIDIInstrument.
 
-Example: AVAudioUnitMIDIInstrumentEngineIsRunning()
+Example:
+put "/Library/Application Support/GarageBand/Instrument Library/Sampler/Sampler Instruments/iOS Instruments/Flute iOS KB.exs" into pEXSPresetOrSoundPath
+AVAudioSamplerLoadEXSPresetOrSound pAUPresetPath
 
-Returns: True if the AVAudioUnitMIDIInstrument's AudioEngine is already running, false if it is not.
+Parameters: 
 
-Description: Check if AVAudioUnitMIDIInstrument's AudioEngine instance is already running.
+pAUPresetPath: The file path to a EXS or AUPreset file
+
+Description: Attempts to Load an Patch AUPreset file into the AVAudioUnitMIDIInstrument.
 
 
 
@@ -81,6 +85,23 @@ Summary: Restarts the AVAudioUnitMIDIInstrument Engine.
 Example: AVAudioUnitMIDIInstrumentEngineRestart
 
 Description: Restarts the AVAudioUnitMIDIInstrument Engine after it has been stopped or paused.
+
+
+
+
+Name: AVAudioUnitMIDIInstrumentEngineIsRunning
+
+Type: function
+
+Syntax: AVAudioUnitMIDIInstrumentEngineIsRunning()
+
+Summary: Check if AVAudioUnitMIDIInstrument's AudioEngine is already running.
+
+Example: AVAudioUnitMIDIInstrumentEngineIsRunning()
+
+Returns: True if the AVAudioUnitMIDIInstrument's AudioEngine is already running, false if it is not.
+
+Description: Check if AVAudioUnitMIDIInstrument's AudioEngine instance is already running.
 
 
 
