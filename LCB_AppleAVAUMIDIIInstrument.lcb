@@ -93,6 +93,14 @@ private foreign handler objC_NSObjectClassName(in pNSObj as ObjcId) returns Objc
 private foreign handler objC_NSMutableArrayAlloc() returns ObjcRetainedId binds to "objc:NSMutableArray.+alloc"
 private foreign handler objC_NSMutableArrayInitWithCapacity(in pNSMutableArray as ObjcId, in pCapacity as NaturalFloat) returns ObjcId binds to "objc:NSMutableArray.-initWithCapacity:"
 private foreign handler objC_NSMutableArrayInitWithNSArray(in pNSMutableArray as ObjcId, in pNSArray as ObjcId) returns ObjcId binds to "objc:NSMutableArray.-initWithArray:"
+
+private foreign handler objC_AUGenericViewAlloc() returns ObjcRetainedId binds to "objc:CoreAudioKit.framework>AUGenericView.+alloc"
+private foreign handler objC_AUGenericViewInitWithAudioUnit(in pAUGenericView as ObjcId, in pAudioUnit as ObjcId) returns ObjcId binds to "objc:CoreAudioKit.framework>AUGenericView.-initWithAudioUnit:"
+
+private foreign handler objC_NSWindowyAlloc() returns ObjcRetainedId binds to "objc:NSWindow.+alloc"
+private foreign handler objC_NSWindowyInit(in pNSWindow as ObjcId) returns ObjcId binds to "objc:NSWindow.-initWithContentRect:styleMask:backing:defer:screen:"
+private foreign handler objC_NSWindowyCreateWithViewController(in pNSViewController as ObjcId) returns ObjcRetainedId binds to "objc:NSWindow.+windowWithContentViewController:"
+
 private foreign handler c_CFErrorCopyDescription(in pCFErrorRef as ObjcId) returns ObjcId binds to "c:CFErrorCopyDescription"
 
 private foreign handler objC_AVAudioEngineAlloc() returns ObjcRetainedId binds to "objc:AVAudioEngine.+alloc" -- must be ObjcRetainedId
@@ -140,7 +148,7 @@ private foreign handler objC_AVAudioUnitMIDIInstrumentSetVolume(in pAVAUMIDIInst
 private foreign handler objC_AVAudioUnitMIDIInstrumentNoteOn(in pAVAUMIDIInstrInstr as ObjcId,in pNoteNum as UInt8, in pNoteVelo as UInt8, in pNoteChan as UInt8) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-startNote:withVelocity:onChannel:"
 private foreign handler objC_AVAudioUnitMIDIInstrumentNoteOff(in pAVAUMIDIInstrInstr as ObjcId, in pNoteNum as UInt8, in pNoteChan as UInt8) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-stopNote:onChannel:"
 
-private foreign handler objC_AVAudioUnitLoadPresetURL(in pAVAudioUnit as ObjcId, in pFileURL as ObjcId, out pNSError as optional ObjcId) returns CBool binds to "objc:AVAudioUnit.loadAudioUnitPresetAtURL:error:"
+private foreign handler objC_AVAudioUnitLoadPresetURL(in pAVAudioUnit as ObjcId, in pFileURL as ObjcId, out pNSError as optional ObjcId) returns CBool binds to "objc:AVAudioUnit.-loadAudioUnitPresetAtURL:error:"
 
 private foreign handler objC_AVAudioUnitGetAUAudioUnit(in pAVAUMIDIInstrInstr as ObjcId) returns ObjcId binds to "objc:AVAudioUnit.AUAudioUnit" -- macOS 10.11+ only
 private foreign handler objC_AVAudioUnitGetAUAudioUnitFactoryPresets(in pAUAudioUnit as ObjcId) returns ObjcId binds to "objc:AUAudioUnit.factoryPresets" -- macOS 10.11+ only
@@ -351,12 +359,12 @@ public handler AVAudioUnitCMGetMIDIInstruments(in pAUSubType as optional String,
             put "false \t" after rTempStr
          end if
 
-         -- put objC_AVAudioUnitComponentHasCustomView( tAVAUAudioComponent ) into tCBool
-         -- if tCBool is true then
-         --    put "true \t" after rTempStr
-         -- else
-         --    put "false \t" after rTempStr
-         -- end if
+         put objC_AVAudioUnitComponentHasCustomView( tAVAUAudioComponent ) into tCBool
+         if tCBool is true then
+            put "true \t" after rTempStr
+         else
+            put "false \t" after rTempStr
+         end if
 
          -----  userTagNames [String] -- get & set property can be used to add tags by users
 
@@ -819,20 +827,85 @@ public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
       put "," after tInfoChunk
       put element 5 of tAudioComponentDescription formatted as string after tInfoChunk
 
-            -- put objC_AVAudioUnitComponentGetComponent(tAudioUnit) into tAudioUnitComponent
-      -- log tAudioUnitComponent
-      -- put objC_AVAudioUnitComponentHasCustomView(tAudioUnitComponent) into tBool
-      -- if tBool then
-      --   put "Has Custom View" & newline after tInfoChunk
-      -- else
-      --   put "Does Not Have Custom View" & newline after tInfoChunk
-      -- end if
+
       -- check engine to see if itsAVAudioUnitMIDIInstrument is attached to it
       -- put objC_AVAudioNodeGetEngine(sAVAudioUnitMIDIInstrument) into tNSObj -- Null if Node is not attached to an AVAudioEngine
       -- log tNSObj
    end unsafe
    return tInfoChunk
 end handler
+
+public variable sAUGenericView as optional ObjcObject
+
+
+public handler AVAudioUnitMIDIInstrumentOpenUIWindow() returns optional any
+   variable tAudioComponentDescription as AudioComponentDescription
+   variable tAUAudioUnit as ObjcObject
+   variable tAudioUnit as Pointer
+
+   variable tNSWindow as ObjcObject
+   variable tListIterand as any
+   variable tNSError as optional ObjcObject
+   variable tNSErrorDescriptionRef as ObjcId
+   variable tErrorDescription as optional String
+   variable tBool as CBool
+   variable tOSStatus as CSInt
+   variable tInfoChunk as String
+   variable tNSStrObj as optional ObjcId
+   variable tStr as optional String
+   variable tNSObj as optional ObjcId
+   variable tNSObject as optional ObjcObject
+   variable tDataPtr as optional Pointer
+   variable tData as any
+
+   variable rWriteable as Boolean
+   variable rDataSize as UInt32
+
+   variable tNumber as optional Number -- Integer
+   variable rPropertySizePtr as Pointer
+   variable rAnything as optional any
+   variable tCocoaViewInfo as optional any
+
+   variable tAudioUnitProperty as UInt32
+   variable tAudioUnitScope as UInt32
+   variable tAudioUnitElement as UInt32
+
+   unsafe
+      put 1 into rDataSize
+      put objC_AVAudioUnitGetAudioUnit(sAVAudioUnitMIDIInstrument) into tAudioUnit
+      log tAudioUnit
+      put c_AudioUnitGetProperty(tAudioUnit,31,0,0,tCocoaViewInfo,rDataSize) into tOSStatus
+      log tCocoaViewInfo
+      -- put c_AudioUnitGetProperty(tAudioUnit,31,tAudioUnitScope,tAudioUnitElement,tDataPtr,rDataSize) into tOSStatus
+      -- kAudioUnitProperty_CocoaUI = 31
+      -- put objC_AUGenericViewAlloc() into sAUGenericView
+      -- log sAUGenericView
+      -- put objC_AUGenericViewInitWithAudioUnit(sAUGenericView,tAudioUnit) into sAUGenericView
+      -- log sAUGenericView
+      -- objC_NSWindowyCreateWithViewController(sAUGenericView)
+      -- put objC_NSWindowyAlloc() into tNSWindow
+      -- put objC_NSWindowyInit(tNSWindow) into tNSWindow
+
+      -- put objC_AVAudioUnitComponentGetComponent(tAudioUnit) into tAudioUnitComponent
+      -- log tAudioUnitComponent
+      -- put objC_AVAudioUnitComponentHasCustomView(tAudioUnitComponent) into tBool
+
+      -- check engine to see if itsAVAudioUnitMIDIInstrument is attached to it
+      -- put objC_AVAudioNodeGetEngine(sAVAudioUnitMIDIInstrument) into tNSObj -- Null if Node is not attached to an AVAudioEngine
+      -- log tNSObj
+
+      -- if tDataPtr is not nothing then
+      --   put PointerToObjcObject(tDataPtr) into tNSObject
+      --   log tNSObject
+      --   if tNSObject is not nothing then
+      --      put ArrayFromNSDictionary(tNSObject) into tAUAudioUnitFactoryPresetsArray
+      --      -- put ListFromNSArray(tNSObject) into tAUAudioUnitFactoryPresetsList
+      --      log tAUAudioUnitFactoryPresetsArray
+      --   end if
+      -- end if
+   end unsafe
+end handler
+
 
 
 public handler AVAudioUnitMIDIInstrumentGetFactoryPresets() returns String
