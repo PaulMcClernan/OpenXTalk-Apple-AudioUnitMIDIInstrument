@@ -13,9 +13,13 @@ public foreign type CGPoint binds to "MCAggregateTypeInfo:qq"
 public foreign type CGSize binds to "MCAggregateTypeInfo:qq"
 public foreign type CGRect binds to "MCAggregateTypeInfo:rr"
 
-private foreign handler ObjC_NSWindowAlloc() returns ObjcRetainedId binds to "objc:NSWindow.+alloc"
 
--- private foreign handler ObjC_NSRectMakeNSRect( CGFloat x, CGFloat y, CGFloat w, CGFloat h ) returns ObjcId binds to "objc:NSRect.NSMakeRect" CGFloat raw type is Double
+private foreign handler objC_NSObjectClassName(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.className"
+
+private foreign handler ObjC_NSWindowAlloc() returns ObjcRetainedId binds to "objc:NSWindow.+alloc"
+private foreign handler ObjC_NSWindowInitWithRectStyleBackingDefer(in pObj as ObjcId, in pRect as List, in pStyleMask as Uint64, in pBackingStoreType as Uint64, in pDefer as CBool) returns ObjcId binds to "objc:NSWindow.-initWithContentRect:styleMask:backing:defer:"
+
+-- private foreign handler ObjC_NSRectMakeNSRect( CGFloat x, CGFloat y, CGFloat w, CGFloat h ) returns NSRect binds to "objc:NSRect.NSMakeRect" -- CGFloat raw type is Double
 private foreign handler ObjC_NSRectAlloc() returns optional any binds to "objc:NSRect.+alloc"
 -- private foreign handler ObjC_NSRectInit(in pObj as ObjcRetainedId) returns CGRect binds to "objc:NSRect.-init"
 private foreign handler c_NSRectFromString(in pObj as ObjcId) returns optional any binds to "c:Foundation.framework>NSRectFromString"
@@ -40,40 +44,55 @@ private foreign handler CGWindowListCopyWindowInfo(in pListOptions as CUint, in 
      returns ObjcRetainedId \
      binds to "c:CoreGraphics.framework>CGWindowListCopyWindowInfo"
 
-private foreign handler NSRectMakeRect (in pX as NaturalFloat,in pY as NaturalFloat, in pW as NaturalFloat, in pH as NaturalFloat ) \
-          returns ObjcRetainedId \
-          binds to "c:Foundation.framework>NSMakeRect"
+private foreign handler c_CGRectMake(in pX as ObjcId,in pY as ObjcId, in pW as ObjcId, in pH as ObjcId ) returns any binds to "c:CoreFoundation.framework>CGRectMake"
+   --       binds to "c:CoreGraphics.framework>CGRectMake"
 
 private constant kCGNullWindowId is 0
 
-public variable sMyWindow as ObjcObject
+public variable sMyWindow as ObjcId
 
 private handler _GetNSWindow(in pWindowId as Integer) returns optional ObjcId
  variable tNSApp as ObjcObject
  variable tWindow as optional ObjcObject
  unsafe
-   put ObjC_NSApplicationSharedApplication() into tNSApp
-   put ObjC_NSAppWindowWithWindowNumber(tNSApp, pWindowId) into tWindow
- end unsafe
-
- return tWindow
+      put ObjC_NSApplicationSharedApplication() into tNSApp
+      put ObjC_NSAppWindowWithWindowNumber(tNSApp, pWindowId) into tWindow
+      end unsafe
+  return tWindow
 end handler
 
 public handler CreateNSWindow(in pWindowH as optional Number,in pWindowW as optional Number) returns optional any
    variable tNSRect as ObjcObject
+   variable tRect as any
    variable tCGRect as optional any
    variable tWindow as optional ObjcObject
+   variable tStyleMask as Uint32
+   variable tNSObj as ObjcId
+   variable tStr as String
    -- variable tCGSize as CGSize
 
-   if pWindowH is nothing then
-    put 200 into pWindowH
-   end if
-   if pWindowW is nothing then
-      put 200 into pWindowW
-   end if
-    unsafe
-    put ObjC_NSRectAlloc() into tCGRect
-    log tCGRect
+   -- if pWindowH is nothing then
+   -- put 200 into pWindowH
+   --end if
+   --if pWindowW is nothing then
+   --   put 200 into pWindowW
+   --end if
+   put 0 into tStyleMask
+   --put 1 shifted left by 0 bitwise into tStyleMask
+   unsafe
+      -- put c_CGRectMake(NumberToNSNumber(50), NumberToNSNumber(50), NumberToNSNumber(350),NumberToNSNumber(250)) into tRect
+      -- put c_CGRectMake(50, 50, 400,400) into tRect
+      put [50, 50, 400,400] into tRect
+      put ObjC_NSWindowAlloc() into sMyWindow
+      log sMyWindow
+      put ObjC_NSWindowInitWithRectStyleBackingDefer(sMyWindow,tRect,tStyleMask,1,true) into sMyWindow
+      log sMyWindow
+      put objC_NSObjectClassName(sMyWindow) into tNSObj
+      put StringFromNSString(tNSObj) into tStr
+      log tStr
+
+    --put ObjC_NSRectAlloc() into tCGRect
+    -- log tCGRect
     -- put c_NSRectFromString(StringToNSString("0 0 200,200")) into tCGRect
       -- put NSRectMakeRect(0,0,pWindowH,pWindowW) into tNSRect
       -- log tCGRect
