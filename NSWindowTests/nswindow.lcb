@@ -3,6 +3,7 @@ library com.livecode.extensions.devore.nswindow
 use com.livecode.foreign
 use com.livecode.objc
 use com.livecode.library.scriptitems
+use com.livecode.canvas
 
 metadata title is "NSWindow"
 metadata author is "Trevor DeVore"
@@ -11,18 +12,19 @@ metadata version is "0.1.0"
 public foreign type CGImageRef binds to "MCAggregateTypeInfo:r"
 public foreign type CGPoint binds to "MCAggregateTypeInfo:qq"
 public foreign type CGSize binds to "MCAggregateTypeInfo:qq"
-public foreign type CGRect binds to "MCAggregateTypeInfo:rr"
-
+public foreign type CGRect binds to "MCAggregateTypeInfo:qqqq"
 
 private foreign handler objC_NSObjectClassName(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.className"
 
 private foreign handler ObjC_NSWindowAlloc() returns ObjcRetainedId binds to "objc:NSWindow.+alloc"
-private foreign handler ObjC_NSWindowInitWithRectStyleBackingDefer(in pObj as ObjcId, in pRect as List, in pStyleMask as Uint64, in pBackingStoreType as Uint64, in pDefer as CBool) returns ObjcId binds to "objc:NSWindow.-initWithContentRect:styleMask:backing:defer:"
+private foreign handler ObjC_NSWindowInitWithRectStyleBackingDefer(in pObj as ObjcId, in pRect as any, in pStyleMask as CLong, in pBackingStoreType as Uint8, in pDefer as CBool) returns ObjcId binds to "objc:NSWindow.-initWithContentRect:styleMask:backing:defer:"
+private foreign handler ObjC_NSWindowSetTitle(in pObj as ObjcId, in pTitleNSStr as ObjcId) returns ObjcId binds to "objc:NSWindow.-setTitle:"
+
 
 -- private foreign handler ObjC_NSRectMakeNSRect( CGFloat x, CGFloat y, CGFloat w, CGFloat h ) returns NSRect binds to "objc:NSRect.NSMakeRect" -- CGFloat raw type is Double
-private foreign handler ObjC_NSRectAlloc() returns optional any binds to "objc:NSRect.+alloc"
+-- private foreign handler ObjC_NSRectAlloc() returns optional any binds to "objc:NSRect.+alloc"
 -- private foreign handler ObjC_NSRectInit(in pObj as ObjcRetainedId) returns CGRect binds to "objc:NSRect.-init"
-private foreign handler c_NSRectFromString(in pObj as ObjcId) returns optional any binds to "c:Foundation.framework>NSRectFromString"
+private foreign handler c_NSRectFromString(in pObj as ObjcId) returns optional Pointer binds to "c:Foundation.framework>NSRectFromString"
 
 private foreign handler ObjC_NSApplicationSharedApplication() returns ObjcId binds to "objc:NSApplication.+sharedApplication"
 private foreign handler ObjC_NSAppWindowWithWindowNumber(in pObj as ObjcId, in pWindowNumber as CLong) returns ObjcId binds to "objc:NSApplication.-windowWithWindowNumber:"
@@ -46,7 +48,17 @@ private foreign handler CGWindowListCopyWindowInfo(in pListOptions as CUint, in 
 
 private foreign handler c_CGRectMake(in pX as ObjcId,in pY as ObjcId, in pW as ObjcId, in pH as ObjcId ) returns any binds to "c:CoreFoundation.framework>CGRectMake"
    --       binds to "c:CoreGraphics.framework>CGRectMake"
+private foreign handler c_NSMakeRect(in pX as NaturalFloat,in pY as NaturalFloat, in pW as NaturalFloat, in pH as NaturalFloat ) returns any binds to "objc:Foundation.framework>NSMakeRect"
 
+-- MCRectangle MCRectangleMake(int16_t x, int16_t y, uint16_t width, uint16_t height)
+-- private foreign handler MCRectangleMake(in pX as CInt,in pY as CInt,in pW as CUint,in pH as CUint) returns any binds to "<builtin>"
+private foreign handler MCRectangleToCGRect(in pRectangle as any, out rCGRect as any) returns any binds to "<builtin>"
+-- private foreign MCRectangleToCGRect(const MCRectangle &p_rect)  {return CGRectMake(p_rect.x, p_rect.y, p_rect.width, p_rect.height);
+
+-- static inline MCGRectangle MCGRectangleFromCGRect(CGRect p_rect)
+-- static inline CGRect MCRectangleToCGRect(const MCRectangle &p_rect)
+-- convertcgtomcrect
+-- convertcgtomcrect
 private constant kCGNullWindowId is 0
 
 public variable sMyWindow as ObjcId
@@ -62,11 +74,15 @@ private handler _GetNSWindow(in pWindowId as Integer) returns optional ObjcId
 end handler
 
 public handler CreateNSWindow(in pWindowH as optional Number,in pWindowW as optional Number) returns optional any
-   variable tNSRect as ObjcObject
+   variable tNSRect as List
+   variable tNSRectPtr as Pointer
+   variable tMCRectPtr as Pointer
+   variable tMCRect
+
    variable tRect as any
-   variable tCGRect as optional any
+   variable tCGRect as any
    variable tWindow as optional ObjcObject
-   variable tStyleMask as Uint32
+   variable tStyleMask as CLong
    variable tNSObj as ObjcId
    variable tStr as String
    -- variable tCGSize as CGSize
@@ -77,23 +93,37 @@ public handler CreateNSWindow(in pWindowH as optional Number,in pWindowW as opti
    --if pWindowW is nothing then
    --   put 200 into pWindowW
    --end if
-   put 0 into tStyleMask
+   --put the empty list into tCGRect
+   put 4096 into tStyleMask
    --put 1 shifted left by 0 bitwise into tStyleMask
    unsafe
       -- put c_CGRectMake(NumberToNSNumber(50), NumberToNSNumber(50), NumberToNSNumber(350),NumberToNSNumber(250)) into tRect
       -- put c_CGRectMake(50, 50, 400,400) into tRect
-      put [50, 50, 400,400] into tRect
+       put rectangle [0,0,500,500] into tMCRect
+       log tMCRect
+       -- MCRectangleToCGRect(tMCRect,tCGRect)
+       --put 0 into element 1 of tCGRect
+       --put 0 into element 2 of tCGRect
+       --put 500 into element 3 of tCGRect
+       --put 500 into element 4 of tCGRect
+
+      -- put c_NSMakeRect(0,0,500,500) into tCGRect
+      --put c_NSRectFromString(StringToNSString("0 0 500,500")) into tNSRectPtr
+      -- log tNSRectPtr
+      -- put MCRectangleMake(0,0,500,500) into tMCRectPtr
+      -- log tMCRectPtr
+
       put ObjC_NSWindowAlloc() into sMyWindow
       log sMyWindow
-      put ObjC_NSWindowInitWithRectStyleBackingDefer(sMyWindow,tRect,tStyleMask,1,true) into sMyWindow
+      put ObjC_NSWindowInitWithRectStyleBackingDefer(sMyWindow,tMCRect,tStyleMask,2,true) into sMyWindow
       log sMyWindow
       put objC_NSObjectClassName(sMyWindow) into tNSObj
       put StringFromNSString(tNSObj) into tStr
       log tStr
+      ObjC_NSWindowSetTitle(sMyWindow,StringToNSString("Paul's NSWindow Test"))
 
     --put ObjC_NSRectAlloc() into tCGRect
     -- log tCGRect
-    -- put c_NSRectFromString(StringToNSString("0 0 200,200")) into tCGRect
       -- put NSRectMakeRect(0,0,pWindowH,pWindowW) into tNSRect
       -- log tCGRect
       -- put ObjC_NSWindowAlloc() into sMyWindow
