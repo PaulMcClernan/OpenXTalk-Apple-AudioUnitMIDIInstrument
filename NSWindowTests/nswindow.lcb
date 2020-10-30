@@ -80,24 +80,26 @@ public handler CreateNSWindow(in pWindowH as optional Number,in pWindowW as opti
    --   put 200 into pWindowW
    --end if
    -- Borderless = 0
+   -- Titled = 1
    -- Closable = 2
+   -- Miniaturizable = 4
+   -- Resizable = 8
+   -- Utility = 16
    -- DocModal = 64
+   -- NonactivatingPanel = 128
+   -- TexturedBackground = 256
+   -- Unscaled = 2048
+   -- UnifiedTitleAndToolbar = 4096
+   -- Hud = 8192
    -- FullScreenWindow = 16384
    -- FullSizeContentView = 32768
-   -- Hud = 8192
-   -- Miniaturizable = 4
-   -- NonactivatingPanel = 128
-   -- Resizable = 8
-   -- TexturedBackground = 256
-   -- Titled = 1
-   -- UnifiedTitleAndToolbar = 4096
-   -- Unscaled = 2048
-   -- Utility = 16`
+
    -- put 1 shifted left by 0 bitwise into tStyleMask -- titlebar only
    -- put 23 into tStyleMask -- <- Titled is 1 + Closable is 2 + Utility is 16 + Miniaturizable is 4 = 23
-   put 11 into tStyleMask -- <- Titled is 1 + Closable is 2 + Resizable is 8
+   -- put 11 into tStyleMask -- <- Titled is 1 + Closable is 2 + Resizable is 8
+   put 256+8 into tStyleMask
    unsafe
-      put [200,200,500,500] into tNSRect
+      put [640,640,500,500] into tNSRect
       put ObjC_NSWindowAlloc() into sMyWindow
       put ObjC_NSWindowInitWithRectStyleBackingDefer(sMyWindow,tNSRect,tStyleMask,2,true) into sMyWindow
      -- log sMyWindow
