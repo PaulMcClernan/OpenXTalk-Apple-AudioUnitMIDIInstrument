@@ -11,6 +11,8 @@ use com.livecode.binary
 use com.livecode.bitwise
 use com.livecode.math
 use com.livecode.string
+use com.livecode.canvas
+use com.livecode.library.scriptitems
 
 metadata version is "0.1"
 metadata author is "Paul McClernan"
@@ -133,6 +135,8 @@ private foreign handler objC_AVAudioUnitMIDIInstrumentBankAndProgramChange(in pA
 private foreign handler objC_AVAudioUnitMIDIInstrumentSetValForKey(in pAVAUMIDIInstrInstr as ObjcId, in pValue as ObjcId, in pSelector as ObjcId) returns nothing binds to "objc:AVAudioUnitMIDIInstrument.-setValue:forKey:"
 private foreign handler objC_AVAudioUnitMIDIInstrumentGetValForKey(in pAVAUMIDIInstrInstr as ObjcId, in pSelector as ObjcId) returns ObjcId binds to "objc:AVAudioUnitMIDIInstrument.-valueForKey:"
 private foreign handler objC_AUAudioUnitGetValForKey(in pAUAudioUnit as ObjcId, in pSelector as ObjcId) returns ObjcId binds to "objc:AUAudioUnit.-valueForKey:"
+private foreign handler objC_AUAudioUnitGetValForKeyBool(in pAUAudioUnit as ObjcId, in pSelector as ObjcId) returns CBool binds to "objc:AUAudioUnit.-valueForKey:"
+
 private foreign handler objC_AUAudioUnitSetValForKey(in pAUAudioUnit as ObjcId, in pValue as ObjcId, in pSelector as ObjcId) returns nothing binds to "objc:AUAudioUnit.-setValue:forKey:"
 private foreign handler objC_AUAudioUnitPresetGetValForKey(in pAUAudioUnit as ObjcId, in pSelector as ObjcId) returns ObjcId binds to "objc:AUAudioUnitPreset.-valueForKey:"
 
@@ -151,11 +155,21 @@ private foreign handler objC_AVAudioUnitGetAUAudioUnit(in pAVAUMIDIInstrInstr as
 private foreign handler objC_AVAudioUnitGetAUAudioUnitFactoryPresets(in pAUAudioUnit as ObjcId) returns ObjcId binds to "objc:AUAudioUnit.factoryPresets" -- macOS 10.11+ only
 private foreign handler objC_AVAudioUnitCurrentPreset(in pAUAudioUnit as ObjcId) returns ObjcId binds to "objc:AUAudioUnit.currentPreset" -- macOS 10.11+ only
 
+private foreign handler objC_AUAudioUnitProvidesUI(in pAUAudioUnit as ObjcId) returns CBool binds to "objc:AUAudioUnit.providesUserInterface" -- macOS 10.11+ only
+private foreign handler objC_AUCocoaUIBaseGetNSView(in pAUAudioUnit as ObjcId,in pUIViewClass as ObjcId, in pCGSize as CGSize) returns ObjcId binds to "objc:AUCocoaUIBase.-uiViewForAudioUnit:withSize:"
+private foreign handler objC_NSViewForAudioUnit(in pAUAudioUnit as ObjcId,in pUIViewClass as ObjcId,in pCGSize as CGSize) returns ObjcId binds to "objc:AudiotUnit.uiViewForAudioUnit:withSize:"
+
 private foreign handler c_AudioUnitUninitialize(in pAVAUMIDIInstrInstr as ObjcId) returns CSInt binds to "c:AudioUnit.framework>AudioUnitUninitialize"
 private foreign handler c_AudioUnitInitialize(in pAVAUMIDIInstrInstr as ObjcId) returns CSInt binds to "c:AudioUnit.framework>AudioUnitInitialize"
 
 private foreign handler c_AudioUnitGetProperty(in pAudioUnit as Pointer,in pPropertyID as UInt32,in pScope as UInt32, in pElement as UInt32, \
-                                       out rProp as any, inout rDataSize as UInt32) returns CSInt binds to "c:AudioUnit.framework>AudioUnitGetProperty"
+                                       out rProp as optional any, inout rDataSize as optional UInt32) returns CSInt binds to "c:AudioUnit.framework>AudioUnitGetProperty"
+
+public foreign type AudioUnitCocoaViewInfo binds to "MCAggregateTypeInfo:rr"
+private foreign handler c_AudioUnitGetPropertyAudioUnitCocoaViewInfo(in pAudioUnit as Pointer,in pPropertyID as UInt32,in pScope as UInt32, in pElement as UInt32, \
+                                       out rPtr as optional AudioUnitCocoaViewInfo, inout rDataSize as optional UInt32) returns CSInt binds to "c:AudioUnit.framework>AudioUnitGetProperty"
+private foreign handler c_AudioUnitGetPropertyPtr(in pAudioUnit as Pointer,in pPropertyID as UInt32,in pScope as UInt32, in pElement as UInt32, \
+                                       out rPtr as optional Pointer, inout rDataSize as optional UInt32) returns CSInt binds to "c:AudioUnit.framework>AudioUnitGetProperty"
 private foreign handler c_AudioUnitGetPropertyInfo(in pAudioUnit as Pointer,in pPropertyID as UInt32,in pScope as UInt32, in pElement as UInt32, \
                                        out rDataSize as optional Uint32, out rWriteable as CBool) returns CSInt binds to "c:AudioUnit.framework>AudioUnitGetPropertyInfo"
 
@@ -165,11 +179,6 @@ private foreign handler c_AudioUnitSetProperty(in pAudioUnit as Pointer,in pProp
 private foreign handler c_AudioUnitGetPropertyFactoryPresets(in pAudioUnit as Pointer, in pPropertyID as UInt32 , in pScope as UInt32, in pElement as UInt32, \
                                        out rProp as optional Pointer, inout rDataSize as UInt32) returns CSInt binds to "c:AudioUnit.framework>AudioUnitGetProperty"
 
-public foreign type AudioUnitCocoaViewInfo binds to "MCAggregateTypeInfo:rr"
-private foreign handler c_AudioUnitGetPropertyAudioUnitCocoaViewInfo(in pAudioUnit as Pointer,in pPropertyID as UInt32,in pScope as UInt32, in pElement as UInt32, \
-                                       out rPtr as optional AudioUnitCocoaViewInfo, inout rDataSize as optional UInt32) returns CSInt binds to "c:AudioUnit.framework>AudioUnitGetProperty"
-private foreign handler c_AudioUnitGetPropertyPtr(in pAudioUnit as Pointer,in pPropertyID as UInt32,in pScope as UInt32, in pElement as UInt32, \
-                                       out rPtr as optional Pointer, inout rDataSize as optional UInt32) returns CSInt binds to "c:AudioUnit.framework>AudioUnitGetProperty"
 
 private foreign handler objC_AVAudioNodeGetNumberOfInputs(in pAVAUMIDIInstrInstr as ObjcId) returns NaturalUInt binds to "objc:AVAudioNode.numberOfInputs"
 private foreign handler objC_AVAudioNodeGetNumberOfOutputs(in pAVAUMIDIInstrInstr as ObjcId) returns NaturalUInt binds to "objc:AVAudioNode.numberOfOutputs"
@@ -191,8 +200,8 @@ private foreign handler objC_AVAudioUnitComponentGetManufacturer(in pAVAudioUnit
 private foreign handler objC_AVAudioUnitGetVersion(in pAVAUMIDIInstrInstr as ObjcId) returns UInt64 binds to "objc:AVAudioUnit.version"
 private foreign handler objC_AVAudioUnitComponentGetVersion(in pAVAudioUnit as ObjcId) returns UInt64 binds to "objc:AVAudioUnitComponent.version"
 
-private foreign handler objC_AVAudioUnitGetAudioUnit(in pAVAUMIDIInstrInstr as ObjcId) returns Pointer binds to "objc:AVAudioUnit.audioUnit"
-private foreign handler objC_AVAudioUnitComponentGetAudioUnit(in pAVAudioUnit as ObjcId) returns ObjcId binds to "objc:AVAudioUnitComponent.audioUnit" -- macOS 10.11+ only
+private foreign handler objC_AVAudioUnitGetAudioUnit(in pAVAUMIDIInstrInstr as ObjcId) returns optional Pointer binds to "objc:AVAudioUnit.audioUnit"
+private foreign handler objC_AVAudioUnitComponentGetAudioComponent(in pAVAudioUnit as ObjcId) returns ObjcId binds to "objc:AVAudioUnitComponent.audioComponent" -- macOS 10.11+ only
 
 private foreign handler objC_AVAudioUnitAUComponentManagerTagNames(in pSharedAudioUnitComponentManager as ObjcId) returns ObjcId binds to "objc:AVAudioUnitComponentManager.tagNames"
 private foreign handler objC_AVAudioUnitGetHasMIDIInput(in pAVAudioUnit as ObjcId) returns CBool binds to "objc:AVAudioUnitComponent.hasMIDIInput"
@@ -851,6 +860,53 @@ end handler
 public foreign type CGSize binds to "MCAggregateTypeInfo:qq"
 public foreign type NSRect binds to "MCAggregateTypeInfo:qqqq"
 
+public variable sMyWindow as ObjcObject
+public variable sMyWindowController as ObjcObject
+public variable sMyViewController as ObjcObject
+
+private foreign handler ObjC_NSApplicationSharedApplication() returns ObjcId binds to "objc:NSApplication.+sharedApplication"
+private foreign handler ObjC_NSAppWindowWithWindowNumber(in pObj as ObjcId, in pWindowNumber as CLong) returns ObjcId binds to "objc:NSApplication.-windowWithWindowNumber:"
+private foreign handler ObjC_NSWindowGetStyleMask(in pObj as ObjcId) returns CLong binds to "objc:NSWindow.-styleMask"
+private foreign handler ObjC_NSWindowSetStyleMask(in pObj as ObjcId, in pOptions as CInt) returns nothing binds to "objc:NSWindow.-setStyleMask:"
+private foreign handler ObjC_NSWindowSetLevel(in pObj as ObjcId, in pLevel as CInt) returns nothing binds to "objc:NSWindow.-setLevel:"
+private foreign handler ObjC_NSWindowGetLevel(in pObj as ObjcId) returns CInt binds to "objc:NSWindow.-level"
+
+private foreign handler ObjC_NSWindowAlloc() returns ObjcRetainedId binds to "objc:NSWindow.+alloc"
+private foreign handler ObjC_NSWindowInitWithRectStyleBackingDefer(in pObj as ObjcRetainedId, in pRect as NSRect, in pStyleMask as CLong, in pBackingStoreType as CLong, in pDefer as CBool) \
+                                                       returns ObjcId binds to "objc:NSWindow.-initWithContentRect:styleMask:backing:defer:"
+private foreign handler ObjC_NSWindowControllerAlloc() returns ObjcRetainedId binds to "objc:NSWindowController.+alloc"
+private foreign handler ObjC_NSWindowControllerInitWithWindow(in pObj as ObjcId,in pNSWindow as ObjcId) returns ObjcId binds to "objc:NSWindowController.-initWithWindow:"
+
+private foreign handler ObjC_NSWindowControllerShowWindow(in pObj as ObjcId,in pNSWindow as ObjcId) returns nothing binds to "objc:NSWindowController.-showWindow:"
+private foreign handler ObjC_NSWindowSetTitle(in pObj as ObjcId, in pTitleNSStr as ObjcId) returns ObjcId binds to "objc:NSWindow.-setTitle:"
+private foreign handler ObjC_NSViewControllerAlloc() returns ObjcRetainedId binds to "objc:NSViewController.+alloc"
+private foreign handler ObjC_NSViewControllerInitWithNameBundle(in pObj as ObjcRetainedId, in pNameNStr as optional ObjcId, in pNSBundle as optional ObjcId) \
+                                                      returns ObjcId binds to "objc:NSViewController.-initWithNibName:bundle:"
+private foreign handler objC_NSWindowyCreateWithViewController(in pNSViewController as ObjcId) returns ObjcRetainedId binds to "objc:NSWindow.+windowWithContentViewController:"
+private foreign handler objC_AUGenericViewInitWithAudioUnit(in pAUGenericView as ObjcId, in pAudioUnit as ObjcId) returns ObjcId binds to "objc:CoreAudioKit.framework>AUGenericView.-initWithAudioUnit:"
+
+public handler CreateNSWindow( in pWindowH as optional Number,in pWindowW as optional Number) returns nothing
+   variable tNSRect as NSRect
+   variable tStyleMask as CLong
+   variable tStr as String
+   -- if pWindowH is nothing then
+   -- put 200 into pWindowH
+   --end if
+   --if pWindowW is nothing then
+   --   put 200 into pWindowW
+   --end if
+   unsafe
+      put 15 into tStyleMask
+      put [640,640,500,500] into tNSRect
+      put ObjC_NSWindowAlloc() into sMyWindow
+      put ObjC_NSWindowInitWithRectStyleBackingDefer(sMyWindow,tNSRect,tStyleMask,2,true) into sMyWindow
+      ObjC_NSWindowSetTitle(sMyWindow,StringToNSString("NSWindow Test"))
+      put ObjC_NSWindowControllerAlloc() into sMyWindowController
+      put ObjC_NSWindowControllerInitWithWindow(sMyWindowController,sMyWindow) into sMyWindowController
+      ObjC_NSWindowControllerShowWindow(sMyWindowController,sMyWindow)
+    end unsafe
+end handler
+
 public handler AVAudioUnitMIDIInstrumentOpenUIWindow( ) returns nothing
    variable tAudioComponentDescription as AudioComponentDescription
    variable tAUAudioUnit as ObjcObject
@@ -905,11 +961,11 @@ public handler AVAudioUnitMIDIInstrumentOpenUIWindow( ) returns nothing
       put c_NSClassFromString(tNSObj) into tNSObj
       LogNSObjectClassName(tNSObj)
 
-      --put objC_AVAudioUnitGetAUAudioUnit(sAVAudioUnitMIDIInstrument) into tAUAudioUnit
+      put objC_AVAudioUnitGetAUAudioUnit(sAVAudioUnitMIDIInstrument) into tAUAudioUnit
       -- LogNSObjectClassName(tAUAudioUnit)
-      -- put objC_NSViewForAudioUnit(tAUAudioUnit,tNSObj,[400,400]) into tNSObject
+      put objC_NSViewForAudioUnit(tAUAudioUnit,tNSObj,[400,400]) into tNSObject
       --put objC_AUCocoaUIBaseGetNSView(tAUAudioUnit,tNSObj,[400,400]) into tNSObject
-      -- LogNSObjectClassName(tNSObject) -- NSURL?
+      LogNSObjectClassName(tNSObject) -- NSURL?
    end unsafe
 end handler
 
@@ -939,9 +995,7 @@ public handler AVAudioUnitMIDIInstrumentGetFactoryPresets() returns String
       if tNSObject is not nothing then
          put ListFromNSArray(tNSObject) into tAUAudioUnitFactoryPresetsList
          repeat for each element tAUAudioUnitPreset in tAUAudioUnitFactoryPresetsList
-            --put objC_NSObjectClassName(tAUAudioUnitPreset) into tNSObj
-            -- put StringFromNSString(tNSObj) into tStr
-            -- log tStr
+            -- LogNSObjectClassName(tAUAudioUnitPreset)
             put objC_AUAudioUnitPresetGetValForKey(tAUAudioUnitPreset,StringToNSString("name")) into tNSStrObj
             -- put objC_AUAudioUnitPresetName(tAUAudioUnit) into tNSStrObj
 
@@ -964,9 +1018,7 @@ public handler AVAudioUnitMIDIInstrumentGetFactoryPresets() returns String
       if tNSObject is not nothing then
          put ListFromNSArray(tNSObject) into tAUAudioUnitFactoryPresetsList
          repeat for each element tAUAudioUnitPreset in tAUAudioUnitFactoryPresetsList
-            --put objC_NSObjectClassName(tAUAudioUnitPreset) into tNSObj
-            -- put StringFromNSString(tNSObj) into tStr
-            -- log tStr
+            -- LogNSObjectClassName(tAUAudioUnitPreset)
             put objC_AUAudioUnitPresetGetValForKey(tAUAudioUnitPreset,StringToNSString("name")) into tNSStrObj
             -- put objC_AUAudioUnitPresetName(tAUAudioUnit) into tNSStrObj
 
