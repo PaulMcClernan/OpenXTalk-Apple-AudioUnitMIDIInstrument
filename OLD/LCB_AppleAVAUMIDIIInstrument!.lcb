@@ -939,10 +939,17 @@ public handler AVAudioUnitMIDIInstrumentOpenUIWindow( ) returns nothing
    variable tAudioUnitsNNSBundleNSURL as ObjcId
    variable tAudioUnitsNSBundle as ObjcId
    variable tAudioUnitUIClassNSStr as ObjcId
+   variable tAudioUnitUIClass as ObjcId
    variable tAudioUnitProperty as UInt32
    variable tAudioUnitScope as UInt32
    variable tAudioUnitElement as UInt32
    variable tNSView as ObjcId
+   variable tAUViewsList as List
+   variable tListIterand as any
+   variable tNSError as optional ObjcObject
+   variable tNSErrorDescriptionRef as ObjcId
+   variable tErrorDescription as optional String
+   variable tBool as Boolean
    variable tOSStatus as CSInt
    variable tNSStrObj as optional ObjcId
    variable tStr as optional String
@@ -950,15 +957,22 @@ public handler AVAudioUnitMIDIInstrumentOpenUIWindow( ) returns nothing
    variable tNSObject as optional ObjcObject
    variable tDataPtr as optional Pointer
    variable tData as optional any
+   variable rWriteable as Boolean
    variable rDataSize as optional UInt32
    variable tNumber as optional Number -- Integer
+   variable rPropertySizePtr as Pointer
+   variable rAnything as optional any
+   variable tCocoaViewUI as optional ObjcId
+   variable tNSSharedApplication as ObjcId
    variable tNSRect as NSRect
    variable tStyleMask as CLong
    variable tCGSize as CGSize
    unsafe
       put objC_AVAudioUnitGetAudioUnit(sAVAudioUnitMIDIInstrument) into tAudioUnit
+
       put 16 into rDataSize -- 2X 64bit Pointer size
       put c_AudioUnitGetPropertyAudioUnitCocoaViewInfo(tAudioUnit,31,0,0,tAudioUnitCocoaViewInfo,rDataSize) into tOSStatus
+
       log [tAudioUnitCocoaViewInfo,rDataSize] -- returned rDataSize should be 64bit Pointer size
       put element 1 of tAudioUnitCocoaViewInfo into tDataPtr
       put PointerToObjcObject(tDataPtr) into tAudioUnitsNNSBundleNSURL
@@ -974,15 +988,47 @@ public handler AVAudioUnitMIDIInstrumentOpenUIWindow( ) returns nothing
       put PointerToObjcObject(tDataPtr) into tAudioUnitUIClassNSStr
       LogNSObjectClassName(tAudioUnitUIClassNSStr)
       put StringFromNSString(tAudioUnitUIClassNSStr) into tStr
-      log ["tAudioUnitUIClass",tStr]
+      log ["NSString:",tStr]
+
+      -- put c_NSClassFromString(tAudioUnitUIClassNSStr) into tAudioUnitUIClass
+      -- LogNSObjectClassName(tAudioUnitUIClass)
+
+      -- put [0,0,400,400] into tNSRect
 
       put objC_AVAudioUnitGetAUAudioUnit(sAVAudioUnitMIDIInstrument) into tAUAudioUnit
+
       if CreateObjcBlockPointerFromHandler( ViewControllerCompletionHandler , sViewControllerCompletionHandler) then
          put objC_AUAudioUnitRequestViewControllerWithCompletionHandler(tAUAudioUnit,sViewControllerCompletionHandler) into tNSView
       end if
 
+      --objC_NSObjectGetSuperClass
+      -- put ObjC_NSViewControllerAlloc() into sMyViewController
+      -- put ObjC_NSViewControllerInitWithNIBNameBundle(sMyViewController,tAudioUnitUIClassNSStr,tAudioUnitsNSBundle) into sMyViewController
+      -- put ObjC_NSViewControllerInitWithCoder(sMyViewController,tAudioUnitUIClass) into sMyViewController
+      -- LogNSObjectClassName(sMyViewController)
+      --put ObjC_NSBundleGetClassNamed(tAudioUnitsNSBundle,tAudioUnitUIClassNSStr) into tNSView
+      -- LogNSObjectClassName(tNSView)
+      -- if pWindowH is nothing then
+      -- put 200 into pWindowH
+      --end if
+      --if pWindowW is nothing then
+      --   put 200 into pWindowW
+      --end if
+      --put 15 into tStyleMask
+      --put [640,640,500,500] into tNSRect
+      --put ObjC_NSWindowAlloc() into sMyWindow
+      --put ObjC_NSWindowInitWithRectStyleBackingDefer(sMyWindow,tNSRect,tStyleMask,2,true) into sMyWindow
+      --ObjC_NSWindowSetTitle(sMyWindow,StringToNSString("NSWindow Test"))
+      --put ObjC_NSWindowInitWithRectStyleBackingDefer(sMyWindow,tNSRect,tStyleMask,2,true) into sMyWindow
+
+      --put objC_AVAudioUnitGetAUAudioUnit(sAVAudioUnitMIDIInstrument) into tAUAudioUnit
+      -- LogNSObjectClassName(tAUAudioUnit)
+      -- put objC_NSViewForAudioUnit(tAUAudioUnit,tNSObj,[400,400]) into tNSObject
+      --put objC_AUCocoaUIBaseGetNSView(tAUAudioUnit,tNSObj,[400,400]) into tNSObject
+      -- LogNSObjectClassName(tNSObject) -- NSURL?
    end unsafe
 end handler
+
 
 public handler AVAudioUnitMIDIInstrumentGetFactoryPresets() returns String
    variable tAUAudioUnit as ObjcObject
