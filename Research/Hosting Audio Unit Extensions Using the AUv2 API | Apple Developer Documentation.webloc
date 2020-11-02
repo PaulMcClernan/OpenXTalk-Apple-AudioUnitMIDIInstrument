@@ -3,6 +3,6 @@
 <plist version="1.0">
 <dict>
 	<key>URL</key>
-	<string>https://developer.apple.com/documentation/coreaudiokit/auviewcontroller?language=objc</string>
+	<string>https://developer.apple.com/documentation/audiotoolbox/audio_unit_v3_plug-ins/hosting_audio_unit_extensions_using_the_auv2_api?language=objc</string>
 </dict>
 </plist>

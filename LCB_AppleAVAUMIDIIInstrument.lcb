@@ -87,7 +87,6 @@ private foreign handler objC_NSURLfileURLWithPath(in pPathString as ObjcId) retu
 private foreign handler objC_NSURLGetAbsoluteString(in pURLString as ObjcId) returns ObjcId binds to "objc:NSURL.absoluteString"
 private foreign handler objC_NSURLGetPath(in pURLString as ObjcId) returns ObjcId binds to "objc:NSURL.path"
 private foreign handler c_NSClassFromString(in pClassNameString as ObjcId) returns ObjcId binds to "c:NSClassFromString"
-private foreign handler objC_NSObjectGetSuperClass(in pNSObj as ObjcId) returns ObjcRetainedId binds to "c:NObject.+superclass:"
 
 private foreign handler objC_NSErrorAlloc() returns ObjcId binds to "objc:NSError.+alloc"
 private foreign handler objC_NSObjectRetain(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.-retain"
@@ -95,6 +94,8 @@ private foreign handler objC_NSObjectAutoRealease(in pNSObj as ObjcId) returns O
 private foreign handler objC_NSObjectRelease(in pNSObj as ObjcId) returns nothing binds to "objc:NSObject.-release"
 private foreign handler objC_NSObjectDescription(in pNSObj as optional ObjcId) returns ObjcId binds to "objc:NSObject.description"
 private foreign handler objC_NSObjectClassName(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.className"
+private foreign handler objC_NSObjectGetSuperClass(in pNSObj as ObjcId) returns ObjcRetainedId binds to "c:NObject.+superclass:"
+
 private foreign handler objC_NSMutableArrayAlloc() returns ObjcRetainedId binds to "objc:NSMutableArray.+alloc"
 private foreign handler objC_NSMutableArrayInitWithCapacity(in pNSMutableArray as ObjcId, in pCapacity as NaturalFloat) returns ObjcId binds to "objc:NSMutableArray.-initWithCapacity:"
 private foreign handler objC_NSMutableArrayInitWithNSArray(in pNSMutableArray as ObjcId, in pNSArray as ObjcId) returns ObjcId binds to "objc:NSMutableArray.-initWithArray:"
@@ -491,6 +492,8 @@ public handler AVAudioUnitMIDIInstrumentInitWithDescr(in pAUSubType as optional 
       end unsafe
    else
       unsafe
+         DestroyAUWindow()
+
          objC_AVAudioEngineStop(sAVAudioEngine)
          objC_AVAudioEngineDisconnectInputNode(sAVAudioEngine,sAVAudioUnitMIDIInstrument)
          objC_AVAudioEngineDetachNode(sAVAudioEngine,sAVAudioUnitMIDIInstrument)
@@ -872,49 +875,88 @@ end handler
 public foreign type CGSize binds to "MCAggregateTypeInfo:qq"
 public foreign type NSRect binds to "MCAggregateTypeInfo:qqqq"
 
-public variable sMyWindow as ObjcObject
-public variable sMyWindowController as ObjcObject
-public variable sAUViewController as ObjcObject
+public variable sMyWindow as optional ObjcObject
+public variable sMyWindowController as optional ObjcObject
+public variable sAUViewController as optional ObjcObject
 
 private foreign handler ObjC_NSApplicationSharedApplication() returns ObjcId binds to "objc:NSApplication.+sharedApplication"
 private foreign handler ObjC_NSBundleWithURL(in pNSURL as ObjcId) returns ObjcId binds to "objc:NSBundle.+bundleWithURL:"
 private foreign handler ObjC_NSBundleGetClassNamed(in pNSbundle as ObjcId,in pClassNameNSString as ObjcId) returns ObjcId binds to "objc:NSBundle.-classNamed:"
 private foreign handler ObjC_NSAppWindowWithWindowNumber(in pObj as ObjcId, in pWindowNumber as CLong) returns ObjcId binds to "objc:NSApplication.-windowWithWindowNumber:"
+
+private foreign handler ObjC_NSWindowControllerAlloc() returns ObjcRetainedId binds to "objc:NSWindowController.+alloc"
+private foreign handler ObjC_NSWindowControllerDealloc(in pObj as ObjcId) returns nothing binds to "objc:NSWindowController.-dealloc"
+private foreign handler ObjC_NSWindowControllerInitWithWindow(in pObj as ObjcRetainedId,in pNSWindow as ObjcRetainedId) returns ObjcId binds to "objc:NSWindowController.-initWithWindow:"
+private foreign handler ObjC_NSWindowControllerShowWindow(in pObj as ObjcId,in pNSWindow as ObjcId) returns nothing binds to "objc:NSWindowController.-showWindow:"
+private foreign handler ObjC_NSWindowControllerClose(in pNSWindowController as ObjcId) returns nothing binds to "objc:NSWindowController.-close"
+
+private foreign handler ObjC_NSWindowContentViewController(in pObj as ObjcId, in pViewController as ObjcId) returns ObjcId binds to "objc:NSWindow.-setContentViewController:"
+private foreign handler ObjC_NSWindowSetTitle(in pObj as ObjcId, in pTitleNSStr as ObjcId) returns nothing binds to "objc:NSWindow.-setTitle:"
 private foreign handler ObjC_NSWindowGetStyleMask(in pObj as ObjcId) returns CLong binds to "objc:NSWindow.-styleMask"
 private foreign handler ObjC_NSWindowSetStyleMask(in pObj as ObjcId, in pOptions as CInt) returns nothing binds to "objc:NSWindow.-setStyleMask:"
 private foreign handler ObjC_NSWindowSetLevel(in pObj as ObjcId, in pLevel as CInt) returns nothing binds to "objc:NSWindow.-setLevel:"
 private foreign handler ObjC_NSWindowGetLevel(in pObj as ObjcId) returns CInt binds to "objc:NSWindow.-level"
+private foreign handler ObjC_NSWindowGetReleasedWhenClosed(in pObj as ObjcId) returns CBool binds to "objc:NSWindow.isReleasedWhenClosed"
 
 private foreign handler ObjC_NSWindowAlloc() returns ObjcRetainedId binds to "objc:NSWindow.+alloc"
 private foreign handler ObjC_NSWindowInitWithRectStyleBackingDefer(in pObj as ObjcRetainedId, in pRect as NSRect, in pStyleMask as CLong, in pBackingStoreType as CLong, in pDefer as CBool) \
                                                        returns ObjcId binds to "objc:NSWindow.-initWithContentRect:styleMask:backing:defer:"
-private foreign handler ObjC_NSWindowControllerAlloc() returns ObjcRetainedId binds to "objc:NSWindowController.+alloc"
-private foreign handler ObjC_NSWindowControllerInitWithWindow(in pObj as ObjcId,in pNSWindow as ObjcId) returns ObjcId binds to "objc:NSWindowController.-initWithWindow:"
-
-private foreign handler ObjC_NSWindowControllerShowWindow(in pObj as ObjcId,in pNSWindow as ObjcId) returns nothing binds to "objc:NSWindowController.-showWindow:"
-private foreign handler ObjC_NSWindowSetTitle(in pObj as ObjcId, in pTitleNSStr as ObjcId) returns ObjcId binds to "objc:NSWindow.-setTitle:"
-private foreign handler ObjC_NSWindowSetContentView(in pObj as ObjcId, in pViewController as ObjcId) returns ObjcId binds to "objc:NSWindow.contentView"
-
-private foreign handler ObjC_AudioUnitNSViewFactory(in pObj as ObjcId) returns ObjcId binds to "objc:NSView.+alloc"
-
 private foreign handler ObjC_NSViewControllerAlloc() returns ObjcRetainedId binds to "objc:NSViewController.+alloc"
-private foreign handler ObjC_NSViewControllerInitWithNIBNameBundle(in pObj as ObjcRetainedId, in pNameNStr as optional ObjcId, in pNSBundle as optional ObjcId) \
-                                                      returns ObjcId binds to "objc:NSViewController.-initWithNibName:bundle:" --initWithCoder:
-private foreign handler ObjC_NSViewControllerInitWithCoder(in pObj as ObjcRetainedId, in pUIClass as optional ObjcId) \
-                                                      returns ObjcId binds to "objc:NSViewController.-initWithCoder:"
-private foreign handler objC_NSWindowyCreateWithViewController(in pNSViewController as ObjcId) returns ObjcRetainedId binds to "objc:NSWindow.+windowWithContentViewController:"
+private foreign handler ObjC_NSViewControllerDealloc(in pObj as ObjcId) returns nothing binds to "objc:NSViewController.-dealloc"
+
+private foreign handler ObjC_NSWindowCreateWithViewController(in pNSViewController as ObjcId) returns ObjcRetainedId binds to "objc:NSWindow.+windowWithContentViewController:"
+private foreign handler ObjC_NSWindowDealloc(in pNSViewController as ObjcId) returns nothing binds to "objc:NSWindow.-dealloc"
 
 private variable sViewControllerCompletionHandler as optional ObjcBlockPointer
 private foreign handler objC_AUAudioUnitRequestViewControllerWithCompletionHandler(in pAUAudioUnit as ObjcId,in pViewControllerCompletionHandler as optional ObjcBlockPointer) returns ObjcId binds to "objc:AUAudioUnit.requestViewControllerWithCompletionHandler:" -- macOS 10.11+ only
 
 public handler OpenAUWindow()
+   variable tNSObj as optional ObjcId
+   variable tBoolean as optional Boolean
+
    unsafe
       if sAUViewController is not nothing then
-         put objC_NSWindowyCreateWithViewController(sAUViewController) into sMyWindow
-         put ObjC_NSWindowControllerAlloc() into sMyWindowController
-         put ObjC_NSWindowControllerInitWithWindow(sMyWindowController,sMyWindow) into sMyWindowController
+         if sMyWindow is nothing then
+            put ObjC_NSWindowCreateWithViewController(sAUViewController) into sMyWindow
+            ObjC_NSWindowSetTitle(sMyWindow,StringToNSString("Audio Unit"))
+            put ObjC_NSWindowGetReleasedWhenClosed(sMyWindow) into tBoolean
+            log tBoolean
+         else
+            -- put ObjC_NSWindowContentViewController(sMyWindow,sAUViewController) into tNSObj
+         end if
+         if sMyWindowController is nothing then
+            put ObjC_NSWindowControllerAlloc() into sMyWindowController
+             put ObjC_NSWindowControllerInitWithWindow(sMyWindowController,sMyWindow) into sMyWindowController
+          end if
          ObjC_NSWindowControllerShowWindow(sMyWindowController,sMyWindow)
       end if
+   end unsafe
+end handler
+
+public handler DestroyAUWindow()
+   unsafe
+      if sMyWindowController is not nothing then
+         objC_NSWindowControllerClose(sMyWindowController)
+         -- objC_NSObjectRelease(sMyWindowController)
+         -- objC_NSObjectRelease(sMyWindow)
+         -- objC_NSObjectRelease(sAUViewController)
+         put nothing into sMyWindowController
+         put nothing into sMyWindow
+         -- put nothing into sAUViewController
+         -- put nothing into sViewControllerCompletionHandler
+      end if
+      --if sMyWindowController is not nothing then
+         --ObjC_NSWindowControllerDealloc(sMyWindowController)
+         --put nothing into sMyWindowController
+      --end if
+      --if sAUViewController is not nothing then
+      --   ObjC_NSViewControllerDealloc(sAUViewController)
+         -- put nothing into sAUViewController
+      -- end if
+      --if sMyWindow is not nothing then
+         --objC_NSWindowDealloc(sMyWindow)
+      -- put nothing into sMyWindow
+      -- end if
    end unsafe
 end handler
 
@@ -977,10 +1019,18 @@ public handler AVAudioUnitMIDIInstrumentOpenUIWindow( ) returns nothing
       log ["tAudioUnitUIClass",tStr]
 
       put objC_AVAudioUnitGetAUAudioUnit(sAVAudioUnitMIDIInstrument) into tAUAudioUnit
-      if CreateObjcBlockPointerFromHandler( ViewControllerCompletionHandler , sViewControllerCompletionHandler) then
-         put objC_AUAudioUnitRequestViewControllerWithCompletionHandler(tAUAudioUnit,sViewControllerCompletionHandler) into tNSView
+      if sViewControllerCompletionHandler is nothing then
+         if CreateObjcBlockPointerFromHandler( ViewControllerCompletionHandler , sViewControllerCompletionHandler) then
+            -- put objC_AUAudioUnitRequestViewControllerWithCompletionHandler(tAUAudioUnit,sViewControllerCompletionHandler) into tNSView
+         end if
       end if
 
+      --  DestroyAUWindow()
+         objC_AUAudioUnitRequestViewControllerWithCompletionHandler(tAUAudioUnit,sViewControllerCompletionHandler)
+      --else
+      --   put nothing into sAUViewController
+      --   objC_AUAudioUnitRequestViewControllerWithCompletionHandler(tAUAudioUnit,sViewControllerCompletionHandler)
+      --end if
    end unsafe
 end handler
 

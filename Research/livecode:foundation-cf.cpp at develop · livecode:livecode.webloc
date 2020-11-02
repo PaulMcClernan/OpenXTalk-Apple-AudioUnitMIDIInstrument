@@ -3,6 +3,6 @@
 <plist version="1.0">
 <dict>
 	<key>URL</key>
-	<string>https://developer.apple.com/documentation/coreaudiokit/auviewcontroller?language=objc</string>
+	<string>https://github.com/livecode/livecode/blob/develop/libfoundation/src/foundation-cf.cpp</string>
 </dict>
 </plist>
