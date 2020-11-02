@@ -34,7 +34,9 @@
   <handler name="AVAudioUnitMIDIInstrumentProgram" parameters="in optional integer,in optional integer" return="optional any"/>
   <handler name="AVAudioUnitMIDIInstrumentLoadAUPreset" parameters="in optional string" return="optional any"/>
   <handler name="AVAudioUnitMIDIInstrumentInfo" parameters="" return="optional any"/>
-  <handler name="LogNSObjectClassName" parameters="in ObjcId" return="any"/>
+  <handler name="LogNSObjectClassName" parameters="in optional ObjcId" return="any"/>
+  <handler name="OpenAUWindow" parameters="" return="any"/>
+  <handler name="ViewControllerCompletionHandler" parameters="in optional Pointer,in ObjcRetainedId" return="any"/>
   <handler name="AVAudioUnitMIDIInstrumentOpenUIWindow" parameters="" return="nothing"/>
   <handler name="AVAudioUnitMIDIInstrumentGetFactoryPresets" parameters="" return="string"/>
   <handler name="AVAudioUnitMIDIInstrumentSetPresetNumber" parameters="in integer" return="string"/>
