@@ -492,6 +492,7 @@ public handler AVAudioUnitMIDIInstrumentInitWithDescr(in pAUSubType as optional 
       end unsafe
    else
       unsafe
+         CloseAUWindow()
          objC_AVAudioEngineStop(sAVAudioEngine)
          objC_AVAudioEngineDisconnectInputNode(sAVAudioEngine,sAVAudioUnitMIDIInstrument)
          objC_AVAudioEngineDetachNode(sAVAudioEngine,sAVAudioUnitMIDIInstrument)
@@ -874,7 +875,7 @@ public foreign type CGSize binds to "MCAggregateTypeInfo:qq"
 public foreign type NSRect binds to "MCAggregateTypeInfo:qqqq"
 
 public variable sMyWindow as optional ObjcObject
-public variable sMyWindowController as optional ObjcObject
+public variable sMyWindowController as optional ObjcId
 public variable sAUViewController as optional ObjcId
 
 private foreign handler ObjC_NSApplicationSharedApplication() returns ObjcId binds to "objc:NSApplication.+sharedApplication"
@@ -933,28 +934,14 @@ public handler OpenAUWindow()
    end unsafe
 end handler
 
-public handler DestroyAUWindow()
+public handler CloseAUWindow()
    unsafe
       if sMyWindowController is not nothing then
          objC_NSWindowControllerClose(sMyWindowController)
          -- objC_NSObjectRelease(sMyWindowController)
-         -- objC_NSObjectRelease(sMyWindow)
-         -- objC_NSObjectRelease(sAUViewController)
          -- put nothing into sAUViewController
          -- put nothing into sViewControllerCompletionHandler
       end if
-      --if sMyWindowController is not nothing then
-         --ObjC_NSWindowControllerDealloc(sMyWindowController)
-         --put nothing into sMyWindowController
-      --end if
-      --if sAUViewController is not nothing then
-      --   ObjC_NSViewControllerDealloc(sAUViewController)
-         -- put nothing into sAUViewController
-      -- end if
-      --if sMyWindow is not nothing then
-         --objC_NSWindowDealloc(sMyWindow)
-      -- put nothing into sMyWindow
-      -- end if
    end unsafe
 end handler
 
@@ -1023,7 +1010,7 @@ public handler AVAudioUnitMIDIInstrumentOpenUIWindow( ) returns nothing
          end if
       end if
 
-      --  DestroyAUWindow()
+      --  CloseAUWindow()
          objC_AUAudioUnitRequestViewControllerWithCompletionHandler(tAUAudioUnit,sViewControllerCompletionHandler)
       --else
       --   put nothing into sAUViewController

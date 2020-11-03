@@ -37,7 +37,7 @@
   <handler name="LogNSObjectClassName" parameters="in optional ObjcId" return="any"/>
   <handler name="GetNSObjectClassName" parameters="in optional ObjcId" return="optional string"/>
   <handler name="OpenAUWindow" parameters="" return="any"/>
-  <handler name="DestroyAUWindow" parameters="" return="any"/>
+  <handler name="CloseAUWindow" parameters="" return="any"/>
   <handler name="ViewControllerCompletionHandler" parameters="in optional Pointer,in optional ObjcId" return="any"/>
   <handler name="AVAudioUnitMIDIInstrumentOpenUIWindow" parameters="" return="nothing"/>
   <handler name="AVAudioUnitMIDIInstrumentGetFactoryPresets" parameters="" return="string"/>
