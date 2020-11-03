@@ -492,8 +492,6 @@ public handler AVAudioUnitMIDIInstrumentInitWithDescr(in pAUSubType as optional 
       end unsafe
    else
       unsafe
-         DestroyAUWindow()
-
          objC_AVAudioEngineStop(sAVAudioEngine)
          objC_AVAudioEngineDisconnectInputNode(sAVAudioEngine,sAVAudioUnitMIDIInstrument)
          objC_AVAudioEngineDetachNode(sAVAudioEngine,sAVAudioUnitMIDIInstrument)
@@ -877,7 +875,7 @@ public foreign type NSRect binds to "MCAggregateTypeInfo:qqqq"
 
 public variable sMyWindow as optional ObjcObject
 public variable sMyWindowController as optional ObjcObject
-public variable sAUViewController as optional ObjcObject
+public variable sAUViewController as optional ObjcId
 
 private foreign handler ObjC_NSApplicationSharedApplication() returns ObjcId binds to "objc:NSApplication.+sharedApplication"
 private foreign handler ObjC_NSBundleWithURL(in pNSURL as ObjcId) returns ObjcId binds to "objc:NSBundle.+bundleWithURL:"
@@ -890,7 +888,9 @@ private foreign handler ObjC_NSWindowControllerInitWithWindow(in pObj as ObjcRet
 private foreign handler ObjC_NSWindowControllerShowWindow(in pObj as ObjcId,in pNSWindow as ObjcId) returns nothing binds to "objc:NSWindowController.-showWindow:"
 private foreign handler ObjC_NSWindowControllerClose(in pNSWindowController as ObjcId) returns nothing binds to "objc:NSWindowController.-close"
 
-private foreign handler ObjC_NSWindowContentViewController(in pObj as ObjcId, in pViewController as ObjcId) returns ObjcId binds to "objc:NSWindow.-setContentViewController:"
+private foreign handler ObjC_NSWindowSetContentViewController(in pObj as ObjcId, in pViewController as ObjcId) returns nothing binds to "objc:NSWindow.-setContentViewController:"
+private foreign handler ObjC_NSWindowGetContentViewController(in pObj as ObjcId) returns ObjcId binds to "objc:NSWindow.-contentViewController"
+
 private foreign handler ObjC_NSWindowSetTitle(in pObj as ObjcId, in pTitleNSStr as ObjcId) returns nothing binds to "objc:NSWindow.-setTitle:"
 private foreign handler ObjC_NSWindowGetStyleMask(in pObj as ObjcId) returns CLong binds to "objc:NSWindow.-styleMask"
 private foreign handler ObjC_NSWindowSetStyleMask(in pObj as ObjcId, in pOptions as CInt) returns nothing binds to "objc:NSWindow.-setStyleMask:"
@@ -922,7 +922,7 @@ public handler OpenAUWindow()
             put ObjC_NSWindowGetReleasedWhenClosed(sMyWindow) into tBoolean
             log tBoolean
          else
-            -- put ObjC_NSWindowContentViewController(sMyWindow,sAUViewController) into tNSObj
+            ObjC_NSWindowSetContentViewController(sMyWindow,sAUViewController)
          end if
          if sMyWindowController is nothing then
             put ObjC_NSWindowControllerAlloc() into sMyWindowController
@@ -940,8 +940,6 @@ public handler DestroyAUWindow()
          -- objC_NSObjectRelease(sMyWindowController)
          -- objC_NSObjectRelease(sMyWindow)
          -- objC_NSObjectRelease(sAUViewController)
-         put nothing into sMyWindowController
-         put nothing into sMyWindow
          -- put nothing into sAUViewController
          -- put nothing into sViewControllerCompletionHandler
       end if
@@ -960,7 +958,7 @@ public handler DestroyAUWindow()
    end unsafe
 end handler
 
-public handler ViewControllerCompletionHandler( in pContext as optional ObjcBlockPointer,in pNSViewController as optional ObjcRetainedId)
+public handler ViewControllerCompletionHandler( in pContext as optional ObjcBlockPointer,in pNSViewController as optional ObjcId )
    variable tStr as optional String
    if pNSViewController is not nothing then
       put GetNSObjectClassName(pNSViewController) into tStr
