@@ -874,7 +874,7 @@ end handler
 public foreign type CGSize binds to "MCAggregateTypeInfo:qq"
 public foreign type NSRect binds to "MCAggregateTypeInfo:qqqq"
 
-public variable sMyWindow as optional ObjcObject
+public variable sMyWindow as optional ObjcId
 public variable sMyWindowController as optional ObjcId
 public variable sAUViewController as optional ObjcId
 
