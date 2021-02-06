@@ -11,3 +11,10 @@
 .DS_Store
 *.lcdoc
 *.xml
+._.DS_Store
+._AppleAVAUMIDIIInstrument.livecode
+._Generic.aupreset
+._kAudioUnitProperty_CocoaUI | Apple Developer Documentation.webloc
+._LICENSE
+._View Instantiation and Initi.textClipping
+manifest.xml
