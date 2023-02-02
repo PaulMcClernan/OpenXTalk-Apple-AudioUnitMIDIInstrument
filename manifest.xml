@@ -1,6 +1,6 @@
 <package version="0.0">
-  <name>community.appleavaumidiinstrument.paulmcclernan</name>
-  <title>LCB Apple AVAudioUnitMIDIInstrument library</title>
+  <name>org.openxtalk.appleavaumidiinstrument</name>
+  <title>Apple AVAudioUnitMIDIInstrument library</title>
   <author>Paul McClernan</author>
   <version>0.1</version>
   <license>community</license>

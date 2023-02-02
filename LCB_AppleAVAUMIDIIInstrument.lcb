@@ -216,7 +216,8 @@ private foreign handler objC_AVAudioUnitComponentGetComponent(in pAVAudioUnit as
 private foreign handler objC_AVAudioUnitComponentPassesValidation(in pAVAudioUnit as ObjcId) returns CBool binds to "objc:AVAudioUnitComponent.passesAUVal"
 
 -- foreign handler cSizeOf(in pPointer as Pointer) returns UIntSize binds to "c:sizeof"
-foreign handler cSizeOf(in pPointer as Pointer) returns UIntSize binds to "<builtin>"
+-- foreign handler cSizeOf(in pPointer as Pointer) returns UIntSize binds to "<builtin>"
+-- must re-read Dr. Peter Bretts blog on tapping the C standard library symbols
 
 private variable sAVAudioEngine as optional ObjcObject
 private variable sAVAudioMainMixerNode as optional ObjcObject
@@ -464,9 +465,13 @@ public handler AVAudioUnitMIDIInstrumentInitWithDescr(in pAUSubType as optional 
          put objC_AVAudioEngineAlloc() into sAVAudioEngine
          put objC_AVAudioEngineInit(sAVAudioEngine) into sAVAudioEngine
          -- log sAVAudioEngine
+
          put objC_AVAudioUnitMIDIInstrumentAlloc() into sAVAudioUnitMIDIInstrument
          put objC_AVAudioUnitMIDIInstrumentInitWithDescr(sAVAudioUnitMIDIInstrument, tAudioComponentDescription) into sAVAudioUnitMIDIInstrument
-         -- log sAVAudioUnitMIDIInstrument
+         log sAVAudioUnitMIDIInstrument
+         if sAVAudioUnitMIDIInstrument is nothing then
+            return "Error loading AU Type:" & pAUSubType &","& pAUManufacturer
+         end if
          objC_AVAudioEngineAttachNode(sAVAudioEngine,sAVAudioUnitMIDIInstrument)
          -- check engine to see if it attached the instrument node sucessfully:
          -- put objC_AVAudioNodeGetEngine(sAVAudioUnitMIDIInstrument) into tNSObj -- Null if Node is not attached to an AVAudioEngine
