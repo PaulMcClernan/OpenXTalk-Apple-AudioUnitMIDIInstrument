@@ -1,1 +1,1 @@
-﻿script "community.appleavauMIDIInstrument.paulmcclernan.__DefaultScript"
+﻿script "org.openxtalk.library.appleavaumidiinstrument.__DefaultScript"

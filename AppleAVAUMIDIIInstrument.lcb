@@ -88,7 +88,6 @@ private foreign handler objC_NSURLGetAbsoluteString(in pURLString as ObjcId) ret
 private foreign handler objC_NSURLGetPath(in pURLString as ObjcId) returns ObjcId binds to "objc:NSURL.path"
 private foreign handler c_NSClassFromString(in pClassNameString as ObjcId) returns ObjcId binds to "c:NSClassFromString"
 
-private foreign handler objC_NSErrorAlloc() returns ObjcId binds to "objc:NSError.+alloc"
 private foreign handler objC_NSObjectRetain(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.-retain"
 private foreign handler objC_NSObjectAutoRealease(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.-autorelease"
 private foreign handler objC_NSObjectRelease(in pNSObj as ObjcId) returns nothing binds to "objc:NSObject.-release"
@@ -100,6 +99,7 @@ private foreign handler objC_NSMutableArrayAlloc() returns ObjcRetainedId binds 
 private foreign handler objC_NSMutableArrayInitWithCapacity(in pNSMutableArray as ObjcId, in pCapacity as NaturalFloat) returns ObjcId binds to "objc:NSMutableArray.-initWithCapacity:"
 private foreign handler objC_NSMutableArrayInitWithNSArray(in pNSMutableArray as ObjcId, in pNSArray as ObjcId) returns ObjcId binds to "objc:NSMutableArray.-initWithArray:"
 
+private foreign handler objC_NSErrorAlloc() returns ObjcId binds to "objc:NSError.+alloc"
 private foreign handler c_CFErrorCopyDescription(in pCFErrorRef as ObjcId) returns ObjcId binds to "c:CFErrorCopyDescription"
 
 private foreign handler objC_AVAudioEngineAlloc() returns ObjcRetainedId binds to "objc:AVAudioEngine.+alloc" -- must be ObjcRetainedId
@@ -880,6 +880,7 @@ public foreign type CGSize binds to "MCAggregateTypeInfo:qq"
 public foreign type NSRect binds to "MCAggregateTypeInfo:qqqq"
 
 public variable sMyWindow as optional ObjcId
+public variable sMyView as optional ObjcId
 public variable sMyWindowController as optional ObjcId
 public variable sAUViewController as optional ObjcId
 
@@ -914,7 +915,7 @@ private foreign handler ObjC_NSWindowCreateWithViewController(in pNSViewControll
 private foreign handler ObjC_NSWindowDealloc(in pNSViewController as ObjcId) returns nothing binds to "objc:NSWindow.-dealloc"
 
 private variable sViewControllerCompletionHandler as optional ObjcBlockPointer
-private foreign handler objC_AUAudioUnitRequestViewControllerWithCompletionHandler(in pAUAudioUnit as ObjcId,in pViewControllerCompletionHandler as optional ObjcBlockPointer) returns ObjcId binds to "objc:AUAudioUnit.requestViewControllerWithCompletionHandler:" -- macOS 10.11+ only
+private foreign handler objC_AUAudioUnitRequestViewControllerWithCompletionHandler(in pAUAudioUnit as ObjcId,in pViewControllerCompletionHandler as optional ObjcBlockPointer) returns ObjcRetainedId binds to "objc:AUAudioUnit.requestViewControllerWithCompletionHandler:" -- macOS 10.11+ only
 
 public handler OpenAUWindow()
    variable tNSObj as optional ObjcId
@@ -961,6 +962,7 @@ public handler ViewControllerCompletionHandler( in pContext as optional ObjcBloc
          log tStr
       end if
    end if
+   put nothing into sViewControllerCompletionHandler
 end handler
 
 public handler AVAudioUnitMIDIInstrumentOpenUIWindow( ) returns nothing
@@ -974,7 +976,7 @@ public handler AVAudioUnitMIDIInstrumentOpenUIWindow( ) returns nothing
    variable tAudioUnitProperty as UInt32
    variable tAudioUnitScope as UInt32
    variable tAudioUnitElement as UInt32
-   variable tNSView as ObjcId
+   --variable tNSView as ObjcId
    variable tOSStatus as CSInt
    variable tNSStrObj as optional ObjcId
    variable tStr as optional String
@@ -1008,12 +1010,12 @@ public handler AVAudioUnitMIDIInstrumentOpenUIWindow( ) returns nothing
       put StringFromNSString(tAudioUnitUIClassNSStr) into tStr
       log ["tAudioUnitUIClass",tStr]
 
-      put objC_AVAudioUnitGetAUAudioUnit(sAVAudioUnitMIDIInstrument) into tAUAudioUnit
       if sViewControllerCompletionHandler is nothing then
          if CreateObjcBlockPointerFromHandler( ViewControllerCompletionHandler , sViewControllerCompletionHandler) then
             -- put objC_AUAudioUnitRequestViewControllerWithCompletionHandler(tAUAudioUnit,sViewControllerCompletionHandler) into tNSView
          end if
       end if
+      put objC_AVAudioUnitGetAUAudioUnit(sAVAudioUnitMIDIInstrument) into tAUAudioUnit
 
       --  CloseAUWindow()
          objC_AUAudioUnitRequestViewControllerWithCompletionHandler(tAUAudioUnit,sViewControllerCompletionHandler)
