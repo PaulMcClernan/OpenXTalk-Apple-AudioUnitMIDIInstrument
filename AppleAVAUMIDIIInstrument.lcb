@@ -29,6 +29,68 @@ constant kAudioUnitType_Output is 1635086197 -- "uoua" reversed for Intel, Power
 constant kAudioUnitSubType_RemoteIO is 1919512419 -- "coir" reversed for Intel, PowerPC would be 1668245874 -- "rioc"
 constant kAUMIDISynthProperty_EnablePreload is 4119
 
+---------------- AudioUnit Errors ------
+constant kAudioUnitErr_InvalidProperty is -10879
+constant kAudioUnitErr_InvalidParameter is -10878
+constant kAudioUnitErr_InvalidElement is -10877
+constant kAudioUnitErr_NoConnection is -10876
+constant kAudioUnitErr_FailedInitialization is -10875
+constant kAudioUnitErr_TooManyFramesToProcess is -10874
+constant kAudioUnitErr_InvalidFile is -10871
+constant kAudioUnitErr_FormatNotSupported is -10868
+constant kAudioUnitErr_Uninitialized is -10867
+constant kAudioUnitErr_InvalidScope is -10866
+constant kAudioUnitErr_PropertyNotWritable is -10865
+constant kAudioUnitErr_CannotDoInCurrentContext is -10863
+constant kAudioUnitErr_InvalidPropertyValue is -10851
+constant kAudioUnitErr_PropertyNotInUse is -10850
+constant kAudioUnitErr_Initialized is -10849
+constant kAudioUnitErr_InvalidOfflineRender is -10848
+constant kAudioUnitErr_Unauthorized is -10847
+handler CheckAudioUnitError(in pError as CSInt)
+  if pError = kAudioUnitErr_InvalidProperty then
+    log "kAudioUnitErr_InvalidProperty"
+  else if pError = kAudioUnitErr_InvalidParameter then
+    log "kAudioUnitErr_InvalidParameter"
+  else if pError = kAudioUnitErr_InvalidElement then
+    log "kAudioUnitErr_InvalidElement"
+   else if pError = kAudioUnitErr_NoConnection then
+     log "kAudioUnitErr_NoConnection"
+   else if pError = kAudioUnitErr_FailedInitialization then
+     log "kAudioUnitErr_FailedInitialization"
+   else if pError = kAudioUnitErr_TooManyFramesToProcess then
+     log "kAudioUnitErr_TooManyFramesToProcess"
+   else if pError = kAudioUnitErr_InvalidFile then
+     log "kAudioUnitErr_InvalidFile"
+   else if pError = kAudioUnitErr_FormatNotSupported then
+     log "kAudioUnitErr_FormatNotSupported"
+   else if pError = kAudioUnitErr_Uninitialized then
+     log "kAudioUnitErr_Uninitialized"
+   else if pError = kAudioUnitErr_InvalidScope then
+     log "kAudioUnitErr_InvalidScope"
+   else if pError = kAudioUnitErr_PropertyNotWritable then
+     log "kAudioUnitErr_PropertyNotWritable"
+   else if pError = kAudioUnitErr_InvalidScope then
+     log "kAudioUnitErr_InvalidScope"
+   else if pError = kAudioUnitErr_CannotDoInCurrentContext then
+     log "kAudioUnitErr_CannotDoInCurrentContext"
+   else if pError = kAudioUnitErr_InvalidPropertyValue then
+     log "kAudioUnitErr_InvalidPropertyValue"
+   else if pError = kAudioUnitErr_PropertyNotInUse then
+     log "kAudioUnitErr_PropertyNotInUse"
+   else if pError = kAudioUnitErr_Initialized then
+     log "kAudioUnitErr_Initialized"
+   else if pError = kAudioUnitErr_InvalidOfflineRender then
+     log "kAudioUnitErr_InvalidOfflineRender"
+   else if pError = kAudioUnitErr_Unauthorized then
+     log "kAudioUnitErr_Unauthorized"
+  else if pError = 0 then
+    log "No Error"
+  else
+    log "Error code not recognized"
+  end if
+end handler
+
 public handler getIntegerFromFourCharCodeLittleEndian(in pStr as String) returns optional Uint32
    variable tUint32 as Uint32
    put (the code of char 4 of pStr) * 16777216 into tUint32 ---  256 * 256 * 256
@@ -366,6 +428,7 @@ public handler AVAudioUnitCMGetMIDIInstruments(in pAUSubType as optional String,
          end if
 
          put objC_AVAudioUnitComponentHasCustomView( tAVAUAudioComponent ) into tCBool
+         -- log ["Custom UI", tCBool]
          if tCBool is true then
             put "true \t" after rTempStr
          else
@@ -953,15 +1016,19 @@ end handler
 
 public handler ViewControllerCompletionHandler( in pContext as optional ObjcBlockPointer,in pNSViewController as optional ObjcId )
    variable tStr as optional String
-   if pNSViewController is not nothing then
-      put GetNSObjectClassName(pNSViewController) into tStr
-      if tStr is "AUViewController" then
-         put pNSViewController into sAUViewController
-         OpenAUWindow()
-      else
-         log tStr
+   unsafe
+      if pNSViewController is not nothing then
+         put GetNSObjectClassName(pNSViewController) into tStr
+         if tStr is "AUViewController" then
+            put pNSViewController into sAUViewController
+            OpenAUWindow()
+         else
+            -- a better way would be to pre-check that the AudioUnit actually has a custom UI view to display!
+            put nothing into sAUViewController
+            log tStr
+         end if
       end if
-   end if
+   end unsafe
    put nothing into sViewControllerCompletionHandler
 end handler
 
@@ -991,38 +1058,50 @@ public handler AVAudioUnitMIDIInstrumentOpenUIWindow( ) returns nothing
    variable tCGSize as CGSize
    unsafe
       put objC_AVAudioUnitGetAudioUnit(sAVAudioUnitMIDIInstrument) into tAudioUnit
+      -- put objC_AVAudioUnitComponentGetComponent(tAudioUnit) into tAudioComponent
+      -- if objC_AVAudioUnitComponentHasCustomView( sAVAudioUnitMIDIInstrument ) then
+      --    log "Has Custom UI"
+      -- end if
+
       put 16 into rDataSize -- 2X 64bit Pointer size
       put c_AudioUnitGetPropertyAudioUnitCocoaViewInfo(tAudioUnit,31,0,0,tAudioUnitCocoaViewInfo,rDataSize) into tOSStatus
-      log [tAudioUnitCocoaViewInfo,rDataSize] -- returned rDataSize should be 64bit Pointer size
-      put element 1 of tAudioUnitCocoaViewInfo into tDataPtr
-      put PointerToObjcObject(tDataPtr) into tAudioUnitsNNSBundleNSURL
-      LogNSObjectClassName(tAudioUnitsNNSBundleNSURL)
-      -- put objC_NSURLGetAbsoluteString(tNSObj) into tNSStrObj
-      put ObjC_NSBundleWithURL(tAudioUnitsNNSBundleNSURL) into tAudioUnitsNSBundle
-      put objC_NSURLGetPath(tAudioUnitsNNSBundleNSURL) into tNSStrObj
-      put StringFromNSString(tNSStrObj) into tStr
-      log tStr
-      LogNSObjectClassName(tAudioUnitsNSBundle)
-      ---
-      put element 2 of tAudioUnitCocoaViewInfo into tDataPtr
-      put PointerToObjcObject(tDataPtr) into tAudioUnitUIClassNSStr
-      LogNSObjectClassName(tAudioUnitUIClassNSStr)
-      put StringFromNSString(tAudioUnitUIClassNSStr) into tStr
-      log ["tAudioUnitUIClass",tStr]
-
-      if sViewControllerCompletionHandler is nothing then
-         if CreateObjcBlockPointerFromHandler( ViewControllerCompletionHandler , sViewControllerCompletionHandler) then
-            -- put objC_AUAudioUnitRequestViewControllerWithCompletionHandler(tAUAudioUnit,sViewControllerCompletionHandler) into tNSView
-         end if
+      CheckAudioUnitError(tOSStatus)
+      if tOSStatus = kAudioUnitErr_InvalidProperty then
+         log "No Custom UI for this AudioUnit"
       end if
-      put objC_AVAudioUnitGetAUAudioUnit(sAVAudioUnitMIDIInstrument) into tAUAudioUnit
+      -- log [tAudioUnitCocoaViewInfo,rDataSize] -- returned rDataSize should be 64bit Pointer size
+      if tOSStatus = 0 then
 
-      --  CloseAUWindow()
-         objC_AUAudioUnitRequestViewControllerWithCompletionHandler(tAUAudioUnit,sViewControllerCompletionHandler)
-      --else
-      --   put nothing into sAUViewController
-      --   objC_AUAudioUnitRequestViewControllerWithCompletionHandler(tAUAudioUnit,sViewControllerCompletionHandler)
-      --end if
+         put element 1 of tAudioUnitCocoaViewInfo into tDataPtr
+         put PointerToObjcObject(tDataPtr) into tAudioUnitsNNSBundleNSURL
+         LogNSObjectClassName(tAudioUnitsNNSBundleNSURL)
+         -- put objC_NSURLGetAbsoluteString(tNSObj) into tNSStrObj
+         put ObjC_NSBundleWithURL(tAudioUnitsNNSBundleNSURL) into tAudioUnitsNSBundle
+         put objC_NSURLGetPath(tAudioUnitsNNSBundleNSURL) into tNSStrObj
+         put StringFromNSString(tNSStrObj) into tStr
+         log tStr
+         LogNSObjectClassName(tAudioUnitsNSBundle)
+         ---
+         put element 2 of tAudioUnitCocoaViewInfo into tDataPtr
+         put PointerToObjcObject(tDataPtr) into tAudioUnitUIClassNSStr
+         LogNSObjectClassName(tAudioUnitUIClassNSStr)
+         put StringFromNSString(tAudioUnitUIClassNSStr) into tStr
+         log ["tAudioUnitUIClass",tStr]
+
+         if sViewControllerCompletionHandler is nothing then
+            if CreateObjcBlockPointerFromHandler( ViewControllerCompletionHandler , sViewControllerCompletionHandler) then
+               -- put objC_AUAudioUnitRequestViewControllerWithCompletionHandler(tAUAudioUnit,sViewControllerCompletionHandler) into tNSView
+            end if
+         end if
+         put objC_AVAudioUnitGetAUAudioUnit(sAVAudioUnitMIDIInstrument) into tAUAudioUnit
+
+         --  CloseAUWindow()
+            objC_AUAudioUnitRequestViewControllerWithCompletionHandler(tAUAudioUnit,sViewControllerCompletionHandler)
+         --else
+         --   put nothing into sAUViewController
+         --   objC_AUAudioUnitRequestViewControllerWithCompletionHandler(tAUAudioUnit,sViewControllerCompletionHandler)
+         --end if
+      end if
    end unsafe
 end handler
 
