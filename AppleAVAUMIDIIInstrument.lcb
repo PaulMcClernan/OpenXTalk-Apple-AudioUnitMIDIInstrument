@@ -155,7 +155,8 @@ private foreign handler objC_NSObjectAutoRealease(in pNSObj as ObjcId) returns O
 private foreign handler objC_NSObjectRelease(in pNSObj as ObjcId) returns nothing binds to "objc:NSObject.-release"
 private foreign handler objC_NSObjectDescription(in pNSObj as optional ObjcId) returns ObjcId binds to "objc:NSObject.description"
 private foreign handler objC_NSObjectClassName(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.className"
-private foreign handler objC_NSObjectGetSuperClass(in pNSObj as ObjcId) returns ObjcRetainedId binds to "c:NObject.+superclass:"
+private foreign handler objC_NSObjectGetSuperClass(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.superclass"
+private foreign handler objC_NSObjectGetDescription(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.description"
 
 private foreign handler objC_NSMutableArrayAlloc() returns ObjcRetainedId binds to "objc:NSMutableArray.+alloc"
 private foreign handler objC_NSMutableArrayInitWithCapacity(in pNSMutableArray as ObjcId, in pCapacity as NaturalFloat) returns ObjcId binds to "objc:NSMutableArray.-initWithCapacity:"
@@ -909,16 +910,26 @@ public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
    return tInfoChunk
 end handler
 
-public handler LogNSObjectClassName(in tNSObj as optional ObjcId)
+public handler LogNSObjectClassName(in pNSObj as optional ObjcId)
    variable tOSStatus as CSInt
    variable tNSStrObj as optional ObjcId
+   variable tNSObjB as optional ObjcId
    variable tStr as optional String
-   if tNSObj is not nothing then
-   unsafe
-      put objC_NSObjectClassName(tNSObj) into tNSStrObj
-      put StringFromNSString(tNSStrObj) into tStr
-      log tStr
-   end unsafe
+   if pNSObj is not nothing then
+      unsafe
+         put objC_NSObjectClassName(pNSObj) into tNSStrObj
+         put StringFromNSString(tNSStrObj) into tStr
+         log ["Class" , tStr]
+
+         put objC_NSObjectGetDescription(pNSObj) into tNSStrObj
+         put StringFromNSString(tNSStrObj) into tStr
+         log ["Description" , tStr]
+
+         put objC_NSObjectGetSuperClass(pNSObj) into tNSObjB
+         put objC_NSObjectClassName(tNSObjB) into tNSStrObj
+         put StringFromNSString(tNSStrObj) into tStr
+         log ["SuperClass" , tStr]
+      end unsafe
    else
       log "No Object"
    end if
