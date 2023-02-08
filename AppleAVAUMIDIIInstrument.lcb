@@ -148,15 +148,6 @@ private foreign handler objC_NSURLfileOrDirURLWithPath(in pPathString as ObjcId,
 private foreign handler objC_NSURLfileURLWithPath(in pPathString as ObjcId) returns ObjcId binds to "objc:NSURL.+fileURLWithPath:"
 private foreign handler objC_NSURLGetAbsoluteString(in pURLString as ObjcId) returns ObjcId binds to "objc:NSURL.absoluteString"
 private foreign handler objC_NSURLGetPath(in pURLString as ObjcId) returns ObjcId binds to "objc:NSURL.path"
-private foreign handler c_NSClassFromString(in pClassNameString as ObjcId) returns ObjcId binds to "c:NSClassFromString"
-
-private foreign handler objC_NSObjectRetain(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.-retain"
-private foreign handler objC_NSObjectAutoRealease(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.-autorelease"
-private foreign handler objC_NSObjectRelease(in pNSObj as ObjcId) returns nothing binds to "objc:NSObject.-release"
-private foreign handler objC_NSObjectDescription(in pNSObj as optional ObjcId) returns ObjcId binds to "objc:NSObject.description"
-private foreign handler objC_NSObjectClassName(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.className"
-private foreign handler objC_NSObjectGetSuperClass(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.superclass"
-private foreign handler objC_NSObjectGetDescription(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.description"
 
 private foreign handler objC_NSMutableArrayAlloc() returns ObjcRetainedId binds to "objc:NSMutableArray.+alloc"
 private foreign handler objC_NSMutableArrayInitWithCapacity(in pNSMutableArray as ObjcId, in pCapacity as NaturalFloat) returns ObjcId binds to "objc:NSMutableArray.-initWithCapacity:"
@@ -910,16 +901,65 @@ public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
    return tInfoChunk
 end handler
 
+private foreign handler c_NSClassFromString(in pClassNameString as ObjcId) returns ObjcId binds to "c:NSClassFromString"
+private foreign handler c_class_copyPropertyList(in pClass as ObjcId, out pCount as UInt32) returns optional Pointer binds to "c:class_copyPropertyList"
+
+private foreign handler objC_NSObjectRetain(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.-retain"
+private foreign handler objC_NSObjectAutoRealease(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.-autorelease"
+private foreign handler objC_NSObjectRelease(in pNSObj as ObjcId) returns nothing binds to "objc:NSObject.-release"
+private foreign handler objC_NSObjectDescription(in pNSObj as optional ObjcId) returns ObjcId binds to "objc:NSObject.description"
+private foreign handler objC_NSObjectClassName(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.className"
+private foreign handler objC_NSObjectGetSuperClass(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.superclass"
+private foreign handler objC_NSObjectGetDescription(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.description"
+public foreign handler objC_NSObjectClassDescription(in pNSObject as ObjcId) returns optional ObjcId binds to "objc:NSObject.-classDescription"
+public foreign handler objC_NSObjectGetAttributeKeys(in pNSObject as ObjcId) returns optional ObjcId binds to "objc:NSObject.attributeKeys"
+private foreign handler ObjC_NSObjectGetClassNamed( in pNSClassName as ObjcId) returns optional ObjcId binds to "objc:NSObject.-classNamed:"
+
+public foreign handler objC_NSObjectsGetClassDescriptionForClass(in pClasss as ObjcId) returns optional ObjcRetainedId binds to "objc:NSClassDescription.+classDescriptionForClass:"
+
+
 public handler LogNSObjectClassName(in pNSObj as optional ObjcId)
    variable tOSStatus as CSInt
    variable tNSStrObj as optional ObjcId
    variable tNSObjB as optional ObjcId
    variable tStr as optional String
+   variable tClass as ObjcId
+   variable tPropsCount as optional UInt32
+   variable tClassDescription as optional ObjcId
+   variable tListNSObj as ObjcId
+   variable tListOpaquePtr as optional Pointer
+
+   variable tList as List
+
    if pNSObj is not nothing then
       unsafe
+         log ["Obj ID" , pNSObj]
+
          put objC_NSObjectClassName(pNSObj) into tNSStrObj
+
          put StringFromNSString(tNSStrObj) into tStr
-         log ["Class" , tStr]
+         log ["Class Name" , tStr]
+
+         put c_NSClassFromString(tNSStrObj) into tClass
+          -- put ObjC_NSObjectGetClassNamed(tNSStrObj) into tClass
+          -- LogNSObjectClassName(tClass)
+         log ["Class Obj", tClass]
+
+         put c_class_copyPropertyList(tClass,tPropsCount) into tListOpaquePtr
+
+         log ["Props List Obj", tPropsCount, tListOpaquePtr]
+
+         --put objC_NSObjectsGetClassDescriptionForClass(tClass) into tClassDescription
+         -- log ["Class Description Obj", tClassDescription]
+         -- objC_lookUpClass(pClass)
+         -- LogNSObjectClassName(tClassDescription)
+         -- put objC_NSObjectGetAttributeKeys(tClassDescription) into tListNSObj
+         -- attributeKeys
+         -- Get the list of methodss
+         -- objc_sendMessage(tClass, "methods")
+         -- put ListFromNSArray(tListNSObj) into tList
+         -- log tList
+        -- GetNSObjectAttributeKeys(pNSObj)
 
          put objC_NSObjectGetDescription(pNSObj) into tNSStrObj
          put StringFromNSString(tNSStrObj) into tStr
@@ -929,6 +969,7 @@ public handler LogNSObjectClassName(in pNSObj as optional ObjcId)
          put objC_NSObjectClassName(tNSObjB) into tNSStrObj
          put StringFromNSString(tNSStrObj) into tStr
          log ["SuperClass" , tStr]
+
       end unsafe
    else
       log "No Object"
