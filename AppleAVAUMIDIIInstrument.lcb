@@ -528,6 +528,8 @@ public handler AVAudioUnitMIDIInstrumentInitWithDescr(in pAUSubType as optional 
             return "Error loading AU Type:" & pAUSubType &","& pAUManufacturer
          end if
          objC_AVAudioEngineAttachNode(sAVAudioEngine,sAVAudioUnitMIDIInstrument)
+         LogNSObjectClassName(sAVAudioEngine)
+         -- LogNSObjectClassName(sAVAudioUnitMIDIInstrument)
          -- check engine to see if it attached the instrument node sucessfully:
          -- put objC_AVAudioNodeGetEngine(sAVAudioUnitMIDIInstrument) into tNSObj -- Null if Node is not attached to an AVAudioEngine
 
@@ -943,11 +945,11 @@ public handler LogNSObjectClassName(in pNSObj as optional ObjcId)
          put c_NSClassFromString(tNSStrObj) into tClass
           -- put ObjC_NSObjectGetClassNamed(tNSStrObj) into tClass
           -- LogNSObjectClassName(tClass)
-         log ["Class Obj", tClass]
+         -- log ["Class Obj", tClass]
 
          put c_class_copyPropertyList(tClass,tPropsCount) into tListOpaquePtr
 
-         log ["Props List Obj", tPropsCount, tListOpaquePtr]
+         log ["Props List Count and Pointer", tPropsCount, tListOpaquePtr]
 
          --put objC_NSObjectsGetClassDescriptionForClass(tClass) into tClassDescription
          -- log ["Class Description Obj", tClassDescription]
