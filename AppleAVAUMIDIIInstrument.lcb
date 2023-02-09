@@ -904,8 +904,12 @@ public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
 end handler
 
 private foreign handler c_NSClassFromString(in pClassNameString as ObjcId) returns ObjcId binds to "c:NSClassFromString"
-private foreign handler c_class_copyPropertyList(in pClass as ObjcId, out pCount as UInt32) returns Pointer binds to "c:class_copyPropertyList"
+private foreign handler c_class_copyPropertyList(in pClass as ObjcId, out pCount as UInt32) returns optional any binds to "c:class_copyPropertyList"
+private foreign handler c_class_getProperty(in pClass as ObjcId, in pPropNameNSStr as ObjcId) returns optional Pointer binds to "c:c_class_getProperty"
+-- objc_property_t class_getProperty(Class cls, const char *name);
 
+private foreign handler c_property_getName(in pClass as optional Pointer) returns optional Pointer binds to "c:property_getName"
+-- const char * property_getName(objc_property_t property);
 private foreign handler objC_NSObjectRetain(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.-retain"
 private foreign handler objC_NSObjectAutoRealease(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.-autorelease"
 private foreign handler objC_NSObjectRelease(in pNSObj as ObjcId) returns nothing binds to "objc:NSObject.-release"
@@ -913,12 +917,16 @@ private foreign handler objC_NSObjectDescription(in pNSObj as optional ObjcId) r
 private foreign handler objC_NSObjectClassName(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.className"
 private foreign handler objC_NSObjectGetSuperClass(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.superclass"
 private foreign handler objC_NSObjectGetDescription(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.description"
-public foreign handler objC_NSObjectClassDescription(in pNSObject as ObjcId) returns optional ObjcId binds to "objc:NSObject.-classDescription"
-public foreign handler objC_NSObjectGetAttributeKeys(in pNSObject as ObjcId) returns optional ObjcId binds to "objc:NSObject.attributeKeys"
+private foreign handler objC_NSObjectClassDescription(in pNSObject as ObjcId) returns optional ObjcId binds to "objc:NSObject.-classDescription"
+private foreign handler objC_NSObjectGetAttributeKeys(in pNSObject as ObjcId) returns optional ObjcId binds to "objc:NSObject.attributeKeys"
 private foreign handler ObjC_NSObjectGetClassNamed( in pNSClassName as ObjcId) returns optional ObjcId binds to "objc:NSObject.-classNamed:"
 
 public foreign handler objC_NSObjectsGetClassDescriptionForClass(in pClasss as ObjcId) returns optional ObjcRetainedId binds to "objc:NSClassDescription.+classDescriptionForClass:"
 
+__safe foreign handler MCStringCreateWithCString(in pString as Pointer, out rString as String) returns CBool binds to "<builtin>"
+public foreign type ClassPropertiesList  binds to "MCAggregateTypeInfo:r"
+__safe foreign handler PointerToPropsList(out rAggregate as ClassPropertiesList, in pPointer as Pointer, in pSize as UIntSize) returns nothing binds to "c:memcpy"
+-- PointerToPropsList(PropsList,rOutArrayPtr,8)
 
 public handler LogNSObjectClassName(in pNSObj as optional ObjcId)
    variable tOSStatus as CSInt
@@ -929,14 +937,17 @@ public handler LogNSObjectClassName(in pNSObj as optional ObjcId)
    variable tPropsCount as optional UInt32
    variable tClassDescription as optional ObjcId
    variable tListNSObj as optional ObjcId
-   variable tListOpaquePtr as optional Pointer
+   variable tListOpaquePtr as optional Pointer -- to an array of 'objc_property_t'
    variable tListArray as optional Array
    variable tList as List
+   variable tString as optional ZStringNative
+   variable tCStringPtr as optional Pointer
+   variable tSuccess as CBool
+   variable rOutArrayPtr as ClassPropertiesList
 
    if pNSObj is not nothing then
       unsafe
-         log ["Obj ID" , pNSObj]
-
+         -- log ["Obj ID" , pNSObj]
          put objC_NSObjectClassName(pNSObj) into tNSStrObj
 
          put StringFromNSString(tNSStrObj) into tStr
@@ -946,15 +957,35 @@ public handler LogNSObjectClassName(in pNSObj as optional ObjcId)
           -- put ObjC_NSObjectGetClassNamed(tNSStrObj) into tClass
           -- LogNSObjectClassName(tClass)
          -- log ["Class Obj", tClass]
-         -- put c_class_copyPropertyList(tClass,tPropsCount) into tListCArray
          put c_class_copyPropertyList(tClass,tPropsCount) into tListOpaquePtr
+         -- https://developer.apple.com/documentation/corefoundation/1388741-cfarraycreate?language=objc
+         -- put c_class_copyPropertyList(tClass,tPropsCount) into tListNSObj
+         -- put ListFromNSArray(tListNSObj) into tList
          -- put c_class_copyPropertyList(tClass,tPropsCount) into tListNSObj
          -- log ["Props List Count and Pointer", tPropsCount,tListNSObj ]
          log ["Props List Count and Pointer", tPropsCount,tListOpaquePtr ]
+          if tPropsCount is not 0 then
+            -- log tListOpaquePtr
+            -- put PointerToObjcObject(tListOpaquePtr) into tListNSObj
+             -- LogNSObjectClassName(tListOpaquePtr)
+             -- log "Has Props"
+            -- PointerToPropsList(rOutArrayPtr,tListOpaquePtr,8)
+            -- log ["Out Array", rOutArrayPtr]
+            -- put PointerToObjcObject(tListOpaquePtr) into tListNSObj
+            -- put ListFromNSArray(rOutArrayPtr) into tList
+            -- put c_property_getName(tPropertyPtr) into tCStringPtr
+            -- log ["Name String Ptr", tCStringPtr]
+            -- put MCStringCreateWithCString(tCStringPtr,tString) into tSuccess
+            -- log [tSuccess,tString ]
+            -- put PointerToObjcObject(tListOpaquePtr) into tListNSObj
+            -- log tListNSObj
+            -- LogNSObjectClassName(tListNSObj)
+            -- log tString
+          end if
 
-
-         --unsigned int outCount, i;
-         --objc_property_t *properties = class_copyPropertyList([TestClass class], &outCount);
+         -- const char * property_getName(objc_property_t property);
+         -- unsigned int outCount, i;
+         -- objc_property_t *properties = class_copyPropertyList([TestClass class], &outCount);
          --for (i = 0; i < outCount; i++) {
          --    objc_property_t property = properties[i];
          --    fprintf(stdout, "%s %s\n", property_getName(property), property_getAttributes(property)); }

@@ -34,8 +34,6 @@
   <handler name="AVAudioUnitMIDIInstrumentProgram" parameters="in optional integer,in optional integer" return="optional any"/>
   <handler name="AVAudioUnitMIDIInstrumentLoadAUPreset" parameters="in optional string" return="optional any"/>
   <handler name="AVAudioUnitMIDIInstrumentInfo" parameters="" return="optional any"/>
-  <handler name="objC_NSObjectClassDescription" parameters="in ObjcId" return="optional ObjcId"/>
-  <handler name="objC_NSObjectGetAttributeKeys" parameters="in ObjcId" return="optional ObjcId"/>
   <handler name="objC_NSObjectsGetClassDescriptionForClass" parameters="in ObjcId" return="optional ObjcRetainedId"/>
   <handler name="LogNSObjectClassName" parameters="in optional ObjcId" return="any"/>
   <handler name="GetNSObjectClassName" parameters="in optional ObjcId" return="optional string"/>
