@@ -904,7 +904,7 @@ public handler AVAudioUnitMIDIInstrumentInfo() returns optional any
 end handler
 
 private foreign handler c_NSClassFromString(in pClassNameString as ObjcId) returns ObjcId binds to "c:NSClassFromString"
-private foreign handler c_class_copyPropertyList(in pClass as ObjcId, out pCount as UInt32) returns optional Pointer binds to "c:class_copyPropertyList"
+private foreign handler c_class_copyPropertyList(in pClass as ObjcId, out pCount as UInt32) returns Pointer binds to "c:class_copyPropertyList"
 
 private foreign handler objC_NSObjectRetain(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.-retain"
 private foreign handler objC_NSObjectAutoRealease(in pNSObj as ObjcId) returns ObjcId binds to "objc:NSObject.-autorelease"
@@ -928,9 +928,9 @@ public handler LogNSObjectClassName(in pNSObj as optional ObjcId)
    variable tClass as ObjcId
    variable tPropsCount as optional UInt32
    variable tClassDescription as optional ObjcId
-   variable tListNSObj as ObjcId
+   variable tListNSObj as optional ObjcId
    variable tListOpaquePtr as optional Pointer
-
+   variable tListArray as optional Array
    variable tList as List
 
    if pNSObj is not nothing then
@@ -946,10 +946,17 @@ public handler LogNSObjectClassName(in pNSObj as optional ObjcId)
           -- put ObjC_NSObjectGetClassNamed(tNSStrObj) into tClass
           -- LogNSObjectClassName(tClass)
          -- log ["Class Obj", tClass]
-
+         -- put c_class_copyPropertyList(tClass,tPropsCount) into tListCArray
          put c_class_copyPropertyList(tClass,tPropsCount) into tListOpaquePtr
+         -- put c_class_copyPropertyList(tClass,tPropsCount) into tListNSObj
+         -- log ["Props List Count and Pointer", tPropsCount,tListNSObj ]
+         log ["Props List Count and Pointer", tPropsCount,tListOpaquePtr ]
 
-         log ["Props List Count and Pointer", tPropsCount, tListOpaquePtr]
+         -- put ListFromNSArray(tListOpaquePtr) into tList
+         -- log tList
+      --   put PointerToObjcObject(tListOpaquePtr) into tListNSObj
+      -- put ListFromNSArray[tListNSObj] into tList
+      --   log tList
 
          --put objC_NSObjectsGetClassDescriptionForClass(tClass) into tClassDescription
          -- log ["Class Description Obj", tClassDescription]
