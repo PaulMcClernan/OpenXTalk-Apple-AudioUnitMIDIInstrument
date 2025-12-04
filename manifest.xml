@@ -37,6 +37,7 @@
   <handler name="objC_NSObjectsGetClassDescriptionForClass" parameters="in ObjcId" return="optional ObjcRetainedId"/>
   <handler name="LogNSObjectClassName" parameters="in optional ObjcId" return="any"/>
   <handler name="GetNSObjectClassName" parameters="in optional ObjcId" return="optional string"/>
+  <handler name="LogNSObjectReflection" parameters="in optional ObjcId" return="any"/>
   <handler name="OpenAUWindow" parameters="" return="any"/>
   <handler name="CloseAUWindow" parameters="" return="any"/>
   <handler name="ViewControllerCompletionHandler" parameters="in optional Pointer,in optional ObjcId" return="any"/>
